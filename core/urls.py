@@ -35,6 +35,8 @@ urlpatterns = [
     path('spotify/callback/', views.spotify_callback, name='spotify_callback'),
     path('spotify/disconnect/', views.spotify_disconnect, name='spotify_disconnect'),
     path('spotify/search-track/', views.search_track, name='search_track'),
+    path('spotify/search-track-for-story/', views.search_track_for_story, name='search_track_for_story'),
     path('popular-artists/', views.popular_artists, name='popular_artists'),
     path('recommended-artists/', views.recommended_artists, name='recommended_artists'),
+    path('story/<int:story_id>/details/', views.get_story_details, name='story_details'),
 ] 

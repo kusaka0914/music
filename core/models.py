@@ -399,6 +399,9 @@ class MusicStory(models.Model):
     comment = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField()
+    track_name = models.CharField(max_length=100, blank=True, null=True)
+    artist_name = models.CharField(max_length=100, blank=True, null=True)
+    album_image_url = models.URLField(blank=True, null=True)
     
     # 追加フィールド
     viewers = models.ManyToManyField(User, related_name='viewed_stories', blank=True)

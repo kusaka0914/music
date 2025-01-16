@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+{% csrf_token %}
 <div class="spotify-container">
     <div class="home-layout">
         <!-- 左サイドバー -->
@@ -68,6 +69,7 @@
             <!-- ストーリーセクション -->
             <div class="stories-section">
                 <div class="stories-container">
+                    {% if user.is_authenticated %}
                     <!-- ストーリー追加ボタン -->
                     <div class="story-item add-story">
                         <div class="story-add-button">
@@ -75,19 +77,20 @@
                         </div>
                         <span>ストーリーを追加</span>
                     </div>
+                    {% endif %}
                     
                     <!-- ストーリーアイテム -->
-                    {% for story in stories %}
-                    <div class="story-item" data-story-id="{{ story.id }}">
-                        <div class="story-avatar {% if not story.viewed %}not-viewed{% endif %}">
-                            {% if story.user.profile.avatar %}
-                                <img src="{{ story.user.profile.avatar.url }}" alt="{{ story.user.username }}">
-                            {% else %}
-                                <img src="{% static 'images/default-avatar.svg' %}" alt="{{ story.user.username }}">
-                            {% endif %}
+                    {% for user_data in stories_by_user %}
+                        <div class="story-item" data-first-story-id="{{ user_data.stories.0.id }}">
+                            <div class="story-avatar {% if user_data.has_unviewed %}not-viewed{% endif %}">
+                                {% if user_data.user.avatar_url %}
+                                    <img src="{{ user_data.user.avatar_url }}" alt="{{ user_data.user.username }}">
+                                {% else %}
+                                    <img src="{% static 'images/default-avatar.svg' %}" alt="{{ user_data.user.username }}">
+                                {% endif %}
+                            </div>
+                            <span class="story-username">{{ user_data.user.username }}</span>
                         </div>
-                        <span class="story-username">{{ story.user.username }}</span>
-                    </div>
                     {% endfor %}
                 </div>
             </div>
@@ -200,7 +203,7 @@
     <div class="story-modal-content">
         <button class="close-modal"><i class="bi bi-x-lg"></i></button>
         <div class="story-view-container">
-            <button class="story-nav prev"><i class="bi bi-chevron-left"></i></button>
+            <button class="story-nav prev" style="display: none;"><i class="bi bi-chevron-left"></i></button>
             <div class="story-main">
                 <div class="story-header">
                     <div class="story-user-info">
@@ -231,9 +234,14 @@
                         <span class="mood-emoji"></span>
                         <p class="mood-text"></p>
                     </div>
+                    <div class="story-comment"></div>
+                    <div class="story-viewers">
+                        <i class="bi bi-eye"></i>
+                        <span class="viewers-count">0</span>
+                    </div>
                 </div>
             </div>
-            <button class="story-nav next"><i class="bi bi-chevron-right"></i></button>
+            <button class="story-nav next" style="display: none;"><i class="bi bi-chevron-right"></i></button>
         </div>
     </div>
 </div>
@@ -242,7 +250,7 @@
 <div class="create-story-modal" style="display: none;">
     <div class="modal-content">
         <button class="close-modal"><i class="bi bi-x-lg"></i></button>
-        <h3>ストーリーを作成</h3>
+        <h3>今日、なに聴いた？</h3>
         
         <div class="search-section">
             <div class="search-box">
@@ -259,7 +267,7 @@
                     <h4 class="track-title"></h4>
                     <p class="track-artist"></p>
                 </div>
-                <button class="preview-button">
+                <button class="preview-button" style="display: none;">
                     <i class="bi bi-play-fill"></i>
                 </button>
             </div>
@@ -1275,6 +1283,13 @@
 </style>
 
 <script>
+// ストーリーデータをJavaScriptオブジェクトとして定義
+const storiesData = {
+    {% for user_data in stories_by_user %}
+        "{{ forloop.counter }}": {{ user_data.stories|safe }},
+    {% endfor %}
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     // いいねボタンの処理
     const setupLikeButtons = () => {
@@ -1365,39 +1380,142 @@ document.addEventListener('DOMContentLoaded', function() {
 // ストーリー関連のJavaScript
 document.addEventListener('DOMContentLoaded', function() {
     const storyModal = document.querySelector('.story-modal');
-    const closeModal = document.querySelector('.close-modal');
+    const closeModal = storyModal.querySelector('.close-modal');
     const storyItems = document.querySelectorAll('.story-item:not(.add-story)');
-    const addStoryButton = document.querySelector('.add-story');
+    const prevButton = storyModal.querySelector('.story-nav.prev');
+    const nextButton = storyModal.querySelector('.story-nav.next');
+    let currentStoryId = null;
     
     // ストーリーアイテムクリック時の処理
     storyItems.forEach(item => {
         item.addEventListener('click', function() {
-            const storyId = this.dataset.storyId;
-            openStoryModal(storyId);
+            const firstStoryId = this.dataset.firstStoryId;
+            if (firstStoryId) {
+                showStory(firstStoryId);
+            }
         });
-    });
-    
-    // ストーリー追加ボタンクリック時の処理
-    addStoryButton.addEventListener('click', function() {
-        // TODO: ストーリー作成モーダルを表示
-        console.log('Create new story');
     });
     
     // モーダルを閉じる
     closeModal.addEventListener('click', function() {
         storyModal.style.display = 'none';
+        stopProgress();
     });
     
-    // モーダル外クリックで閉じる
-    storyModal.addEventListener('click', function(e) {
-        if (e.target === storyModal) {
-            storyModal.style.display = 'none';
+    // 前のストーリーへ
+    prevButton.addEventListener('click', function() {
+        const prevId = this.dataset.prevId;
+        if (prevId) {
+            showStory(prevId);
         }
     });
     
-    function openStoryModal(storyId) {
-        // TODO: ストーリーデータの取得とモーダル表示
-        storyModal.style.display = 'flex';
+    // 次のストーリーへ
+    nextButton.addEventListener('click', function() {
+        const nextId = this.dataset.nextId;
+        if (nextId) {
+            showStory(nextId);
+        }
+    });
+    
+    // ストーリーを表示
+    function showStory(storyId) {
+        fetch(`/story/${storyId}/details/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const story = data.story;
+                    currentStoryId = story.id;
+                    
+                    // ユーザー情報を更新
+                    storyModal.querySelector('.story-user-avatar').src = story.user.avatar_url;
+                    storyModal.querySelector('.story-user-name').textContent = story.user.username;
+                    
+                    // 経過時間を設定
+                    const timeAgo = getTimeAgo(new Date(story.created_at));
+                    storyModal.querySelector('.story-time').textContent = timeAgo;
+                    
+                    // 曲情報を更新
+                    storyModal.querySelector('.album-art img').src = story.album_image_url;
+                    storyModal.querySelector('.music-title').textContent = story.track_name;
+                    storyModal.querySelector('.music-artist').textContent = story.artist_name;
+                    
+                    // 気分とコメントを更新
+                    storyModal.querySelector('.mood-emoji').textContent = story.mood_emoji;
+                    storyModal.querySelector('.mood-text').textContent = story.mood;
+                    storyModal.querySelector('.story-comment').textContent = story.comment;
+                    
+                    // 閲覧数を更新
+                    storyModal.querySelector('.viewers-count').textContent = story.viewers_count;
+                    
+                    // ナビゲーションボタンの表示/非表示
+                    prevButton.style.display = story.prev_story_id ? 'block' : 'none';
+                    nextButton.style.display = story.next_story_id ? 'block' : 'none';
+                    prevButton.dataset.prevId = story.prev_story_id;
+                    nextButton.dataset.nextId = story.next_story_id;
+                    
+                    // モーダルを表示
+                    storyModal.style.display = 'flex';
+                    startProgress();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('ストーリーの読み込みに失敗しました');
+            });
+    }
+    
+    // プログレスバーの処理
+    let progressInterval;
+    const STORY_DURATION = 5000; // 5秒
+    
+    function startProgress() {
+        const progressBar = storyModal.querySelector('.progress-bar');
+        let progress = 0;
+        
+        stopProgress();
+        progressBar.style.width = '0%';
+        
+        progressInterval = setInterval(() => {
+            progress += (100 * 100 / STORY_DURATION); // 100ms毎の進捗
+            progressBar.style.width = Math.min(progress, 100) + '%';
+            
+            if (progress >= 100) {
+                stopProgress();
+                // 次のストーリーがあれば自動で表示
+                const nextId = nextButton.dataset.nextId;
+                if (nextId) {
+                    showStory(nextId);
+                } else {
+                    storyModal.style.display = 'none';
+                }
+            }
+        }, 100);
+    }
+    
+    function stopProgress() {
+        if (progressInterval) {
+            clearInterval(progressInterval);
+            progressInterval = null;
+        }
+    }
+    
+    // 経過時間を計算
+    function getTimeAgo(date) {
+        const seconds = Math.floor((new Date() - date) / 1000);
+        
+        if (seconds < 60) {
+            return '今';
+        } else if (seconds < 3600) {
+            const minutes = Math.floor(seconds / 60);
+            return `${minutes}分前`;
+        } else if (seconds < 86400) {
+            const hours = Math.floor(seconds / 3600);
+            return `${hours}時間前`;
+        } else {
+            const days = Math.floor(seconds / 86400);
+            return `${days}日前`;
+        }
     }
 });
 
@@ -1421,6 +1539,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ストーリー作成ボタンクリック時
     addStoryButton.addEventListener('click', function() {
         createStoryModal.style.display = 'flex';
+        console.log('Opening create story modal');  // デバッグログ
     });
     
     // モーダルを閉じる
@@ -1443,20 +1562,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         searchTimeout = setTimeout(() => {
-            fetch(`/search-track/?q=${encodeURIComponent(query)}`)
+            console.log('Searching for:', query);  // デバッグログ
+            fetch(`/spotify/search-track-for-story/?q=${encodeURIComponent(query)}`)
                 .then(response => response.json())
                 .then(data => {
+                    console.log('Search results:', data);  // デバッグログ
                     if (data.tracks && data.tracks.length > 0) {
                         searchResults.innerHTML = data.tracks.map(track => `
                             <div class="search-result-item" data-track-id="${track.id}" 
-                                 data-preview-url="${track.preview_url || ''}"
-                                 data-image-url="${track.album.images[0].url}"
-                                 data-title="${track.name}"
-                                 data-artist="${track.artists[0].name}">
-                                <img src="${track.album.images[0].url}" alt="${track.name}">
+                                data-preview-url="${track.preview_url || ''}"
+                                data-spotify-url="${track.spotify_url}"
+                                data-image-url="${track.imageUrl}"
+                                data-title="${track.title}"
+                                data-artist="${track.artist}">
+                                <img src="${track.imageUrl}" alt="${track.title}">
                                 <div class="result-details">
-                                    <h4>${track.name}</h4>
-                                    <p>${track.artists[0].name}</p>
+                                    <h4>${track.title}</h4>
+                                    <p>${track.artist}</p>
                                 </div>
                             </div>
                         `).join('');
@@ -1465,9 +1587,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         // 検索結果クリック時の処理
                         document.querySelectorAll('.search-result-item').forEach(item => {
                             item.addEventListener('click', function() {
+                                console.log('Selected track:', this.dataset);  // デバッグログ
                                 selectedTrackData = {
                                     id: this.dataset.trackId,
                                     previewUrl: this.dataset.previewUrl,
+                                    spotifyUrl: this.dataset.spotifyUrl,
                                     imageUrl: this.dataset.imageUrl,
                                     title: this.dataset.title,
                                     artist: this.dataset.artist
@@ -1485,35 +1609,17 @@ document.addEventListener('DOMContentLoaded', function() {
                             });
                         });
                     }
+                })
+                .catch(error => {
+                    console.error('Search error:', error);  // エラーログ
                 });
         }, 500);
-    });
-    
-    // プレビュー再生の処理
-    document.querySelector('.preview-button').addEventListener('click', function() {
-        if (!selectedTrackData.previewUrl) return;
-        
-        if (!audioPreview) {
-            audioPreview = new Audio(selectedTrackData.previewUrl);
-            audioPreview.addEventListener('ended', () => {
-                this.classList.remove('playing');
-                this.innerHTML = '<i class="bi bi-play-fill"></i>';
-                audioPreview = null;
-            });
-            audioPreview.play();
-            this.classList.add('playing');
-            this.innerHTML = '<i class="bi bi-pause-fill"></i>';
-        } else {
-            audioPreview.pause();
-            audioPreview = null;
-            this.classList.remove('playing');
-            this.innerHTML = '<i class="bi bi-play-fill"></i>';
-        }
     });
     
     // 気分選択の処理
     moodOptions.forEach(option => {
         option.addEventListener('click', function() {
+            console.log('Selected mood:', this.dataset);  // デバッグログ
             moodOptions.forEach(opt => opt.classList.remove('selected'));
             this.classList.add('selected');
             selectedMood = {
@@ -1533,12 +1639,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 作成ボタンの有効/無効を更新
     function updateCreateButton() {
-        createButton.disabled = !selectedTrackData || !selectedMood;
+        const isValid = selectedTrackData && selectedMood;
+        console.log('Update create button:', { isValid, selectedTrackData, selectedMood });  // デバッグログ
+        createButton.disabled = !isValid;
     }
     
     // ストーリー作成
     createButton.addEventListener('click', function() {
-        if (!selectedTrackData || !selectedMood) return;
+        console.log('Create button clicked');  // デバッグログ
+        if (!selectedTrackData || !selectedMood) {
+            console.log('Missing required data');  // デバッグログ
+            return;
+        }
         
         const data = {
             spotify_track_id: selectedTrackData.id,
@@ -1546,6 +1658,8 @@ document.addEventListener('DOMContentLoaded', function() {
             mood_emoji: selectedMood.emoji,
             comment: commentTextarea.value.trim()
         };
+        
+        console.log('Sending data:', data);  // デバッグログ
         
         fetch('/story/create/', {
             method: 'POST',
@@ -1555,12 +1669,15 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             body: JSON.stringify(data)
         })
-        .then(response => response.json())
+        .then(response => {
+            console.log('Response:', response);  // デバッグログ
+            return response.json();
+        })
         .then(data => {
+            console.log('Success:', data);  // デバッグログ
             if (data.status === 'success') {
                 createStoryModal.style.display = 'none';
                 resetModal();
-                // ページをリロードしてストーリーを表示
                 window.location.reload();
             } else {
                 alert('ストーリーの作成に失敗しました');

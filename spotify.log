@@ -1123,3 +1123,317 @@ INFO 2025-01-16 17:49:45,440 spotify_utils 93417 6239105024 Spotifyクライア�
 INFO 2025-01-16 17:49:45,441 spotify_utils 93417 6239105024 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
 INFO 2025-01-16 17:49:45,624 spotify_utils 93417 6239105024 アクセストークンの更新に成功しました
 INFO 2025-01-16 17:49:45,625 spotify_utils 93417 6239105024 Spotifyクライアント取得成功
+INFO 2025-01-16 17:51:01,370 spotify_utils 93417 6204878848 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 17:51:01,562 spotify_utils 93417 6204878848 アクセストークンの更新に成功しました
+INFO 2025-01-16 17:51:01,562 spotify_utils 93417 6204878848 Spotifyクライアント取得成功
+INFO 2025-01-16 17:51:01,562 spotify_utils 93417 6204878848 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 17:51:01,736 spotify_utils 93417 6204878848 アクセストークンの更新に成功しました
+INFO 2025-01-16 17:51:01,736 spotify_utils 93417 6204878848 Spotifyクライアント取得成功
+INFO 2025-01-16 17:53:54,341 spotify_utils 94640 6202765312 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 17:53:54,538 spotify_utils 94640 6202765312 アクセストークンの更新に成功しました
+INFO 2025-01-16 17:53:54,538 spotify_utils 94640 6202765312 Spotifyクライアント取得成功
+INFO 2025-01-16 17:53:54,538 spotify_utils 94640 6202765312 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 17:53:54,708 spotify_utils 94640 6202765312 アクセストークンの更新に成功しました
+INFO 2025-01-16 17:53:54,708 spotify_utils 94640 6202765312 Spotifyクライアント取得成功
+INFO 2025-01-16 17:55:03,614 spotify_utils 94640 6219591680 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 17:55:03,787 spotify_utils 94640 6219591680 アクセストークンの更新に成功しました
+INFO 2025-01-16 17:55:03,787 spotify_utils 94640 6219591680 Spotifyクライアント取得成功
+INFO 2025-01-16 17:55:03,787 spotify_utils 94640 6219591680 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 17:55:03,949 spotify_utils 94640 6219591680 アクセストークンの更新に成功しました
+INFO 2025-01-16 17:55:03,949 spotify_utils 94640 6219591680 Spotifyクライアント取得成功
+INFO 2025-01-16 17:56:57,764 spotify_utils 94640 6219591680 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 17:56:57,966 spotify_utils 94640 6219591680 アクセストークンの更新に成功しました
+INFO 2025-01-16 17:56:57,966 spotify_utils 94640 6219591680 Spotifyクライアント取得成功
+INFO 2025-01-16 17:56:57,966 spotify_utils 94640 6219591680 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 17:56:58,136 spotify_utils 94640 6219591680 アクセストークンの更新に成功しました
+INFO 2025-01-16 17:56:58,136 spotify_utils 94640 6219591680 Spotifyクライアント取得成功
+INFO 2025-01-16 17:59:22,915 spotify_utils 95251 6200094720 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 17:59:23,120 spotify_utils 95251 6200094720 アクセストークンの更新に成功しました
+INFO 2025-01-16 17:59:23,120 spotify_utils 95251 6200094720 Spotifyクライアント取得成功
+INFO 2025-01-16 17:59:23,120 spotify_utils 95251 6200094720 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 17:59:23,288 spotify_utils 95251 6200094720 アクセストークンの更新に成功しました
+INFO 2025-01-16 17:59:23,288 spotify_utils 95251 6200094720 Spotifyクライアント取得成功
+INFO 2025-01-16 18:01:34,024 spotify_utils 95578 6124957696 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:01:34,227 spotify_utils 95578 6124957696 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:01:34,228 spotify_utils 95578 6124957696 Spotifyクライアント取得成功
+INFO 2025-01-16 18:01:34,229 spotify_utils 95578 6124957696 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 18:01:34,421 spotify_utils 95578 6124957696 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:01:34,422 spotify_utils 95578 6124957696 Spotifyクライアント取得成功
+INFO 2025-01-16 18:02:05,400 views 95578 6141784064 楽曲検索開始: query=ライラ
+INFO 2025-01-16 18:02:05,401 views 95578 6141784064 Spotifyクライアント作成成功
+INFO 2025-01-16 18:02:05,401 views 95578 6141784064 日本市場での検索開始
+INFO 2025-01-16 18:02:05,735 views 95578 6141784064 日本市場での検索結果: 5件
+INFO 2025-01-16 18:02:05,735 views 95578 6141784064 グローバル市場での検索開始
+INFO 2025-01-16 18:02:06,023 views 95578 6141784064 グローバル市場での検索結果: 5件
+INFO 2025-01-16 18:02:06,023 views 95578 6141784064 曲情報: id=7KfRmw1LmnvHxgTxH7YNqZ, name=ライラ, preview_url=False
+INFO 2025-01-16 18:02:06,024 views 95578 6141784064 曲情報: id=78W4mTLIh4qoLu92W4IQhO, name=ライラック, preview_url=False
+INFO 2025-01-16 18:02:06,024 views 95578 6141784064 曲情報: id=1UyXobBFQBAckYnT4qZp0g, name=ヒーローの居ない街, preview_url=False
+INFO 2025-01-16 18:02:06,024 views 95578 6141784064 曲情報: id=72S7iSPFO8BfLQY4T7XOpW, name=ライラ, preview_url=False
+INFO 2025-01-16 18:02:06,024 views 95578 6141784064 曲情報: id=1sUqnqCEKDJDFfiSjiGrVR, name=来来来, preview_url=False
+INFO 2025-01-16 18:02:06,024 views 95578 6141784064 曲情報: id=7KfRmw1LmnvHxgTxH7YNqZ, name=ライラ, preview_url=False
+INFO 2025-01-16 18:02:06,024 views 95578 6141784064 曲情報: id=78W4mTLIh4qoLu92W4IQhO, name=ライラック, preview_url=False
+INFO 2025-01-16 18:02:06,024 views 95578 6141784064 曲情報: id=1UyXobBFQBAckYnT4qZp0g, name=ヒーローの居ない街, preview_url=False
+INFO 2025-01-16 18:02:06,024 views 95578 6141784064 曲情報: id=72S7iSPFO8BfLQY4T7XOpW, name=ライラ, preview_url=False
+INFO 2025-01-16 18:02:06,025 views 95578 6141784064 曲情報: id=1sUqnqCEKDJDFfiSjiGrVR, name=来来来, preview_url=False
+INFO 2025-01-16 18:02:06,025 views 95578 6141784064 最終的な検索結果: 0件
+INFO 2025-01-16 18:02:30,327 spotify_utils 95745 6201749504 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:02:30,495 spotify_utils 95745 6201749504 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:02:30,495 spotify_utils 95745 6201749504 Spotifyクライアント取得成功
+INFO 2025-01-16 18:02:30,495 spotify_utils 95745 6201749504 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 18:02:30,663 spotify_utils 95745 6201749504 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:02:30,663 spotify_utils 95745 6201749504 Spotifyクライアント取得成功
+INFO 2025-01-16 18:02:35,074 views 95801 6133706752 楽曲検索開始: query=ライラ
+INFO 2025-01-16 18:02:35,074 views 95801 6133706752 Spotifyクライアント作成成功
+INFO 2025-01-16 18:02:35,074 views 95801 6133706752 日本市場での検索開始
+INFO 2025-01-16 18:02:35,401 views 95801 6133706752 日本市場での検索結果: 5件
+INFO 2025-01-16 18:02:35,401 views 95801 6133706752 グローバル市場での検索開始
+INFO 2025-01-16 18:02:35,754 views 95801 6133706752 グローバル市場での検索結果: 5件
+INFO 2025-01-16 18:02:35,754 views 95801 6133706752 曲情報: id=7KfRmw1LmnvHxgTxH7YNqZ, name=ライラ, preview_url=False
+INFO 2025-01-16 18:02:35,755 views 95801 6133706752 曲情報: id=78W4mTLIh4qoLu92W4IQhO, name=ライラック, preview_url=False
+INFO 2025-01-16 18:02:35,755 views 95801 6133706752 曲情報: id=1UyXobBFQBAckYnT4qZp0g, name=ヒーローの居ない街, preview_url=False
+INFO 2025-01-16 18:02:35,755 views 95801 6133706752 曲情報: id=72S7iSPFO8BfLQY4T7XOpW, name=ライラ, preview_url=False
+INFO 2025-01-16 18:02:35,755 views 95801 6133706752 曲情報: id=1sUqnqCEKDJDFfiSjiGrVR, name=来来来, preview_url=False
+INFO 2025-01-16 18:02:35,755 views 95801 6133706752 曲情報: id=7KfRmw1LmnvHxgTxH7YNqZ, name=ライラ, preview_url=False
+INFO 2025-01-16 18:02:35,755 views 95801 6133706752 曲情報: id=78W4mTLIh4qoLu92W4IQhO, name=ライラック, preview_url=False
+INFO 2025-01-16 18:02:35,755 views 95801 6133706752 曲情報: id=1UyXobBFQBAckYnT4qZp0g, name=ヒーローの居ない街, preview_url=False
+INFO 2025-01-16 18:02:35,755 views 95801 6133706752 曲情報: id=72S7iSPFO8BfLQY4T7XOpW, name=ライラ, preview_url=False
+INFO 2025-01-16 18:02:35,755 views 95801 6133706752 曲情報: id=1sUqnqCEKDJDFfiSjiGrVR, name=来来来, preview_url=False
+INFO 2025-01-16 18:02:35,756 views 95801 6133706752 最終的な検索結果: 0件
+INFO 2025-01-16 18:04:46,769 spotify_utils 96019 6129070080 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:04:46,974 spotify_utils 96019 6129070080 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:04:46,975 spotify_utils 96019 6129070080 Spotifyクライアント取得成功
+INFO 2025-01-16 18:04:46,975 spotify_utils 96019 6129070080 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 18:04:47,133 spotify_utils 96019 6129070080 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:04:47,133 spotify_utils 96019 6129070080 Spotifyクライアント取得成功
+INFO 2025-01-16 18:04:51,440 views 96019 6180696064 楽曲検索開始: query=ライラ
+INFO 2025-01-16 18:04:51,441 views 96019 6180696064 Spotifyクライアント作成成功
+INFO 2025-01-16 18:04:51,441 views 96019 6180696064 日本市場での検索開始
+INFO 2025-01-16 18:04:51,941 views 96019 6180696064 日本市場での検索結果: 5件
+INFO 2025-01-16 18:04:51,942 views 96019 6180696064 グローバル市場での検索開始
+INFO 2025-01-16 18:04:52,224 views 96019 6180696064 グローバル市場での検索結果: 5件
+INFO 2025-01-16 18:04:52,224 views 96019 6180696064 曲情報: id=7KfRmw1LmnvHxgTxH7YNqZ, name=ライラ, preview_url=False
+INFO 2025-01-16 18:04:52,224 views 96019 6180696064 曲情報: id=78W4mTLIh4qoLu92W4IQhO, name=ライラック, preview_url=False
+INFO 2025-01-16 18:04:52,224 views 96019 6180696064 曲情報: id=1UyXobBFQBAckYnT4qZp0g, name=ヒーローの居ない街, preview_url=False
+INFO 2025-01-16 18:04:52,225 views 96019 6180696064 曲情報: id=72S7iSPFO8BfLQY4T7XOpW, name=ライラ, preview_url=False
+INFO 2025-01-16 18:04:52,225 views 96019 6180696064 曲情報: id=1sUqnqCEKDJDFfiSjiGrVR, name=来来来, preview_url=False
+INFO 2025-01-16 18:04:52,225 views 96019 6180696064 曲情報: id=7KfRmw1LmnvHxgTxH7YNqZ, name=ライラ, preview_url=False
+INFO 2025-01-16 18:04:52,225 views 96019 6180696064 曲情報: id=78W4mTLIh4qoLu92W4IQhO, name=ライラック, preview_url=False
+INFO 2025-01-16 18:04:52,225 views 96019 6180696064 曲情報: id=1UyXobBFQBAckYnT4qZp0g, name=ヒーローの居ない街, preview_url=False
+INFO 2025-01-16 18:04:52,225 views 96019 6180696064 曲情報: id=72S7iSPFO8BfLQY4T7XOpW, name=ライラ, preview_url=False
+INFO 2025-01-16 18:04:52,225 views 96019 6180696064 曲情報: id=1sUqnqCEKDJDFfiSjiGrVR, name=来来来, preview_url=False
+INFO 2025-01-16 18:04:52,225 views 96019 6180696064 最終的な検索結果: 0件
+INFO 2025-01-16 18:06:13,619 spotify_utils 96145 6124679168 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:06:13,818 spotify_utils 96145 6124679168 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:06:13,818 spotify_utils 96145 6124679168 Spotifyクライアント取得成功
+INFO 2025-01-16 18:06:13,818 spotify_utils 96145 6124679168 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 18:06:13,986 spotify_utils 96145 6124679168 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:06:13,986 spotify_utils 96145 6124679168 Spotifyクライアント取得成功
+INFO 2025-01-16 18:08:28,827 spotify_utils 96347 6219100160 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:08:29,032 spotify_utils 96347 6219100160 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:08:29,032 spotify_utils 96347 6219100160 Spotifyクライアント取得成功
+INFO 2025-01-16 18:08:29,032 spotify_utils 96347 6219100160 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 18:08:29,208 spotify_utils 96347 6219100160 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:08:29,209 spotify_utils 96347 6219100160 Spotifyクライアント取得成功
+INFO 2025-01-16 18:09:09,989 spotify_utils 96347 6219100160 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:09:10,183 spotify_utils 96347 6219100160 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:09:10,183 spotify_utils 96347 6219100160 Spotifyクライアント取得成功
+INFO 2025-01-16 18:09:10,183 spotify_utils 96347 6219100160 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 18:09:10,349 spotify_utils 96347 6219100160 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:09:10,349 spotify_utils 96347 6219100160 Spotifyクライアント取得成功
+INFO 2025-01-16 18:11:21,634 spotify_utils 96664 6167965696 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:11:21,910 spotify_utils 96664 6167965696 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:11:21,914 spotify_utils 96664 6167965696 Spotifyクライアント取得成功
+INFO 2025-01-16 18:11:21,916 spotify_utils 96664 6167965696 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 18:11:22,099 spotify_utils 96664 6167965696 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:11:22,099 spotify_utils 96664 6167965696 Spotifyクライアント取得成功
+INFO 2025-01-16 18:11:59,258 spotify_utils 96664 6184792064 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:11:59,436 spotify_utils 96664 6184792064 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:11:59,436 spotify_utils 96664 6184792064 Spotifyクライアント取得成功
+INFO 2025-01-16 18:11:59,436 spotify_utils 96664 6184792064 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 18:11:59,598 spotify_utils 96664 6184792064 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:11:59,598 spotify_utils 96664 6184792064 Spotifyクライアント取得成功
+INFO 2025-01-16 18:12:18,690 spotify_utils 96664 6184792064 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:12:18,851 spotify_utils 96664 6184792064 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:12:18,852 spotify_utils 96664 6184792064 Spotifyクライアント取得成功
+INFO 2025-01-16 18:12:18,852 spotify_utils 96664 6184792064 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 18:12:19,016 spotify_utils 96664 6184792064 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:12:19,016 spotify_utils 96664 6184792064 Spotifyクライアント取得成功
+INFO 2025-01-16 18:14:33,238 spotify_utils 96664 6184792064 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:14:33,430 spotify_utils 96664 6184792064 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:14:33,430 spotify_utils 96664 6184792064 Spotifyクライアント取得成功
+INFO 2025-01-16 18:14:33,430 spotify_utils 96664 6184792064 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 18:14:33,615 spotify_utils 96664 6184792064 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:14:33,616 spotify_utils 96664 6184792064 Spotifyクライアント取得成功
+INFO 2025-01-16 18:16:06,856 spotify_utils 97140 6159953920 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:16:07,070 spotify_utils 97140 6159953920 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:16:07,071 spotify_utils 97140 6159953920 Spotifyクライアント取得成功
+INFO 2025-01-16 18:16:07,071 spotify_utils 97140 6159953920 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 18:16:07,244 spotify_utils 97140 6159953920 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:16:07,244 spotify_utils 97140 6159953920 Spotifyクライアント取得成功
+INFO 2025-01-16 18:16:27,377 views 97140 6211579904 ストーリー作成リクエスト: {'spotify_track_id': '0kdqcbwei4MDWFEX5f33yG', 'mood': 'happy', 'mood_emoji': '😊', 'comment': ''}
+ERROR 2025-01-16 18:16:27,634 views 97140 6211579904 ストーリー作成エラー: MusicStory() got unexpected keyword arguments: 'track_name', 'artist_name', 'album_image_url'
+INFO 2025-01-16 18:18:05,721 spotify_utils 97318 6190526464 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:18:05,983 spotify_utils 97318 6190526464 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:18:05,983 spotify_utils 97318 6190526464 Spotifyクライアント取得成功
+INFO 2025-01-16 18:18:05,983 spotify_utils 97318 6190526464 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 18:18:06,148 spotify_utils 97318 6190526464 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:18:06,148 spotify_utils 97318 6190526464 Spotifyクライアント取得成功
+INFO 2025-01-16 18:18:22,382 views 97318 6242152448 ストーリー作成リクエスト: {'spotify_track_id': '1JdUw14vtWg9Vt4aRfHqwl', 'mood': 'energetic', 'mood_emoji': '⚡️', 'comment': ''}
+ERROR 2025-01-16 18:18:22,557 views 97318 6242152448 ストーリー作成エラー: MusicStory() got unexpected keyword arguments: 'track_name', 'artist_name', 'album_image_url'
+INFO 2025-01-16 18:20:23,310 spotify_utils 97591 6168047616 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:20:23,509 spotify_utils 97591 6168047616 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:20:23,509 spotify_utils 97591 6168047616 Spotifyクライアント取得成功
+INFO 2025-01-16 18:20:23,509 spotify_utils 97591 6168047616 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 18:20:23,663 spotify_utils 97591 6168047616 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:20:23,663 spotify_utils 97591 6168047616 Spotifyクライアント取得成功
+INFO 2025-01-16 18:20:34,209 views 97591 6219673600 ストーリー作成リクエスト: {'spotify_track_id': '78W4mTLIh4qoLu92W4IQhO', 'mood': 'happy', 'mood_emoji': '😊', 'comment': ''}
+INFO 2025-01-16 18:20:34,374 views 97591 6219673600 ストーリー作成成功: id=1
+INFO 2025-01-16 18:20:34,385 spotify_utils 97591 6219673600 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:20:34,552 spotify_utils 97591 6219673600 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:20:34,552 spotify_utils 97591 6219673600 Spotifyクライアント取得成功
+INFO 2025-01-16 18:20:34,552 spotify_utils 97591 6219673600 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 18:20:34,760 spotify_utils 97591 6219673600 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:20:34,760 spotify_utils 97591 6219673600 Spotifyクライアント取得成功
+INFO 2025-01-16 18:25:09,522 spotify_utils 98004 6129823744 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:25:09,708 spotify_utils 98004 6129823744 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:25:09,709 spotify_utils 98004 6129823744 Spotifyクライアント取得成功
+INFO 2025-01-16 18:25:09,709 spotify_utils 98004 6129823744 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 18:25:09,896 spotify_utils 98004 6129823744 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:25:09,900 spotify_utils 98004 6129823744 Spotifyクライアント取得成功
+INFO 2025-01-16 18:26:57,932 spotify_utils 98158 6201159680 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:26:58,100 spotify_utils 98158 6201159680 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:26:58,100 spotify_utils 98158 6201159680 Spotifyクライアント取得成功
+INFO 2025-01-16 18:26:58,100 spotify_utils 98158 6201159680 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 18:26:58,259 spotify_utils 98158 6201159680 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:26:58,259 spotify_utils 98158 6201159680 Spotifyクライアント取得成功
+INFO 2025-01-16 18:27:33,547 views 98285 6189871104 Spotifyデータ取得開始: user=engineering_takumi
+INFO 2025-01-16 18:27:33,547 spotify_utils 98285 6189871104 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:27:33,741 spotify_utils 98285 6189871104 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:27:33,741 spotify_utils 98285 6189871104 Spotifyクライアント取得成功
+INFO 2025-01-16 18:27:33,741 views 98285 6189871104 Spotifyクライアント取得成功
+INFO 2025-01-16 18:27:34,054 views 98285 6189871104 Spotifyデータ取得完了: recently_played=1件, top_tracks=0件
+INFO 2025-01-16 18:27:40,445 views 98285 6189871104 人気アーティストの取得を開始
+INFO 2025-01-16 18:27:40,851 views 98285 6189871104 アーティスト取得: YOASOBI
+INFO 2025-01-16 18:27:40,851 views 98285 6189871104 アーティスト取得: Mrs. GREEN APPLE
+INFO 2025-01-16 18:27:40,851 views 98285 6189871104 アーティスト取得: back number
+INFO 2025-01-16 18:27:40,851 views 98285 6189871104 アーティスト取得: ヨルシカ
+INFO 2025-01-16 18:27:40,851 views 98285 6189871104 アーティスト取得: Vaundy
+INFO 2025-01-16 18:27:40,851 views 98285 6189871104 アーティスト取得: Kenshi Yonezu
+INFO 2025-01-16 18:27:40,851 views 98285 6189871104 アーティスト取得: RADWIMPS
+INFO 2025-01-16 18:27:40,851 views 98285 6189871104 アーティスト取得: OFFICIAL HIGE DANDISM
+INFO 2025-01-16 18:27:40,851 views 98285 6189871104 アーティスト取得: Aimyon
+INFO 2025-01-16 18:27:40,851 views 98285 6189871104 アーティスト取得: Fujii Kaze
+INFO 2025-01-16 18:27:40,851 views 98285 6189871104 人気アーティスト取得完了: 10件
+INFO 2025-01-16 18:27:46,063 views 98285 6206697472 Spotifyデータ取得開始: user=engineering_takumi
+INFO 2025-01-16 18:27:46,063 spotify_utils 98285 6206697472 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:27:46,236 spotify_utils 98285 6206697472 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:27:46,237 spotify_utils 98285 6206697472 Spotifyクライアント取得成功
+INFO 2025-01-16 18:27:46,237 views 98285 6206697472 Spotifyクライアント取得成功
+INFO 2025-01-16 18:27:49,037 views 98331 6167556096 Spotifyデータ取得開始: user=engineering_takumi
+INFO 2025-01-16 18:27:49,037 spotify_utils 98331 6167556096 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:27:49,220 spotify_utils 98331 6167556096 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:27:49,221 spotify_utils 98331 6167556096 Spotifyクライアント取得成功
+INFO 2025-01-16 18:27:49,221 views 98331 6167556096 Spotifyクライアント取得成功
+INFO 2025-01-16 18:27:49,556 views 98331 6167556096 Spotifyデータ取得完了: recently_played=1件, top_tracks=0件
+INFO 2025-01-16 18:27:50,598 views 98331 6167556096 Spotifyデータ取得開始: user=engineering_takumi
+INFO 2025-01-16 18:27:50,598 spotify_utils 98331 6167556096 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:27:50,791 spotify_utils 98331 6167556096 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:27:50,791 spotify_utils 98331 6167556096 Spotifyクライアント取得成功
+INFO 2025-01-16 18:27:50,791 views 98331 6167556096 Spotifyクライアント取得成功
+INFO 2025-01-16 18:27:51,106 views 98331 6167556096 Spotifyデータ取得完了: recently_played=1件, top_tracks=0件
+INFO 2025-01-16 18:27:56,953 spotify_utils 98331 6167556096 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:27:57,118 spotify_utils 98331 6167556096 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:27:57,118 spotify_utils 98331 6167556096 Spotifyクライアント取得成功
+INFO 2025-01-16 18:27:57,118 spotify_utils 98331 6167556096 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 18:27:57,290 spotify_utils 98331 6167556096 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:27:57,290 spotify_utils 98331 6167556096 Spotifyクライアント取得成功
+INFO 2025-01-16 18:28:14,104 spotify_utils 98331 6167556096 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:28:14,299 spotify_utils 98331 6167556096 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:28:14,300 spotify_utils 98331 6167556096 Spotifyクライアント取得成功
+INFO 2025-01-16 18:28:14,300 spotify_utils 98331 6167556096 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 18:28:14,462 spotify_utils 98331 6167556096 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:28:14,462 spotify_utils 98331 6167556096 Spotifyクライアント取得成功
+INFO 2025-01-16 18:31:05,139 spotify_utils 98331 6167556096 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:31:06,377 spotify_utils 98331 6167556096 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:31:06,378 spotify_utils 98331 6167556096 Spotifyクライアント取得成功
+INFO 2025-01-16 18:31:06,378 spotify_utils 98331 6167556096 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 18:31:06,556 spotify_utils 98331 6167556096 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:31:06,556 spotify_utils 98331 6167556096 Spotifyクライアント取得成功
+INFO 2025-01-16 18:31:29,283 views 98331 6167556096 Spotifyデータ取得開始: user=engineering_takumi
+INFO 2025-01-16 18:31:29,284 spotify_utils 98331 6167556096 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:31:29,459 spotify_utils 98331 6167556096 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:31:29,460 spotify_utils 98331 6167556096 Spotifyクライアント取得成功
+INFO 2025-01-16 18:31:29,460 views 98331 6167556096 Spotifyクライアント取得成功
+INFO 2025-01-16 18:31:29,786 views 98331 6167556096 Spotifyデータ取得完了: recently_played=1件, top_tracks=0件
+INFO 2025-01-16 18:32:28,515 spotify_utils 98752 6131576832 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:32:28,744 spotify_utils 98752 6131576832 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:32:28,752 spotify_utils 98752 6131576832 Spotifyクライアント取得成功
+INFO 2025-01-16 18:32:28,753 spotify_utils 98752 6131576832 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 18:32:28,933 spotify_utils 98752 6131576832 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:32:28,933 spotify_utils 98752 6131576832 Spotifyクライアント取得成功
+INFO 2025-01-16 18:33:45,384 spotify_utils 98884 6159904768 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:33:45,627 spotify_utils 98884 6159904768 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:33:45,627 spotify_utils 98884 6159904768 Spotifyクライアント取得成功
+INFO 2025-01-16 18:33:45,627 spotify_utils 98884 6159904768 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 18:33:45,800 spotify_utils 98884 6159904768 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:33:45,800 spotify_utils 98884 6159904768 Spotifyクライアント取得成功
+INFO 2025-01-16 18:35:40,294 spotify_utils 99088 6160363520 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:35:40,509 spotify_utils 99088 6160363520 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:35:40,510 spotify_utils 99088 6160363520 Spotifyクライアント取得成功
+INFO 2025-01-16 18:35:40,510 spotify_utils 99088 6160363520 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 18:35:40,685 spotify_utils 99088 6160363520 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:35:40,686 spotify_utils 99088 6160363520 Spotifyクライアント取得成功
+INFO 2025-01-16 18:36:47,258 spotify_utils 99088 6211989504 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:36:47,482 spotify_utils 99088 6211989504 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:36:47,482 spotify_utils 99088 6211989504 Spotifyクライアント取得成功
+INFO 2025-01-16 18:36:47,482 spotify_utils 99088 6211989504 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 18:36:47,664 spotify_utils 99088 6211989504 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:36:47,664 spotify_utils 99088 6211989504 Spotifyクライアント取得成功
+INFO 2025-01-16 18:37:11,600 views 99088 6211989504 人気アーティストの取得を開始
+INFO 2025-01-16 18:37:11,952 views 99088 6211989504 アーティスト取得: YOASOBI
+INFO 2025-01-16 18:37:11,953 views 99088 6211989504 アーティスト取得: Mrs. GREEN APPLE
+INFO 2025-01-16 18:37:11,953 views 99088 6211989504 アーティスト取得: back number
+INFO 2025-01-16 18:37:11,953 views 99088 6211989504 アーティスト取得: ヨルシカ
+INFO 2025-01-16 18:37:11,953 views 99088 6211989504 アーティスト取得: Vaundy
+INFO 2025-01-16 18:37:11,953 views 99088 6211989504 アーティスト取得: Kenshi Yonezu
+INFO 2025-01-16 18:37:11,953 views 99088 6211989504 アーティスト取得: RADWIMPS
+INFO 2025-01-16 18:37:11,953 views 99088 6211989504 アーティスト取得: OFFICIAL HIGE DANDISM
+INFO 2025-01-16 18:37:11,954 views 99088 6211989504 アーティスト取得: Fujii Kaze
+INFO 2025-01-16 18:37:11,954 views 99088 6211989504 アーティスト取得: Aimyon
+INFO 2025-01-16 18:37:11,954 views 99088 6211989504 人気アーティスト取得完了: 10件
+INFO 2025-01-16 18:37:38,113 views 99088 6195163136 Spotifyデータ取得開始: user=engineering_takumi
+INFO 2025-01-16 18:37:38,113 spotify_utils 99088 6195163136 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:37:38,305 spotify_utils 99088 6195163136 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:37:38,305 spotify_utils 99088 6195163136 Spotifyクライアント取得成功
+INFO 2025-01-16 18:37:38,305 views 99088 6195163136 Spotifyクライアント取得成功
+INFO 2025-01-16 18:37:38,599 views 99088 6195163136 Spotifyデータ取得完了: recently_played=1件, top_tracks=0件
+INFO 2025-01-16 18:37:39,639 views 99088 6195163136 Spotifyデータ取得開始: user=engineering_takumi
+INFO 2025-01-16 18:37:39,639 spotify_utils 99088 6195163136 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:37:39,811 spotify_utils 99088 6195163136 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:37:39,811 spotify_utils 99088 6195163136 Spotifyクライアント取得成功
+INFO 2025-01-16 18:37:39,812 views 99088 6195163136 Spotifyクライアント取得成功
+INFO 2025-01-16 18:37:40,121 views 99088 6195163136 Spotifyデータ取得完了: recently_played=1件, top_tracks=0件
+INFO 2025-01-16 18:55:38,469 spotify_utils 99088 6160363520 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:55:38,674 spotify_utils 99088 6160363520 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:55:38,674 spotify_utils 99088 6160363520 Spotifyクライアント取得成功
+INFO 2025-01-16 18:55:38,674 spotify_utils 99088 6160363520 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 18:55:38,844 spotify_utils 99088 6160363520 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:55:38,845 spotify_utils 99088 6160363520 Spotifyクライアント取得成功
+INFO 2025-01-16 18:55:40,441 spotify_utils 99088 6160363520 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:55:40,625 spotify_utils 99088 6160363520 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:55:40,626 spotify_utils 99088 6160363520 Spotifyクライアント取得成功
+INFO 2025-01-16 18:55:40,626 spotify_utils 99088 6160363520 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 18:55:40,801 spotify_utils 99088 6160363520 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:55:40,802 spotify_utils 99088 6160363520 Spotifyクライアント取得成功
+INFO 2025-01-16 18:55:45,901 views 99088 6160363520 Spotifyデータ取得開始: user=engineering_takumi
+INFO 2025-01-16 18:55:45,901 spotify_utils 99088 6160363520 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 18:55:46,065 spotify_utils 99088 6160363520 アクセストークンの更新に成功しました
+INFO 2025-01-16 18:55:46,065 spotify_utils 99088 6160363520 Spotifyクライアント取得成功
+INFO 2025-01-16 18:55:46,065 views 99088 6160363520 Spotifyクライアント取得成功
+INFO 2025-01-16 18:55:46,414 views 99088 6160363520 Spotifyデータ取得完了: recently_played=1件, top_tracks=0件
+INFO 2025-01-16 19:11:28,237 views 99088 6160363520 Spotifyデータ取得開始: user=engineering_takumi
+INFO 2025-01-16 19:11:28,237 spotify_utils 99088 6160363520 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 19:11:28,435 spotify_utils 99088 6160363520 アクセストークンの更新に成功しました
+INFO 2025-01-16 19:11:28,435 spotify_utils 99088 6160363520 Spotifyクライアント取得成功
+INFO 2025-01-16 19:11:28,435 views 99088 6160363520 Spotifyクライアント取得成功
+INFO 2025-01-16 19:11:28,826 views 99088 6160363520 Spotifyデータ取得完了: recently_played=1件, top_tracks=0件

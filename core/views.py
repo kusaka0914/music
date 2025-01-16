@@ -26,14 +26,38 @@ def home(request):
     # アクティブなストーリーを取得（24時間以内）
     active_stories = MusicStory.objects.filter(
         expires_at__gt=timezone.now()
-    ).select_related('user').order_by('-created_at')
+    ).select_related('user', 'user__profile').order_by('-created_at')
     
     # ストーリーをユーザーごとにグループ化
     stories_by_user = {}
     for story in active_stories:
         if story.user not in stories_by_user:
-            stories_by_user[story.user] = []
-        stories_by_user[story.user].append(story)
+            stories_by_user[story.user] = {
+                'user': {
+                    'username': story.user.username,
+                    'avatar_url': story.user.profile.avatar.url if story.user.profile.avatar else '/static/images/default-avatar.svg',
+                },
+                'stories': [],
+                'has_unviewed': 'false'  # JavaScriptのブーリアン値として文字列を使用
+            }
+        
+        # ストーリーの情報を追加
+        story_info = {
+            'id': story.id,
+            'track_name': story.track_name or '',
+            'artist_name': story.artist_name or '',
+            'album_image_url': story.album_image_url or '',
+            'mood': story.mood or '',
+            'mood_emoji': story.mood_emoji or '',
+            'comment': story.comment or '',
+            'created_at': story.created_at.isoformat(),
+            'viewed': 'true' if request.user.is_authenticated and request.user in story.viewers.all() else 'false'  # JavaScriptのブーリアン値として文字列を使用
+        }
+        stories_by_user[story.user]['stories'].append(story_info)
+        
+        # 未閲覧のストーリーがあるかチェック
+        if request.user.is_authenticated and not story_info['viewed']:
+            stories_by_user[story.user]['has_unviewed'] = 'true'  # JavaScriptのブーリアン値として文字列を使用
     
     # トレンド投稿を取得（過去7日間で最もエンゲージメントの高い投稿）
     week_ago = timezone.now() - timezone.timedelta(days=7)
@@ -43,9 +67,14 @@ def home(request):
         engagement=Count('likes') + Count('comments')
     ).order_by('-engagement')[:5]
     
+    # stories_by_userをリスト形式に変換
+    stories_by_user_list = []
+    for user_data in stories_by_user.values():
+        stories_by_user_list.append(user_data)
+    
     context = {
         'posts': posts,
-        'stories_by_user': stories_by_user,
+        'stories_by_user': stories_by_user_list,
         'trending_posts': trending_posts,
     }
     
@@ -818,17 +847,55 @@ def filter_posts(request):
 
 @login_required
 def create_story(request):
+    """ストーリー作成エンドポイント"""
     if request.method == 'POST':
-        data = json.loads(request.body)
-        form = MusicStoryForm(data)
-        if form.is_valid():
-            story = form.save(commit=False)
-            story.user = request.user
-            story.save()
+        try:
+            data = json.loads(request.body)
+            logger.info(f"ストーリー作成リクエスト: {data}")  # デバッグログ
+            
+            # 必須フィールドの確認
+            if not data.get('spotify_track_id'):
+                return JsonResponse({'status': 'error', 'message': '曲の選択は必須です'}, status=400)
+            if not data.get('mood'):
+                return JsonResponse({'status': 'error', 'message': '気分の選択は必須です'}, status=400)
+            
+            # Spotifyから曲の情報を取得
+            spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(
+                client_id=settings.SPOTIFY_CLIENT_ID,
+                client_secret=settings.SPOTIFY_CLIENT_SECRET
+            ))
+            track_info = spotify.track(data['spotify_track_id'])
+            
+            # 気分に応じたテキストを設定
+            mood_text = {
+                'happy': 'ハッピー',
+                'chill': 'リラックス',
+                'energetic': 'エネルギッシュ',
+                'sad': 'メランコリー',
+                'love': 'ラブ'
+            }.get(data['mood'], '')
+            
+            # ストーリーの作成
+            story = MusicStory.objects.create(
+                user=request.user,
+                spotify_track_id=data['spotify_track_id'],
+                mood=data['mood'],
+                mood_emoji=mood_text,
+                comment=data.get('comment', ''),
+                expires_at=timezone.now() + timezone.timedelta(hours=24)
+            )
+            
+            logger.info(f"ストーリー作成成功: id={story.id}")  # デバッグログ
             return JsonResponse({'status': 'success', 'story_id': story.id})
-        else:
-            return JsonResponse({'status': 'error', 'errors': form.errors}, status=400)
-    return JsonResponse({'status': 'error', 'message': '無効なリクエストです。'}, status=400)
+            
+        except json.JSONDecodeError:
+            logger.error("JSONデコードエラー")
+            return JsonResponse({'status': 'error', 'message': '無効なJSONデータです'}, status=400)
+        except Exception as e:
+            logger.error(f"ストーリー作成エラー: {str(e)}")
+            return JsonResponse({'status': 'error', 'message': 'ストーリーの作成中にエラーが発生しました'}, status=500)
+    
+    return JsonResponse({'status': 'error', 'message': '無効なリクエストです'}, status=400)
 
 @login_required
 def story_reaction(request, story_id):
@@ -871,14 +938,15 @@ def search_track(request):
         results = spotify.search(q=query, type='track', limit=5)
         tracks = results['tracks']['items']
         
-        formatted_tracks = [{
-            'id': track['id'],
-            'name': track['name'],
-            'artist': track['artists'][0]['name'],
-            'image': track['album']['images'][0]['url'] if track['album']['images'] else None,
-            'preview_url': track['preview_url'],
-            'spotify_url': track['external_urls']['spotify']
-        } for track in tracks]
+        formatted_tracks = []
+        for track in tracks:
+            track_data = {
+                'id': track['id'],
+                'title': track['name'],
+                'artist': track['artists'][0]['name'],
+                'imageUrl': track['album']['images'][0]['url'] if track['album']['images'] else '',
+            }
+            formatted_tracks.append(track_data)
         
         return JsonResponse({'tracks': formatted_tracks})
     
@@ -925,3 +993,85 @@ def get_top_tracks(spotify_client):
     except Exception as e:
         logger.error(f"トップトラックの取得に失敗: {str(e)}")
         return []
+
+@login_required
+def search_track_for_story(request):
+    """ストーリー作成用の曲検索エンドポイント"""
+    query = request.GET.get('q', '')
+    if not query:
+        return JsonResponse({'tracks': []})
+    
+    try:
+        spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(
+            client_id=settings.SPOTIFY_CLIENT_ID,
+            client_secret=settings.SPOTIFY_CLIENT_SECRET
+        ))
+        
+        results = spotify.search(q=query, type='track', limit=5)
+        tracks = results['tracks']['items']
+        
+        formatted_tracks = []
+        for track in tracks:
+            track_data = {
+                'id': track['id'],
+                'title': track['name'],
+                'artist': track['artists'][0]['name'],
+                'imageUrl': track['album']['images'][0]['url'] if track['album']['images'] else '',
+            }
+            formatted_tracks.append(track_data)
+        
+        return JsonResponse({'tracks': formatted_tracks})
+    
+    except Exception as e:
+        logger.error(f"楽曲検索中にエラーが発生: {str(e)}")
+        return JsonResponse({'error': '楽曲の検索中にエラーが発生しました。'}, status=500)
+
+@login_required
+def get_story_details(request, story_id):
+    """ストーリーの詳細情報を取得するエンドポイント"""
+    try:
+        story = get_object_or_404(MusicStory, id=story_id)
+        
+        # ストーリーを閲覧済みとしてマーク
+        if request.user not in story.viewers.all():
+            story.viewers.add(request.user)
+        
+        # 前後のストーリーを取得
+        user_stories = MusicStory.objects.filter(
+            user=story.user,
+            expires_at__gt=timezone.now()
+        ).order_by('created_at')
+        
+        story_ids = list(user_stories.values_list('id', flat=True))
+        current_index = story_ids.index(story.id)
+        
+        prev_story_id = story_ids[current_index - 1] if current_index > 0 else None
+        next_story_id = story_ids[current_index + 1] if current_index < len(story_ids) - 1 else None
+        
+        # レスポンスデータの作成
+        data = {
+            'id': story.id,
+            'user': {
+                'username': story.user.username,
+                'avatar_url': story.user.profile.avatar.url if story.user.profile.avatar else '/static/images/default-avatar.svg',
+            },
+            'track_name': story.track_name or '',
+            'artist_name': story.artist_name or '',
+            'album_image_url': story.album_image_url or '',
+            'spotify_track_id': story.spotify_track_id or '',
+            'mood': story.mood or '',
+            'mood_emoji': story.mood_emoji or '',
+            'comment': story.comment or '',
+            'created_at': story.created_at.isoformat(),
+            'expires_at': story.expires_at.isoformat(),
+            'viewers_count': story.viewers.count(),
+            'prev_story_id': prev_story_id,
+            'next_story_id': next_story_id,
+            'is_own_story': 'true' if request.user == story.user else 'false'  # JavaScriptのブーリアン値として文字列を使用
+        }
+        
+        return JsonResponse({'status': 'success', 'story': data})
+        
+    except Exception as e:
+        logger.error(f"ストーリー詳細の取得に失敗: {str(e)}")
+        return JsonResponse({'status': 'error', 'message': 'ストーリーの取得に失敗しました'}, status=500)
