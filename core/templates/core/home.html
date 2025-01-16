@@ -29,18 +29,29 @@
                     <i class="bi bi-house-fill"></i>
                     <span>ホーム</span>
                 </a>
-                <a href="{% url 'core:profile' user.username %}" class="nav-item">
-                    <i class="bi bi-person-fill"></i>
-                    <span>プロフィール</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="bi bi-music-note-list"></i>
-                    <span>プレイリスト</span>
-                </a>
-                <a href="{% url 'core:edit_music_taste' %}" class="nav-item">
-                    <i class="bi bi-sliders"></i>
-                    <span>音楽の好み</span>
-                </a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'core:profile' user.username %}" class="nav-item">
+                        <i class="bi bi-person-fill"></i>
+                        <span>プロフィール</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="bi bi-music-note-list"></i>
+                        <span>プレイリスト</span>
+                    </a>
+                    <a href="{% url 'core:edit_music_taste' %}" class="nav-item">
+                        <i class="bi bi-sliders"></i>
+                        <span>音楽の好み</span>
+                    </a>
+                {% else %}
+                    <a href="{% url 'core:login' %}" class="nav-item">
+                        <i class="bi bi-box-arrow-in-right"></i>
+                        <span>ログイン</span>
+                    </a>
+                    <a href="{% url 'core:register' %}" class="nav-item">
+                        <i class="bi bi-person-plus"></i>
+                        <span>新規登録</span>
+                    </a>
+                {% endif %}
             </nav>
 
             {% if not user.profile.spotify_connected %}
@@ -164,27 +175,22 @@
                 </div>
             </div>
 
-            <div class="recommended-users">
+            <!-- おすすめユーザー -->
+            {% if user.is_authenticated and recommended_users %}
+            <div class="recommended-users-section">
                 <h3>おすすめユーザー</h3>
-                {% for rec in recommended_users %}
-                    <div class="recommended-user">
-                        <div class="user-info">
-                            {% if rec.user.profile.image %}
-                                <img src="{{ rec.user.profile.image.url }}" alt="{{ rec.user.username }}">
-                            {% else %}
-                                <img src="{% static 'images/default-avatar.svg' %}" alt="{{ rec.user.username }}">
-                            {% endif %}
-                            <div class="user-details">
-                                <a href="{% url 'core:profile' rec.user.username %}">{{ rec.user.username }}</a>
-                                <span class="compatibility">音楽の相性: {{ rec.compatibility_score }}%</span>
-                            </div>
+                <div class="user-grid">
+                    {% for recommendation in recommended_users %}
+                        <div class="user-card">
+                            <img src="{{ recommendation.user.profile.avatar.url|default:'/static/images/default-avatar.svg' }}" alt="{{ recommendation.user.username }}">
+                            <h4>{{ recommendation.user.username }}</h4>
+                            <p>音楽の相性: {{ recommendation.compatibility_score }}%</p>
+                            <a href="{% url 'core:profile' recommendation.user.username %}" class="spotify-button">プロフィールを見る</a>
                         </div>
-                        <button class="follow-button" data-username="{{ rec.user.username }}">
-                            フォローする
-                        </button>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
+            {% endif %}
         </div>
     </div>
 </div>

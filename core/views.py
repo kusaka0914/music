@@ -7,8 +7,8 @@ from django.db.models import Q, Count
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.conf import settings
-from .models import MusicPost, MusicStory, Comment, Profile, MusicTaste
-from .forms import MusicPostForm, MusicStoryForm, CommentForm, MusicTasteForm, ProfileEditForm, MusicStoryForm,UserLoginForm,UserRegisterForm
+from .models import MusicPost, MusicStory, Comment, Profile, MusicTaste,Playlist,Notification
+from .forms import MusicPostForm, MusicStoryForm, CommentForm, MusicTasteForm, ProfileEditForm, MusicStoryForm,UserLoginForm,UserRegisterForm,PlaylistForm
 from .spotify_utils import get_spotify_client
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials, SpotifyOAuth
@@ -18,7 +18,7 @@ from django.contrib.auth import login, logout
 
 logger = logging.getLogger(__name__)
 
-@login_required
+
 def home(request):
     # 通常の投稿を取得
     posts = MusicPost.objects.select_related('user', 'user__profile').prefetch_related('likes', 'comments').order_by('-created_at')
@@ -43,30 +43,30 @@ def home(request):
         engagement=Count('likes') + Count('comments')
     ).order_by('-engagement')[:5]
     
-    # おすすめユーザーを取得
-    recommended_users = []
-    
-    potential_users = User.objects.exclude(
-        Q(id=request.user.id) | 
-        Q(id__in=request.user.profile.following.all())
-    ).select_related('profile')[:5]
-    
-    for user in potential_users:
-        compatibility_score = calculate_music_compatibility(request.user.profile, user.profile)
-        recommended_users.append({
-            'user': user,
-            'compatibility_score': compatibility_score
-        })
-    
-    # 互換性スコアでソート
-    recommended_users.sort(key=lambda x: x['compatibility_score'], reverse=True)
-    
     context = {
         'posts': posts,
         'stories_by_user': stories_by_user,
         'trending_posts': trending_posts,
-        'recommended_users': recommended_users[:3],  # 上位3人のみを表示
     }
+    
+    # ログインしているユーザーの場合のみ、おすすめユーザーを追加
+    if request.user.is_authenticated:
+        recommended_users = []
+        potential_users = User.objects.exclude(
+            Q(id=request.user.id) | 
+            Q(id__in=request.user.profile.following.all())
+        ).select_related('profile')[:5]
+        
+        for user in potential_users:
+            compatibility_score = calculate_music_compatibility(request.user.profile, user.profile)
+            recommended_users.append({
+                'user': user,
+                'compatibility_score': compatibility_score
+            })
+        
+        # 互換性スコアでソート
+        recommended_users.sort(key=lambda x: x['compatibility_score'], reverse=True)
+        context['recommended_users'] = recommended_users[:3]  # 上位3人のみを表示
     
     return render(request, 'core/home.html', context)
 
