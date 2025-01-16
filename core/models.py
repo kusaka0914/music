@@ -158,19 +158,6 @@ class Notification(models.Model):
         ordering = ['-created_at']
 
 class MusicTaste(models.Model):
-    GENRE_CHOICES = [
-        ('pop', 'ポップ'),
-        ('rock', 'ロック'),
-        ('jazz', 'ジャズ'),
-        ('classical', 'クラシック'),
-        ('hiphop', 'ヒップホップ'),
-        ('electronic', 'エレクトロニック'),
-        ('rnb', 'R&B'),
-        ('metal', 'メタル'),
-        ('folk', 'フォーク'),
-        ('indie', 'インディー'),
-    ]
-
     MOOD_CHOICES = [
         ('energetic', '元気'),
         ('calm', '穏やか'),
@@ -183,8 +170,10 @@ class MusicTaste(models.Model):
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='music_taste')
-    genres = models.JSONField(default=dict)  # 好きなジャンルとその強度
-    moods = models.JSONField(default=dict)   # 好きな曲調とその強度
+    genres = models.JSONField(default=dict, blank=True)  # 好きなジャンルとその強度
+    moods = models.JSONField(default=dict, blank=True)   # 好きな曲調とその強度
+    spotify_genres = models.JSONField(default=list, blank=True)  # Spotifyから取得したジャンル
+    favorite_artists = models.JSONField(default=list, blank=True)  # お気に入りアーティスト
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -202,6 +191,12 @@ class MusicTaste(models.Model):
         """最も好きな曲調を強度順に取得"""
         moods = self.moods.get('preferences', {})
         return dict(sorted(moods.items(), key=lambda x: x[1], reverse=True)[:5])
+
+    def update_spotify_genres(self):
+        """Spotifyからジャンルを更新"""
+        from .spotify_utils import get_spotify_genres
+        self.spotify_genres = get_spotify_genres()
+        self.save()
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

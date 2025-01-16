@@ -115,10 +115,6 @@ body {
     color: var(--spotify-text-secondary);
 }
 
-main {
-    padding: 2rem 0;
-}
-
 .card {
     background-color: var(--spotify-dark-gray);
     border-radius: 8px;

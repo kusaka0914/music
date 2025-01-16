@@ -3,24 +3,28 @@
 
 {% block content %}
 <div class="spotify-container">
-    <div class="sidebar">
-        <h2 class="spotify-title">音楽の好みを編集</h2>
-        <div class="genre-mood-section">
-            <div class="form-group">
-                <label for="id_top_genres">好きなジャンル</label>
-                {{ form.top_genres }}
-            </div>
-            
-            <div class="form-group">
-                <label for="id_top_moods">好きな雰囲気</label>
-                {{ form.top_moods }}
+    <form method="post" class="spotify-form">
+        {% csrf_token %}
+        <div class="sidebar">
+            <h2 class="spotify-title">音楽の好みを編集</h2>
+            <div class="genre-mood-section">
+                <div class="form-group">
+                    <label for="id_genres">好きなジャンル</label>
+                    <div class="checkbox-group">
+                        {{ form.genres }}
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_moods">好きな曲調</label>
+                    <div class="checkbox-group">
+                        {{ form.moods }}
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="main-content">
-        <form method="post" class="spotify-form">
-            {% csrf_token %}
+        <div class="main-content">
             {{ form.non_field_errors }}
             
             <!-- アーティスト検索セクション -->
@@ -36,40 +40,54 @@
             <div class="selected-artists-section">
                 <h3>選択したアーティスト</h3>
                 <div id="selected-artists" class="selected-artists-grid"></div>
-                {{ form.favorite_artists.as_hidden }}
+                {{ form.favorite_artists }}
             </div>
 
             <!-- 人気のアーティスト -->
             <div class="recommendation-section">
                 <h3>人気のアーティスト</h3>
                 <div id="popular-artists" class="artist-grid"></div>
+                <button type="button" id="load-more-popular" class="load-more-button">もっと見る</button>
             </div>
 
             <!-- おすすめのアーティスト -->
             <div class="recommendation-section">
                 <h3>あなたにおすすめ</h3>
                 <div id="recommended-artists" class="artist-grid"></div>
+                <button type="button" id="load-more-recommended" class="load-more-button">もっと見る</button>
             </div>
 
-            <button type="submit" class="spotify-button">保存</button>
-        </form>
-    </div>
+            <button type="submit" class="spotify-button submit-button">保存</button>
+        </div>
+    </form>
 </div>
 
 <style>
+
+#id_favorite_artists {
+    display: none;
+}
+
 .spotify-container {
-    display: flex;
     min-height: 100vh;
     background: #121212;
     color: #fff;
+    width: 100%;
+    position: relative;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
 }
 
 .sidebar {
     width: 300px;
-    background: #000;
+    background: #121212;
     padding: 2rem;
     position: fixed;
     height: 100vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+    z-index: 1;
 }
 
 .main-content {
@@ -77,6 +95,9 @@
     margin-left: 300px;
     padding: 2rem;
     background: linear-gradient(to bottom, #535353, #121212);
+    min-height: 100vh;
+    box-sizing: border-box;
+    width: calc(100% - 300px);
 }
 
 .spotify-title {
@@ -98,6 +119,35 @@
     display: block;
     margin-bottom: 0.5rem;
     color: #b3b3b3;
+    font-size: 1.1rem;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 260px;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #fff;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.checkbox-group label:hover {
+    background: #282828;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #1db954;
 }
 
 .spotify-search {
@@ -136,6 +186,8 @@
     border-radius: 8px;
     transition: background-color 0.3s;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
 }
 
 .artist-card:hover {
@@ -257,34 +309,157 @@
 ::-webkit-scrollbar-thumb:hover {
     background: #686868;
 }
+
+.load-more-button {
+    background: transparent;
+    color: #1db954;
+    border: 1px solid #1db954;
+    padding: 0.8rem 2rem;
+    border-radius: 500px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin: 2rem auto;
+    display: block;
+    width: fit-content;
+    position: relative;
+}
+
+.load-more-button:hover {
+    background: #1db954;
+    color: #fff;
+    transform: scale(1.02);
+}
+
+.load-more-button.loading {
+    color: transparent;
+    pointer-events: none;
+}
+
+.load-more-button.loading::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin: -10px 0 0 -10px;
+    border: 2px solid transparent;
+    border-top-color: #1db954;
+    border-right-color: #1db954;
+    border-radius: 50%;
+    animation: button-loading-spinner 0.8s linear infinite;
+}
+
+@keyframes button-loading-spinner {
+    from {
+        transform: rotate(0turn);
+    }
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+.spotify-button.added {
+    background: #282828;
+    color: #b3b3b3;
+    cursor: not-allowed;
+    border: none;
+}
+
+.spotify-button.added:hover {
+    background: #282828;
+    transform: none;
+}
+
+.artist-card .spotify-button {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+}
 </style>
 
 <script>
 let debounceTimeout;
+let popularPage = 1;
+let recommendedPage = 1;
+let isLoadingPopular = false;
+let isLoadingRecommended = false;
 
 // 初期アーティストの読み込みと表示
 document.addEventListener('DOMContentLoaded', function() {
+    // アーティストの初期化
     const textarea = document.getElementById('id_favorite_artists');
-    const artists = textarea.value.split('\n').filter(a => a.trim());
-    artists.forEach(artist => addArtistChip(artist));
+    if (textarea.value) {
+        try {
+            const artists = JSON.parse(textarea.value);
+            if (Array.isArray(artists)) {
+                artists.forEach(artist => {
+                    if (artist && artist.name) {
+                        addArtistChip(artist.name, artist.image);
+                    }
+                });
+            }
+        } catch (e) {
+            console.error('Error parsing artists:', e);
+        }
+    }
+    
+    // ジャンルの初期化
+    const genreInputs = document.querySelectorAll('#id_genres input[type="checkbox"]');
+    genreInputs.forEach(input => {
+        const label = input.parentElement;
+        if (input.checked) {
+            label.style.background = '#282828';
+        }
+    });
+
+    // 曲調の初期化
+    const moodInputs = document.querySelectorAll('#id_moods input[type="checkbox"]');
+    moodInputs.forEach(input => {
+        const label = input.parentElement;
+        if (input.checked) {
+            label.style.background = '#282828';
+        }
+    });
+
+    // チェックボックスのクリックイベント
+    const allCheckboxes = document.querySelectorAll('.checkbox-group input[type="checkbox"]');
+    allCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const label = this.parentElement;
+            if (this.checked) {
+                label.style.background = '#282828';
+            } else {
+                label.style.background = 'transparent';
+            }
+        });
+    });
     
     loadPopularArtists();
     loadRecommendedArtists();
+
+    const form = document.querySelector('.spotify-form');
+    
+    form.addEventListener('submit', function(e) {
+        // フォームのデフォルトの送信をキャンセル
+        e.preventDefault();
+        
+        // 保存ボタンがクリックされた場合のみフォームを送信
+        if (e.submitter && e.submitter.type === 'submit' && !e.submitter.classList.contains('spotify-button')) {
+            this.submit();
+        }
+    });
 });
 
 // アーティストチップを追加する関数
-function addArtistChip(artistName, imageUrl = null) {
+function addArtistChip(artistName, artistImage) {
     const selectedArtists = document.getElementById('selected-artists');
-    const chips = Array.from(selectedArtists.children);
-    
-    if (chips.some(chip => chip.querySelector('.artist-name').textContent === artistName)) {
-        return;
-    }
-    
     const chip = document.createElement('div');
     chip.className = 'artist-chip';
     chip.innerHTML = `
-        ${imageUrl ? `<img src="${imageUrl}" alt="${artistName}">` : ''}
+        <img src="${artistImage || '/static/images/default-artist.png'}" alt="${artistName}">
         <span class="artist-name">${artistName}</span>
         <span class="remove-artist">&times;</span>
     `;
@@ -292,6 +467,15 @@ function addArtistChip(artistName, imageUrl = null) {
     chip.querySelector('.remove-artist').addEventListener('click', function() {
         chip.remove();
         updateHiddenInput();
+        // すべてのカードのボタンを「追加する」状態に戻す
+        document.querySelectorAll('.artist-card').forEach(card => {
+            if (card.querySelector('h4').textContent === artistName) {
+                const button = card.querySelector('.spotify-button');
+                button.textContent = '追加する';
+                button.classList.remove('added');
+                button.disabled = false;
+            }
+        });
     });
     
     selectedArtists.appendChild(chip);
@@ -301,52 +485,126 @@ function addArtistChip(artistName, imageUrl = null) {
 // 非表示のテキストエリアを更新する関数
 function updateHiddenInput() {
     const chips = document.getElementById('selected-artists').children;
-    const artists = Array.from(chips).map(chip => 
-        chip.querySelector('.artist-name').textContent
-    );
-    document.getElementById('id_favorite_artists').value = artists.join('\n');
+    const artists = Array.from(chips).map(chip => ({
+        name: chip.querySelector('.artist-name').textContent,
+        image: chip.querySelector('img').src
+    }));
+    document.getElementById('id_favorite_artists').value = JSON.stringify(artists);
 }
 
 // アーティストカードを作成する関数
 function createArtistCard(artist, container) {
+    const selectedArtists = Array.from(document.getElementById('selected-artists').children);
+    const isAdded = selectedArtists.some(chip => 
+        chip.querySelector('.artist-name').textContent === artist.name
+    );
+
     const card = document.createElement('div');
     card.className = 'artist-card';
     card.innerHTML = `
         <img src="${artist.image || '/static/images/default-artist.png'}" alt="${artist.name}">
         <h4>${artist.name}</h4>
-        <button class="spotify-button" style="width: 100%; padding: 0.5rem;">追加</button>
+        <button class="spotify-button ${isAdded ? 'added' : ''}" ${isAdded ? 'disabled' : ''}>
+            ${isAdded ? '追加済み' : '追加する'}
+        </button>
     `;
-    
-    card.querySelector('button').addEventListener('click', function() {
-        addArtistChip(artist.name, artist.image);
-    });
-    
+
+    if (!isAdded) {
+        card.querySelector('.spotify-button').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/edit-music-taste/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({
+                        action: 'add_artist',
+                        artist: artist.name,
+                        image: artist.image
+                    })
+                });
+
+                if (response.ok) {
+                    const button = card.querySelector('.spotify-button');
+                    button.textContent = '追加済み';
+                    button.classList.add('added');
+                    button.disabled = true;
+                    addArtistChip(artist.name, artist.image);
+                }
+            } catch (error) {
+                console.error('Error adding artist:', error);
+            }
+        });
+    }
+
     container.appendChild(card);
 }
 
 // 人気のアーティストを読み込む関数
-async function loadPopularArtists() {
+async function loadPopularArtists(page = 1) {
+    if (isLoadingPopular) return;
+    
     try {
-        const response = await fetch('/popular-artists/');
+        isLoadingPopular = true;
+        const loadMoreBtn = document.getElementById('load-more-popular');
+        loadMoreBtn.classList.add('loading');
+        
+        const response = await fetch(`/popular-artists/?page=${page}`);
         const data = await response.json();
         const container = document.getElementById('popular-artists');
-        container.innerHTML = '';
+        
+        if (page === 1) {
+            container.innerHTML = '';
+        }
+        
         data.artists.forEach(artist => createArtistCard(artist, container));
+        
+        // データがない場合のみボタンを非表示
+        if (data.artists.length === 0) {
+            loadMoreBtn.style.display = 'none';
+        } else {
+            loadMoreBtn.style.display = 'block';
+        }
     } catch (error) {
         console.error('Error loading popular artists:', error);
+    } finally {
+        isLoadingPopular = false;
+        document.getElementById('load-more-popular').classList.remove('loading');
     }
 }
 
 // おすすめのアーティストを読み込む関数
-async function loadRecommendedArtists() {
+async function loadRecommendedArtists(page = 1) {
+    if (isLoadingRecommended) return;
+    
     try {
-        const response = await fetch('/recommended-artists/');
+        isLoadingRecommended = true;
+        const loadMoreBtn = document.getElementById('load-more-recommended');
+        loadMoreBtn.classList.add('loading');
+        
+        const response = await fetch(`/recommended-artists/?page=${page}`);
         const data = await response.json();
         const container = document.getElementById('recommended-artists');
-        container.innerHTML = '';
+        
+        if (page === 1) {
+            container.innerHTML = '';
+        }
+        
         data.artists.forEach(artist => createArtistCard(artist, container));
+        
+        // データがない場合のみボタンを非表示
+        if (data.artists.length === 0) {
+            loadMoreBtn.style.display = 'none';
+        } else {
+            loadMoreBtn.style.display = 'block';
+        }
     } catch (error) {
         console.error('Error loading recommended artists:', error);
+    } finally {
+        isLoadingRecommended = false;
+        document.getElementById('load-more-recommended').classList.remove('loading');
     }
 }
 
@@ -396,6 +654,63 @@ document.addEventListener('click', function(e) {
     if (!suggestions.contains(e.target) && !searchInput.contains(e.target)) {
         suggestions.innerHTML = '';
     }
+});
+
+// フォームのサブミットイベントを追加
+document.querySelector('.spotify-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // アーティスト追加ボタンの場合は処理を終了
+    if (e.submitter && e.submitter.classList.contains('spotify-button') && !e.submitter.classList.contains('submit-button')) {
+        return;
+    }
+    
+    const submitButton = this.querySelector('.submit-button');
+    submitButton.disabled = true;
+    submitButton.textContent = '保存中...';
+    
+    // フォームデータの準備
+    const formData = new FormData(this);
+    
+    // 非同期でフォームを送信
+    fetch(window.location.href, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            submitButton.textContent = '保存完了';
+            submitButton.style.background = '#282828';
+            setTimeout(() => {
+                window.location.href = "{% url 'core:profile' username=user.username %}";
+            }, 1000);
+        } else {
+            submitButton.textContent = '保存';
+            submitButton.disabled = false;
+            throw new Error('保存に失敗しました');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        submitButton.textContent = '保存';
+        submitButton.disabled = false;
+    });
+});
+
+// もっと見るボタンのイベントリスナー
+document.getElementById('load-more-popular').addEventListener('click', function(e) {
+    e.preventDefault();  // デフォルトの送信を防ぐ
+    popularPage++;
+    loadPopularArtists(popularPage);
+});
+
+document.getElementById('load-more-recommended').addEventListener('click', function(e) {
+    e.preventDefault();  // デフォルトの送信を防ぐ
+    recommendedPage++;
+    loadRecommendedArtists(recommendedPage);
 });
 </script>
 {% endblock %} 

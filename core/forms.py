@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Profile, MusicPost, Comment, Playlist, MusicTaste
+import json
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
@@ -68,8 +69,23 @@ class PlaylistForm(forms.ModelForm):
         }
 
 class MusicTasteForm(forms.ModelForm):
+    GENRE_CHOICES = [
+        ('j-pop', 'J-POP'),
+        ('j-rock', 'J-ROCK'),
+        ('anime', 'アニメ'),
+        ('pop', 'POP'),
+        ('rock', 'ROCK'),
+        ('hip-hop', 'HIP-HOP'),
+        ('r&b', 'R&B'),
+        ('jazz', 'JAZZ'),
+        ('classical', 'クラシック'),
+        ('electronic', 'エレクトロニック'),
+        ('folk', 'フォーク'),
+        ('indie', 'インディー'),
+    ]
+
     genres = forms.MultipleChoiceField(
-        choices=MusicTaste.GENRE_CHOICES,
+        choices=GENRE_CHOICES,
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
@@ -80,23 +96,28 @@ class MusicTasteForm(forms.ModelForm):
     )
     favorite_artists = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 3}),
-        help_text='アーティスト名をカンマ区切りで入力してください',
         required=False
     )
 
     class Meta:
         model = MusicTaste
-        fields = ['genres', 'moods']
+        fields = ['genres', 'moods', 'favorite_artists']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         instance = kwargs.get('instance')
         if instance:
-            self.fields['genres'].initial = [k for k, v in instance.genres.get('preferences', {}).items() if v > 0]
-            self.fields['moods'].initial = [k for k, v in instance.moods.get('preferences', {}).items() if v > 0]
-            self.fields['favorite_artists'].initial = ', '.join(
-                instance.user.profile.favorite_artists.get('artists', [])
-            )
+            # ジャンルの初期値を設定
+            genres_dict = instance.genres.get('preferences', {})
+            self.initial['genres'] = [k for k, v in genres_dict.items() if v > 0]
+            
+            # ムードの初期値を設定
+            moods_dict = instance.moods.get('preferences', {})
+            self.initial['moods'] = [k for k, v in moods_dict.items() if v > 0]
+            
+            # お気に入りアーティストの初期値を設定
+            if instance.favorite_artists:
+                self.initial['favorite_artists'] = json.dumps(instance.favorite_artists)
 
     def save(self, commit=True):
         instance = super().save(commit=False)
@@ -109,16 +130,17 @@ class MusicTasteForm(forms.ModelForm):
         moods_dict = {mood: 1 for mood in self.cleaned_data['moods']}
         instance.moods = {'preferences': moods_dict}
         
+        # お気に入りアーティストの保存
+        artists_data = self.cleaned_data['favorite_artists']
+        if artists_data:
+            try:
+                instance.favorite_artists = json.loads(artists_data)
+            except json.JSONDecodeError:
+                instance.favorite_artists = []
+        else:
+            instance.favorite_artists = []
+        
         if commit:
             instance.save()
-            
-            # お気に入りアーティストの保存
-            artists = [
-                artist.strip()
-                for artist in self.cleaned_data['favorite_artists'].split(',')
-                if artist.strip()
-            ]
-            instance.user.profile.favorite_artists = {'artists': artists}
-            instance.user.profile.save()
-            
+        
         return instance 

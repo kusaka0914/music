@@ -1,151 +1,746 @@
 {% extends 'core/base.html' %}
 {% load static %}
+{% load custom_filters %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <div class="text-center mb-3">
-                        <img src="{% static 'images/default-avatar.png' %}" alt="{{ profile_user.username }}" class="rounded-circle" width="150">
-                    </div>
-                    <h2 class="card-title text-center">{{ profile_user.username }}</h2>
-                    <p class="card-text text-center">{{ profile_user.profile.bio|default:"自己紹介文がありません" }}</p>
-                    
-                    <div class="d-flex justify-content-around text-center mb-3">
-                        <div>
-                            <h5>投稿</h5>
-                            <p>{{ profile_user.musicpost_set.count }}</p>
-                        </div>
-                        <div>
-                            <h5>フォロワー</h5>
-                            <p>{{ profile_user.profile.followers.count }}</p>
-                        </div>
-                        <div>
-                            <h5>フォロー中</h5>
-                            <p>{{ profile_user.following.count }}</p>
-                        </div>
-                    </div>
+<div class="spotify-container">
+    <div class="profile-header">
+        <div class="profile-info">
+            <img src="{{ profile_user.profile.avatar.url|default:'/static/images/default-avatar.png' }}" alt="{{ profile_user.username }}" class="profile-avatar">
+            <div class="profile-details">
+                <h1>{{ profile_user.username }}</h1>
+                {% if profile_user.profile.bio %}
+                    <p class="bio">{{ profile_user.profile.bio }}</p>
+                {% endif %}
+                <div class="profile-stats">
+                    <span class="stat">
+                        <strong>{{ profile_user.musicpost_set.count|default:0 }}</strong> 投稿
+                    </span>
+                    <span class="stat">
+                        <strong>{{ profile_user.profile.followers.count|default:0 }}</strong> フォロワー
+                    </span>
+                    <span class="stat">
+                        <strong>{{ profile_user.profile.following.count|default:0 }}</strong> フォロー中
+                    </span>
+                </div>
+                {% if user != profile_user %}
+                    <button class="follow-button {% if user in profile_user.profile.followers.all %}following{% endif %}"
+                            data-username="{{ profile_user.username }}">
+                        {% if user in profile_user.profile.followers.all %}
+                            フォロー中
+                        {% else %}
+                            フォローする
+                        {% endif %}
+                    </button>
+                {% else %}
+                    <a href="{% url 'core:profile_edit' %}" class="edit-profile-button">プロフィールを編集</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 
-                    {% if user == profile_user %}
-                        <a href="{% url 'core:profile_edit' %}" class="btn btn-primary btn-block">プロフィールを編集</a>
-                    {% else %}
-                        <form action="{% url 'core:follow_user' profile_user.username %}" method="post" class="text-center">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-primary">
-                                {% if user in profile_user.profile.followers.all %}
-                                    フォロー解除
-                                {% else %}
-                                    フォローする
-                                {% endif %}
-                            </button>
-                        </form>
+    <div class="profile-content">
+        {% if user != profile_user and user.is_authenticated %}
+            <div class="compatibility-section">
+                <div class="section-header">
+                    <h2>音楽の相性</h2>
+                </div>
+                <div class="compatibility-content">
+                    <div class="compatibility-score">
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: {{ compatibility_score|default:0 }}%">
+                                <span class="score-text">{{ compatibility_score|default:0 }}%</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% if common_genres or common_artists %}
+                        <div class="common-tastes">
+                            {% if common_genres %}
+                                <div class="common-item">
+                                    <h3>共通のジャンル</h3>
+                                    <div class="tag-container">
+                                        {% for genre in common_genres %}
+                                            <span class="tag">{{ genre }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if common_artists %}
+                                <div class="common-item">
+                                    <h3>共通のアーティスト</h3>
+                                    <div class="tag-container">
+                                        {% for artist in common_artists %}
+                                            <span class="tag">{{ artist.name }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
                     {% endif %}
                 </div>
+            </div>
+        {% endif %}
+
+        <div class="music-taste-section">
+            <div class="section-header">
+                <h2>音楽の好み</h2>
+                {% if user == profile_user %}
+                    <a href="{% url 'core:edit_music_taste' %}" class="edit-button">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                {% endif %}
+            </div>
+            
+            {% if profile_user.music_taste %}
+                <div class="taste-grid">
+                    {% if profile_user.music_taste.top_genres %}
+                        <div class="taste-card genres">
+                            <h3>好きなジャンル</h3>
+                            <div class="tag-container">
+                                {% for genre, strength in profile_user.music_taste.top_genres.items %}
+                                    <span class="tag">{{ genre }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if profile_user.music_taste.top_moods %}
+                        <div class="taste-card moods">
+                            <h3>好きな曲調</h3>
+                            <div class="tag-container">
+                                {% for mood, strength in profile_user.music_taste.top_moods.items %}
+                                    <span class="tag">{{ mood }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            {% else %}
+                <p class="no-taste">音楽の好みが設定されていません</p>
+            {% endif %}
+        </div>
+
+        {% if profile_user.music_taste.favorite_artists %}
+        <div class="favorite-artists-section">
+            <div class="section-header">
+                <h2>好きなアーティスト</h2>
+            </div>
+            <div class="artists-grid">
+                {% for artist in profile_user.music_taste.favorite_artists %}
+                    <div class="artist-card">
+                        <div class="artist-image">
+                            <img src="{{ artist.image|default:'/static/images/default-artist.png' }}" alt="{{ artist.name }}">
+                        </div>
+                        <div class="artist-info">
+                            <h3>{{ artist.name }}</h3>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="playlists-section">
+            <div class="section-header">
+                <h2>プレイリスト</h2>
+                {% if user == profile_user %}
+                    <a href="{% url 'core:create_playlist' %}" class="create-playlist-button">
+                        <i class="bi bi-plus-lg"></i> 新規作成
+                    </a>
+                {% endif %}
+            </div>
+            <div class="playlists-grid">
+                {% for playlist in profile_user.playlist_set.all %}
+                    {% if playlist.is_public or user == profile_user %}
+                        <div class="playlist-card" data-playlist-id="{{ playlist.id }}">
+                            <div class="playlist-cover">
+                                {% if playlist.posts.first.image %}
+                                    <img src="{{ playlist.posts.first.image.url }}" alt="{{ playlist.title }}">
+                                {% else %}
+                                    <div class="default-cover">
+                                        <i class="bi bi-music-note-list"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="playlist-info">
+                                <h3>{{ playlist.title }}</h3>
+                                <p class="playlist-meta">
+                                    {{ playlist.posts.count }} 曲
+                                    {% if not playlist.is_public %}
+                                        <span class="private-badge">
+                                            <i class="bi bi-lock-fill"></i>
+                                        </span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% empty %}
+                    <p class="no-playlists">プレイリストがありません</p>
+                {% endfor %}
             </div>
         </div>
 
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-body">
-                    <h3 class="card-title">投稿一覧</h3>
-                    {% if posts %}
-                        {% for post in posts %}
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ post.title }}</h5>
-                                    <h6 class="card-subtitle mb-2 text-muted">{{ post.artist }}</h6>
-                                    <p class="card-text">{{ post.description }}</p>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <small class="text-muted">{{ post.created_at|date:"Y/m/d H:i" }}</small>
-                                        </div>
-                                        <div>
-                                            {% if post.spotify_link %}
-                                                <a href="{{ post.spotify_link }}" class="btn btn-success btn-sm" target="_blank">
-                                                    <i class="bi bi-spotify"></i> Spotify
-                                                </a>
-                                            {% endif %}
-                                            {% if post.youtube_link %}
-                                                <a href="{{ post.youtube_link }}" class="btn btn-danger btn-sm" target="_blank">
-                                                    <i class="bi bi-youtube"></i> YouTube
-                                                </a>
-                                            {% endif %}
-                                            <a href="{% url 'core:post_detail' post.pk %}" class="btn btn-primary btn-sm">
-                                                詳細を見る
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <p class="text-center">投稿がありません。</p>
-                    {% endif %}
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h3 class="card-title">音楽の好み</h3>
-                    {% if user == profile_user %}
-                    <a href="{% url 'core:edit_music_taste' %}" class="btn btn-sm btn-outline-primary float-end">
-                        編集
-                    </a>
-                    {% endif %}
-                </div>
-                <div class="card-body">
-                    {% if profile_user.music_taste %}
-                        {% if profile_user.music_taste.top_genres %}
-                        <div class="mb-3">
-                            <h5>好きなジャンル</h5>
-                            <div class="d-flex flex-wrap gap-1">
-                                {% for genre, strength in profile_user.music_taste.top_genres.items %}
-                                <span class="badge bg-primary">{{ genre }}</span>
-                                {% endfor %}
-                            </div>
-                        </div>
+        <div class="posts-section">
+            <h2>最近の投稿</h2>
+            <div class="posts-grid">
+                {% for post in profile_user.musicpost_set.all %}
+                    <div class="post-card">
+                        {% if post.image %}
+                            <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-image">
                         {% endif %}
-
-                        {% if profile_user.music_taste.top_moods %}
-                        <div class="mb-3">
-                            <h5>好きな曲調</h5>
-                            <div class="d-flex flex-wrap gap-1">
-                                {% for mood, strength in profile_user.music_taste.top_moods.items %}
-                                <span class="badge bg-success">{{ mood }}</span>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% endif %}
-
-                        {% if profile_user.profile.favorite_artists.artists %}
-                        <div>
-                            <h5>好きなアーティスト</h5>
-                            <p>{{ profile_user.profile.favorite_artists.artists|join:", " }}</p>
-                        </div>
-                        {% endif %}
-                    {% else %}
-                        <p class="text-muted">音楽の好みが設定されていません。</p>
-                    {% endif %}
-
-                    {% if user != profile_user and user.is_authenticated %}
-                    <div class="mt-3">
-                        <h5>音楽の相性</h5>
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" 
-                                 style="width: {{ compatibility_score }}%"
-                                 aria-valuenow="{{ compatibility_score }}" 
-                                 aria-valuemin="0" 
-                                 aria-valuemax="100">
-                                {{ compatibility_score }}%
+                        <div class="post-content">
+                            <h4>{{ post.title }}</h4>
+                            <p class="artist">{{ post.artist }}</p>
+                            {% if post.mood %}
+                                <span class="mood-tag">{{ post.get_mood_display }}</span>
+                            {% endif %}
+                            <div class="post-meta">
+                                <span class="likes">
+                                    <i class="bi bi-heart-fill"></i> {{ post.likes.count }}
+                                </span>
+                                <span class="comments">
+                                    <i class="bi bi-chat-fill"></i> {{ post.comments.count }}
+                                </span>
                             </div>
                         </div>
                     </div>
-                    {% endif %}
-                </div>
+                {% empty %}
+                    <p class="no-posts">まだ投稿がありません</p>
+                {% endfor %}
             </div>
         </div>
     </div>
 </div>
+
+<style>
+.spotify-container {
+    background: linear-gradient(to bottom, #535353, #121212);
+    min-height: 100vh;
+    padding: 2rem;
+    color: #fff;
+}
+
+.profile-header {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.profile-info {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.profile-avatar {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 4px 60px rgba(0, 0, 0, 0.5);
+}
+
+.profile-details {
+    flex: 1;
+}
+
+.profile-details h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+.bio {
+    color: #b3b3b3;
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+}
+
+.profile-stats {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat .count {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.stat .label {
+    color: #b3b3b3;
+    font-size: 0.9rem;
+}
+
+.follow-button, .edit-profile-button {
+    background: #1db954;
+    color: #fff;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 500px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.follow-button:hover, .edit-profile-button:hover {
+    background: #1ed760;
+    transform: scale(1.02);
+}
+
+.follow-button.following {
+    background: transparent;
+    border: 1px solid #fff;
+}
+
+.edit-profile-button {
+    text-decoration: none;
+    display: inline-block;
+}
+
+.music-taste-section {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.section-header h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.edit-button {
+    color: #b3b3b3;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.edit-button:hover {
+    color: #fff;
+}
+
+.taste-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.taste-card {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+.taste-card:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.taste-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: #1db954;
+}
+
+.tag-container, .artists-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tag, .artist-chip {
+    background: #282828;
+    padding: 0.5rem 1rem;
+    border-radius: 500px;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+}
+
+.tag:hover, .artist-chip:hover {
+    background: #383838;
+}
+
+.posts-section {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+    border-radius: 8px;
+}
+
+.posts-section h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+.posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.post-card {
+    background: #181818;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: background-color 0.3s;
+}
+
+.post-card:hover {
+    background: #282828;
+}
+
+.post-image {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+}
+
+.post-content {
+    padding: 1rem;
+}
+
+.post-content h4 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.artist {
+    color: #b3b3b3;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.mood-tag {
+    display: inline-block;
+    background: #1db954;
+    padding: 0.2rem 0.8rem;
+    border-radius: 500px;
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.post-meta {
+    display: flex;
+    gap: 1rem;
+    color: #b3b3b3;
+    font-size: 0.9rem;
+}
+
+.no-taste, .no-posts {
+    color: #b3b3b3;
+    text-align: center;
+    padding: 2rem;
+}
+
+.favorite-artists-section {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.artists-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.artist-card {
+    background: #181818;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.artist-card:hover {
+    background: #282828;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.artist-image {
+    width: 100%;
+    aspect-ratio: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.artist-image::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.artist-card:hover .artist-image::after {
+    opacity: 1;
+}
+
+.artist-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.artist-card:hover .artist-image img {
+    transform: scale(1.1);
+}
+
+.artist-info {
+    padding: 1rem;
+    text-align: center;
+}
+
+.artist-info h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+    color: #fff;
+    transition: color 0.3s ease;
+}
+
+.artist-card:hover .artist-info h3 {
+    color: #1db954;
+}
+
+.compatibility-section {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.compatibility-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.compatibility-score {
+    text-align: center;
+}
+
+.progress-container {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 500px;
+    height: 20px;
+    overflow: hidden;
+    position: relative;
+    margin: 1rem 0;
+}
+
+.progress-bar {
+    background: linear-gradient(to right, #1db954, #1ed760);
+    height: 100%;
+    border-radius: 500px;
+    transition: width 0.5s ease;
+    position: relative;
+}
+
+.score-text {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-weight: bold;
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+}
+
+.common-tastes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.common-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+.common-item h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: #1db954;
+}
+
+.playlists-section {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.create-playlist-button {
+    background: #1db954;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 500px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.create-playlist-button:hover {
+    background: #1ed760;
+    transform: scale(1.02);
+}
+
+.playlists-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.playlist-card {
+    background: #181818;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.playlist-card:hover {
+    background: #282828;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.playlist-cover {
+    width: 100%;
+    aspect-ratio: 1;
+    position: relative;
+    background: #282828;
+}
+
+.playlist-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.default-cover {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: #b3b3b3;
+}
+
+.playlist-info {
+    padding: 1rem;
+}
+
+.playlist-info h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: #fff;
+}
+
+.playlist-meta {
+    font-size: 0.9rem;
+    color: #b3b3b3;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.private-badge {
+    color: #b3b3b3;
+    font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+    .profile-info {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-avatar {
+        width: 150px;
+        height: 150px;
+    }
+
+    .profile-stats {
+        justify-content: center;
+    }
+
+    .taste-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .artists-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+}
+</style>
+
+<script>
+document.querySelectorAll('.follow-button').forEach(button => {
+    button.addEventListener('click', function() {
+        const username = this.dataset.username;
+        fetch(`/toggle-follow/${username}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'followed') {
+                this.textContent = 'フォロー中';
+                this.classList.add('following');
+            } else {
+                this.textContent = 'フォローする';
+                this.classList.remove('following');
+            }
+            // フォロワー数を更新
+            const followerCount = document.querySelector('.profile-stats .count');
+            followerCount.textContent = data.follower_count;
+        });
+    });
+});
+
+// プレイリストカードのクリックイベント
+document.querySelectorAll('.playlist-card').forEach(card => {
+    card.addEventListener('click', function() {
+        const playlistId = this.dataset.playlistId;
+        window.location.href = `/playlist/${playlistId}/`;
+    });
+});
+</script>
 {% endblock %} 

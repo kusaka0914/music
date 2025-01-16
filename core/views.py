@@ -4,12 +4,15 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django.core.paginator import Paginator
 from .models import Profile, MusicPost, Comment, Playlist, Notification, MusicTaste
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, MusicPostForm, CommentForm, PlaylistForm, MusicTasteForm
 from django.http import JsonResponse
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from django.conf import settings
+import json
+from .spotify_utils import get_artist_image
 
 def home(request):
     posts = MusicPost.objects.all().order_by('-created_at')
@@ -148,15 +151,39 @@ def profile(request, username):
     profile_user = get_object_or_404(User, username=username)
     posts = MusicPost.objects.filter(user=profile_user).order_by('-created_at')
     
-    # 音楽の相性スコアを計算
-    compatibility_score = 0
+    # MusicTasteを取得または作成
+    music_taste, created = MusicTaste.objects.get_or_create(user=profile_user)
+    
+    # 音楽の相性スコアと共通の趣味を計算
+    compatibility_score = None
+    common_genres = []
+    common_artists = []
+    
     if request.user.is_authenticated and request.user != profile_user:
+        # 相性スコアを計算
         compatibility_score = request.user.profile.get_music_compatibility_with_user(profile_user)
+        
+        # 共通のジャンルを取得
+        user_genres = set(request.user.music_taste.genres.get('preferences', {}).keys())
+        profile_genres = set(music_taste.genres.get('preferences', {}).keys())
+        common_genres = list(user_genres & profile_genres)
+        
+        # 共通のアーティストを取得
+        user_artists = set(artist['name'] for artist in request.user.music_taste.favorite_artists)
+        profile_artists = set(artist['name'] for artist in music_taste.favorite_artists)
+        common_artist_names = user_artists & profile_artists
+        common_artists = [
+            artist for artist in music_taste.favorite_artists 
+            if artist['name'] in common_artist_names
+        ]
     
     return render(request, 'core/profile.html', {
         'profile_user': profile_user,
         'posts': posts,
-        'compatibility_score': compatibility_score
+        'compatibility_score': compatibility_score,
+        'common_genres': common_genres,
+        'common_artists': common_artists,
+        'music_taste': music_taste
     })
 
 @login_required
@@ -299,15 +326,48 @@ def edit_music_taste(request):
     music_taste, created = MusicTaste.objects.get_or_create(user=request.user)
     
     if request.method == 'POST':
-        form = MusicTasteForm(request.POST, instance=music_taste)
-        if form.is_valid():
-            form.save()
-            messages.success(request, '音楽の好みを更新しました。')
-            return redirect('core:profile', username=request.user.username)
+        # AJAXリクエストの場合
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            data = json.loads(request.body)
+            action = data.get('action')
+            
+            if action == 'add_artist':
+                artist_name = data.get('artist')
+                artist_image = data.get('image')
+                
+                # favorite_artistsが未初期化の場合は空の配列を作成
+                if not isinstance(music_taste.favorite_artists, list):
+                    music_taste.favorite_artists = []
+                
+                # アーティストデータを作成
+                artist_data = {
+                    'name': artist_name,
+                    'image': artist_image
+                }
+                
+                # 重複チェック
+                if not any(artist.get('name') == artist_name for artist in music_taste.favorite_artists):
+                    music_taste.favorite_artists.append(artist_data)
+                    music_taste.save()
+                
+                return JsonResponse({
+                    'status': 'success',
+                    'message': 'アーティストを追加しました'
+                })
+        
+        # 通常のフォーム送信の場合
+        else:
+            form = MusicTasteForm(request.POST, instance=music_taste)
+            if form.is_valid():
+                form.save()
+                messages.success(request, '音楽の好みを更新しました。')
+                return redirect('core:profile', username=request.user.username)
     else:
         form = MusicTasteForm(instance=music_taste)
     
-    return render(request, 'core/edit_music_taste.html', {'form': form})
+    return render(request, 'core/edit_music_taste.html', {
+        'form': form
+    })
 
 @login_required
 def music_compatibility(request):
@@ -366,13 +426,24 @@ def search_artists(request):
 def popular_artists(request):
     """人気のアーティストを取得するエンドポイント"""
     try:
+        page = int(request.GET.get('page', 1))
+        per_page = 10
+        offset = (page - 1) * per_page
+        
         spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(
             client_id=settings.SPOTIFY_CLIENT_ID,
             client_secret=settings.SPOTIFY_CLIENT_SECRET
         ))
         
-        # 日本の人気アーティストを取得
-        results = spotify.search(q='genre:j-pop', type='artist', market='JP', limit=10)
+        # 日本の人気アーティストを取得（オフセットを使用して新しいアーティストを取得）
+        results = spotify.search(
+            q='genre:j-pop', 
+            type='artist', 
+            market='JP', 
+            limit=per_page,
+            offset=offset
+        )
+        
         artists = [{
             'name': artist['name'],
             'id': artist['id'],
@@ -383,7 +454,10 @@ def popular_artists(request):
         # 人気度でソート
         artists.sort(key=lambda x: x['popularity'], reverse=True)
         
-        return JsonResponse({'artists': artists[:5]})
+        return JsonResponse({
+            'artists': artists,
+            'has_more': len(artists) == per_page  # 取得件数が per_page と同じなら、まだデータがある
+        })
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
@@ -391,37 +465,45 @@ def popular_artists(request):
 def recommended_artists(request):
     """ユーザーにおすすめのアーティストを取得するエンドポイント"""
     try:
+        page = int(request.GET.get('page', 1))
+        per_page = 10
+        offset = (page - 1) * per_page
+        
         spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(
             client_id=settings.SPOTIFY_CLIENT_ID,
             client_secret=settings.SPOTIFY_CLIENT_SECRET
         ))
         
         # ユーザーの好みのジャンルを取得
-        user_genres = request.user.music_taste.top_genres.keys() if hasattr(request.user, 'music_taste') else []
+        user_genres = list(request.user.music_taste.top_genres.keys()) if hasattr(request.user, 'music_taste') else []
         
-        recommended_artists = []
-        for genre in user_genres:
-            # 各ジャンルで人気のアーティストを検索
-            results = spotify.search(q=f'genre:{genre}', type='artist', limit=3)
-            artists = results['artists']['items']
-            for artist in artists:
-                if len(recommended_artists) < 5:  # 最大5アーティストまで
-                    recommended_artists.append({
-                        'name': artist['name'],
-                        'id': artist['id'],
-                        'image': artist['images'][0]['url'] if artist['images'] else None
-                    })
+        if user_genres:
+            # ユーザーのジャンルに基づいて検索
+            genre = user_genres[offset % len(user_genres)]  # ジャンルを循環させる
+            results = spotify.search(
+                q=f'genre:{genre}', 
+                type='artist', 
+                limit=per_page,
+                offset=offset
+            )
+        else:
+            # ジャンルがない場合は一般的な人気アーティストを検索
+            results = spotify.search(
+                q='year:2024', 
+                type='artist', 
+                limit=per_page,
+                offset=offset
+            )
         
-        # ジャンルがない場合や結果が少ない場合は、一般的な人気アーティストで補完
-        if len(recommended_artists) < 5:
-            results = spotify.search(q='year:2024', type='artist', limit=(5 - len(recommended_artists)))
-            for artist in results['artists']['items']:
-                recommended_artists.append({
-                    'name': artist['name'],
-                    'id': artist['id'],
-                    'image': artist['images'][0]['url'] if artist['images'] else None
-                })
+        artists = [{
+            'name': artist['name'],
+            'id': artist['id'],
+            'image': artist['images'][0]['url'] if artist['images'] else None
+        } for artist in results['artists']['items']]
         
-        return JsonResponse({'artists': recommended_artists})
+        return JsonResponse({
+            'artists': artists,
+            'has_more': len(artists) == per_page  # 取得件数が per_page と同じなら、まだデータがある
+        })
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)

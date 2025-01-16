@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, MusicPost, Comment, Playlist, Notification
+from .models import Profile, MusicPost, Comment, Playlist, Notification, MusicTaste
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
@@ -31,3 +31,8 @@ class NotificationAdmin(admin.ModelAdmin):
     list_display = ['recipient', 'notification_type', 'is_read', 'created_at']
     list_filter = ['notification_type', 'is_read', 'created_at']
     readonly_fields = ['created_at']
+
+@admin.register(MusicTaste)
+class MusicTasteAdmin(admin.ModelAdmin):
+    list_display = ['user', 'favorite_artists']
+    search_fields = ['favorite_artists']
