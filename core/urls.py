@@ -21,6 +21,7 @@ urlpatterns = [
     path('filter-posts/', views.filter_posts, name='filter_posts'),
     path('following/posts/', views.following_posts, name='following_posts'),
     path('search/', views.search, name='search'),
+    path('search-artists/', views.search_artists, name='search_artists'),
     path('music-compatibility/', views.music_compatibility, name='music_compatibility'),
     path('playlist/create/', views.create_playlist, name='create_playlist'),
     path('playlist/<int:pk>/', views.playlist_detail, name='playlist_detail'),
@@ -34,4 +35,6 @@ urlpatterns = [
     path('spotify/callback/', views.spotify_callback, name='spotify_callback'),
     path('spotify/disconnect/', views.spotify_disconnect, name='spotify_disconnect'),
     path('spotify/search-track/', views.search_track, name='search_track'),
+    path('popular-artists/', views.popular_artists, name='popular_artists'),
+    path('recommended-artists/', views.recommended_artists, name='recommended_artists'),
 ] 

@@ -10,19 +10,29 @@
             <div class="genre-mood-section">
                 <div class="form-group">
                     <label for="id_genres">好きなジャンル</label>
+                    {% for genre in available_genres %}
                     <div class="checkbox-group">
-                        {{ form.genres }}
+                        <label>
+                            <input type="checkbox" name="genres" value="{{ genre }}" {% if genre in current_genres %}checked{% endif %}>
+                            {{ genre }}
+                        </label>
                     </div>
+                    {% endfor %}
                 </div>
-                
                 <div class="form-group">
                     <label for="id_moods">好きな曲調</label>
+                    {% for mood in available_moods %}
                     <div class="checkbox-group">
-                        {{ form.moods }}
+                        <label>
+                            <input type="checkbox" name="moods" value="{{ mood }}" {% if mood in current_moods %}checked{% endif %}>
+                            {{ mood }}
+                        </label>
                     </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
+        
 
         <div class="main-content">
             {{ form.non_field_errors }}

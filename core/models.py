@@ -347,19 +347,27 @@ class Notification(models.Model):
 
 class MusicTaste(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='music_taste')
-    genres = models.JSONField(default=dict)  # ジャンルの好み度を保存
-    moods = models.JSONField(default=dict)   # ムードの好み度を保存
-    favorite_artists = models.JSONField(default=list)  # お気に入りアーティストのリスト
+    genres = models.JSONField(default=list, blank=True)
+    moods = models.JSONField(default=list, blank=True)
+    favorite_artists = models.JSONField(default=list, blank=True)
 
     @property
     def top_genres(self):
-        """最も好きなジャンルを取得"""
-        return dict(sorted(self.genres.items(), key=lambda x: x[1], reverse=True)[:5])
+        """
+        ジャンルのリストを辞書形式に変換して返す
+        """
+        if not self.genres:
+            return {}
+        return {genre: 1 for genre in self.genres}
 
     @property
     def top_moods(self):
-        """最も好きなムードを取得"""
-        return dict(sorted(self.moods.items(), key=lambda x: x[1], reverse=True)[:5])
+        """
+        ムードのリストを辞書形式に変換して返す
+        """
+        if not self.moods:
+            return {}
+        return {mood: 1 for mood in self.moods}
 
     def __str__(self):
         return f"{self.user.username}の音楽の好み"

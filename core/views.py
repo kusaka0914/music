@@ -8,12 +8,13 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.conf import settings
 from .models import MusicPost, MusicStory, Comment, Profile, MusicTaste
-from .forms import MusicPostForm, MusicStoryForm, CommentForm, MusicTasteForm, ProfileEditForm
+from .forms import MusicPostForm, MusicStoryForm, CommentForm, MusicTasteForm, ProfileEditForm, MusicStoryForm,UserLoginForm,UserRegisterForm
 from .spotify_utils import get_spotify_client
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials, SpotifyOAuth
 import json
 import logging
+from django.contrib.auth import login, logout
 
 logger = logging.getLogger(__name__)
 
@@ -536,18 +537,27 @@ def edit_music_taste(request):
     
     # 人気のアーティストを取得
     try:
+        logger.info("人気アーティストの取得を開始")
         spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(
             client_id=settings.SPOTIFY_CLIENT_ID,
             client_secret=settings.SPOTIFY_CLIENT_SECRET
         ))
         
-        results = spotify.search(q='genre:j-pop', type='artist', market='JP', limit=10)
-        popular_artists = [{
-            'name': artist['name'],
-            'id': artist['id'],
-            'image': artist['images'][0]['url'] if artist['images'] else None,
-            'genres': artist['genres'][:3]
-        } for artist in results['artists']['items']]
+        # J-POPアーティストの検索
+        results = spotify.search(q='genre:j-pop year:2024', type='artist', market='JP', limit=10)
+        popular_artists = []
+        
+        for artist in results['artists']['items']:
+            artist_data = {
+                'name': artist['name'],
+                'id': artist['id'],
+                'image': artist['images'][0]['url'] if artist['images'] else None,
+                'genres': artist['genres'][:3] if artist['genres'] else []
+            }
+            popular_artists.append(artist_data)
+            logger.info(f"アーティスト取得: {artist_data['name']}")
+        
+        logger.info(f"人気アーティスト取得完了: {len(popular_artists)}件")
     except Exception as e:
         logger.error(f"人気アーティストの取得に失敗: {str(e)}")
         popular_artists = []
@@ -563,6 +573,28 @@ def edit_music_taste(request):
     }
     
     return render(request, 'core/edit_music_taste.html', context)
+
+def search_artists(request):
+    query = request.GET.get('q', '')
+    if not query:
+        return JsonResponse({'artists': []})
+    
+    try:
+        spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(
+            client_id=settings.SPOTIFY_CLIENT_ID,
+            client_secret=settings.SPOTIFY_CLIENT_SECRET
+        ))
+        
+        results = spotify.search(q=query, type='artist', limit=5)
+        artists = [{
+            'name': artist['name'],
+            'id': artist['id'],
+            'image': artist['images'][0]['url'] if artist['images'] else None
+        } for artist in results['artists']['items']]
+        
+        return JsonResponse({'artists': artists})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 @login_required
 def music_compatibility(request):
