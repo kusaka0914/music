@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -19,14 +20,16 @@
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'core:create_playlist' %}">プレイリスト作成</a>
+                        <a class="nav-link" href="{% url 'core:create_playlist' %}">
+                            <i class="bi bi-music-note-list"></i> プレイリスト作成
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:music_compatibility' %}">
+                            <i class="fas fa-music"></i> 音楽の相性
+                        </a>
                     </li>
                 {% endif %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'core:music_compatibility' %}">
-                        <i class="fas fa-music"></i> 音楽の相性
-                    </a>
-                </li>
             </ul>
 
             <form class="search-form" action="{% url 'core:search' %}" method="get">
@@ -44,7 +47,11 @@
                     </a>
                     <div class="user-menu dropdown">
                         <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="{{ user.profile.avatar.url|default:'/static/images/default-avatar.png' }}" alt="{{ user.username }}">
+                            {% if user.profile.avatar %}
+                                <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}">
+                            {% else %}
+                                <img src="{% static 'images/default-avatar.svg' %}" alt="{{ user.username }}">
+                            {% endif %}
                             <span class="username">{{ user.username }}</span>
                             <i class="bi bi-chevron-down"></i>
                         </a>

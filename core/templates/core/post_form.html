@@ -2,73 +2,413 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-8 mx-auto">
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="card-title mb-4">{{ title }}</h2>
-                    <form method="post">
-                        {% csrf_token %}
-                        
-                        <div class="mb-3">
-                            <label for="{{ form.title.id_for_label }}" class="form-label">曲名</label>
-                            {{ form.title }}
-                            {% if form.title.errors %}
-                                <div class="alert alert-danger mt-2">
-                                    {{ form.title.errors }}
-                                </div>
-                            {% endif %}
-                        </div>
+<div class="post-form-container">
+    <h2>{{ title|default:'新規投稿' }}</h2>
+    
+    <form method="post" enctype="multipart/form-data" class="post-form">
+        {% csrf_token %}
+        
+        <!-- 投稿タイプ選択 -->
+        <div class="form-section">
+            <h3>投稿タイプを選択</h3>
+            <div class="post-type-options">
+                <label class="post-type-option">
+                    <input type="radio" name="post_type" value="review" checked>
+                    <i class="bi bi-star"></i>
+                    <span>レビュー</span>
+                </label>
+                <label class="post-type-option">
+                    <input type="radio" name="post_type" value="analysis">
+                    <i class="bi bi-music-note-list"></i>
+                    <span>楽曲分析</span>
+                </label>
+                <label class="post-type-option">
+                    <input type="radio" name="post_type" value="memory">
+                    <i class="bi bi-heart"></i>
+                    <span>思い出</span>
+                </label>
+                <label class="post-type-option">
+                    <input type="radio" name="post_type" value="recommendation">
+                    <i class="bi bi-share"></i>
+                    <span>おすすめ</span>
+                </label>
+                <label class="post-type-option">
+                    <input type="radio" name="post_type" value="playlist">
+                    <i class="bi bi-music-note-beamed"></i>
+                    <span>プレイリスト紹介</span>
+                </label>
+            </div>
+        </div>
 
-                        <div class="mb-3">
-                            <label for="{{ form.artist.id_for_label }}" class="form-label">アーティスト名</label>
-                            {{ form.artist }}
-                            {% if form.artist.errors %}
-                                <div class="alert alert-danger mt-2">
-                                    {{ form.artist.errors }}
-                                </div>
-                            {% endif %}
-                        </div>
+        <!-- 曲情報 -->
+        <div class="form-section">
+            <h3>曲の情報</h3>
+            <div class="form-group">
+                <label for="title">曲名</label>
+                <input type="text" name="title" id="title" required>
+            </div>
+            <div class="form-group">
+                <label for="artist">アーティスト</label>
+                <input type="text" name="artist" id="artist" required>
+            </div>
+            <div class="form-group">
+                <label for="spotify_link">SpotifyのURL</label>
+                <input type="text" name="spotify_link" id="spotify_link" required>
+            </div>
+            <div class="form-group">
+                <label for="youtube_link">YouTubeのURL（任意）</label>
+                <input type="text" name="youtube_link" id="youtube_link">
+            </div>
+        </div>
 
-                        <div class="mb-3">
-                            <label for="{{ form.description.id_for_label }}" class="form-label">説明</label>
-                            {{ form.description }}
-                            {% if form.description.errors %}
-                                <div class="alert alert-danger mt-2">
-                                    {{ form.description.errors }}
-                                </div>
-                            {% endif %}
-                        </div>
+        <!-- レビュー情報 -->
+        <div class="form-section review-section">
+            <h3>レビュー</h3>
+            <div class="form-group">
+                <label for="rating">評価</label>
+                <div class="rating-input">
+                    {% for i in "12345" %}
+                    <label>
+                        <input type="radio" name="rating" value="{{ i }}">
+                        <i class="bi bi-star-fill"></i>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="description">レビュー内容</label>
+                <textarea name="description" id="description" rows="5"></textarea>
+            </div>
+        </div>
 
-                        <div class="mb-3">
-                            <label for="{{ form.spotify_link.id_for_label }}" class="form-label">Spotifyリンク（任意）</label>
-                            {{ form.spotify_link }}
-                            {% if form.spotify_link.errors %}
-                                <div class="alert alert-danger mt-2">
-                                    {{ form.spotify_link.errors }}
-                                </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="{{ form.youtube_link.id_for_label }}" class="form-label">YouTubeリンク（任意）</label>
-                            {{ form.youtube_link }}
-                            {% if form.youtube_link.errors %}
-                                <div class="alert alert-danger mt-2">
-                                    {{ form.youtube_link.errors }}
-                                </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">投稿する</button>
-                            <a href="{% url 'core:home' %}" class="btn btn-secondary">キャンセル</a>
-                        </div>
-                    </form>
+        <!-- 楽曲分析情報 -->
+        <div class="form-section analysis-section" style="display: none;">
+            <h3>楽曲分析</h3>
+            <div class="form-group">
+                <label for="lyrics_excerpt">印象的な歌詞</label>
+                <textarea name="lyrics_excerpt" id="lyrics_excerpt" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label>印象的な楽器・サウンド</label>
+                <div class="tag-input" id="music-elements">
+                    <input type="text" placeholder="要素を入力して Enter">
+                    <div class="tags"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>分析ポイント</label>
+                <div class="tag-input" id="analysis-points">
+                    <input type="text" placeholder="ポイントを入力して Enter">
+                    <div class="tags"></div>
                 </div>
             </div>
         </div>
-    </div>
+
+        <!-- 共通設定 -->
+        <div class="form-section">
+            <h3>共通設定</h3>
+            <div class="form-group">
+                <label>ムード</label>
+                <select name="mood">
+                    <option value="">選択してください</option>
+                    <option value="morning">朝</option>
+                    <option value="night">夜</option>
+                    <option value="rain">雨の日</option>
+                    <option value="drive">ドライブ</option>
+                    <option value="work">作業</option>
+                    <option value="relax">リラックス</option>
+                    <option value="party">パーティー</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>ハッシュタグ</label>
+                <div class="tag-input" id="tags">
+                    <input type="text" placeholder="タグを入力して Enter">
+                    <div class="tags"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="image">画像</label>
+                <input type="file" name="image" id="image" accept="image/*">
+            </div>
+        </div>
+
+        <button type="submit" class="submit-button">投稿する</button>
+    </form>
 </div>
+
+<style>
+.post-form-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    color: #fff;
+}
+
+.form-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+}
+
+.form-section h3 {
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+    color: #1DB954;
+}
+
+.post-type-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.post-type-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.post-type-option input[type="radio"] {
+    display: none;
+}
+
+.post-type-option i {
+    font-size: 1.5rem;
+}
+
+.post-type-option:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.post-type-option input[type="radio"]:checked + i + span {
+    color: #1DB954;
+}
+
+.post-type-option input[type="radio"]:checked + i {
+    color: #1DB954;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #b3b3b3;
+}
+
+.form-group input[type="text"],
+.form-group input[type="url"],
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 0.8rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 1rem;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="url"]:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.rating-input {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.rating-input label {
+    cursor: pointer;
+}
+
+.rating-input input[type="radio"] {
+    display: none;
+}
+
+.rating-input i {
+    color: #b3b3b3;
+    font-size: 1.5rem;
+    transition: color 0.3s;
+}
+
+.rating-input input[type="radio"]:checked ~ label i {
+    color: #1DB954;
+}
+
+.tag-input {
+    position: relative;
+}
+
+.tag-input input {
+    width: 100%;
+    padding: 0.8rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.8rem;
+    background: rgba(29, 185, 84, 0.2);
+    border-radius: 500px;
+    color: #1DB954;
+}
+
+.tag button {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 0;
+    font-size: 1.2rem;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 1rem;
+    background: #1DB954;
+    border: none;
+    border-radius: 500px;
+    color: #fff;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.submit-button:hover {
+    background: #1ed760;
+    transform: scale(1.02);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 投稿タイプの切り替え
+    const postTypeInputs = document.querySelectorAll('input[name="post_type"]');
+    const reviewSection = document.querySelector('.review-section');
+    const analysisSection = document.querySelector('.analysis-section');
+
+    postTypeInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            if (this.value === 'review') {
+                reviewSection.style.display = 'block';
+                analysisSection.style.display = 'none';
+            } else if (this.value === 'analysis') {
+                reviewSection.style.display = 'none';
+                analysisSection.style.display = 'block';
+            } else {
+                reviewSection.style.display = 'none';
+                analysisSection.style.display = 'none';
+            }
+        });
+    });
+
+    // タグ入力の処理
+    function setupTagInput(container) {
+        const input = container.querySelector('input');
+        const tagsDiv = container.querySelector('.tags');
+        const tags = new Set();
+
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const tag = this.value.trim();
+                if (tag && !tags.has(tag)) {
+                    tags.add(tag);
+                    const tagElement = document.createElement('span');
+                    tagElement.className = 'tag';
+                    tagElement.innerHTML = `
+                        ${tag}
+                        <button type="button">&times;</button>
+                    `;
+                    tagElement.querySelector('button').addEventListener('click', function() {
+                        tags.delete(tag);
+                        tagElement.remove();
+                        updateHiddenInput();
+                    });
+                    tagsDiv.appendChild(tagElement);
+                    this.value = '';
+                    updateHiddenInput();
+                }
+            }
+        });
+
+        function updateHiddenInput() {
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = container.id;
+            hiddenInput.value = JSON.stringify(Array.from(tags));
+            const existingInput = container.querySelector('input[type="hidden"]');
+            if (existingInput) {
+                existingInput.remove();
+            }
+            container.appendChild(hiddenInput);
+        }
+    }
+
+    // 各タグ入力フィールドの設定
+    setupTagInput(document.getElementById('tags'));
+    setupTagInput(document.getElementById('music-elements'));
+    setupTagInput(document.getElementById('analysis-points'));
+
+    // 評価の星の処理
+    const ratingLabels = document.querySelectorAll('.rating-input label');
+    ratingLabels.forEach((label, index) => {
+        label.addEventListener('mouseover', function() {
+            ratingLabels.forEach((l, i) => {
+                if (i <= index) {
+                    l.querySelector('i').style.color = '#1DB954';
+                } else {
+                    l.querySelector('i').style.color = '#b3b3b3';
+                }
+            });
+        });
+    });
+
+    const ratingInput = document.querySelector('.rating-input');
+    ratingInput.addEventListener('mouseleave', function() {
+        const checkedInput = this.querySelector('input[type="radio"]:checked');
+        const checkedIndex = checkedInput ? Array.from(ratingLabels).findIndex(label => 
+            label.querySelector('input') === checkedInput
+        ) : -1;
+
+        ratingLabels.forEach((label, i) => {
+            if (i <= checkedIndex) {
+                label.querySelector('i').style.color = '#1DB954';
+            } else {
+                label.querySelector('i').style.color = '#b3b3b3';
+            }
+        });
+    });
+});
+</script>
 {% endblock %} 

@@ -2,65 +2,1586 @@
 {% load static %}
 
 {% block content %}
-<div class="container">
-    <h1 class="mb-4">ホーム</h1>
-    {% if user.is_authenticated %}
-        <div class="mb-4">
-            <a href="{% url 'core:create_post' %}" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> 新規投稿
-            </a>
-        </div>
-    {% endif %}
-
-    <div class="row">
-        {% for post in posts %}
-            <div class="col-md-6 mb-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center mb-3">
-                            <a href="{% url 'core:profile' post.user.username %}" class="text-decoration-none">
-                                <img src="{% static 'images/default-avatar.png' %}" alt="Profile" class="rounded-circle me-2" width="40" height="40">
-                                <span class="text-dark">{{ post.user.username }}</span>
-                            </a>
-                            <small class="text-muted ms-auto">{{ post.created_at|date:"Y/m/d H:i" }}</small>
+<div class="spotify-container">
+    <div class="home-layout">
+        <!-- 左サイドバー -->
+        <div class="sidebar">
+            <div class="user-profile-mini">
+                {% if user.is_authenticated %}
+                    <div class="profile-header">
+                        {% if user.profile.avatar %}
+                            <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" class="profile-avatar">
+                        {% else %}
+                            <img src="{% static 'images/default-avatar.svg' %}" alt="{{ user.username }}" class="profile-avatar">
+                        {% endif %}
+                        <div class="profile-info">
+                            <h3>{{ user.username }}</h3>
+                            {% if user.profile.nickname %}
+                                <span class="nickname">{{ user.profile.nickname }}</span>
+                            {% endif %}
                         </div>
-                        <h5 class="card-title">{{ post.title }}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">{{ post.artist }}</h6>
-                        <p class="card-text">{{ post.description|truncatewords:30 }}</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <button class="btn btn-outline-primary btn-sm like-button" data-post-id="{{ post.pk }}">
-                                    <i class="bi {% if user in post.likes.all %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
-                                    <span class="like-count">{{ post.likes.count }}</span>
-                                </button>
-                                <a href="{% url 'core:post_detail' post.pk %}" class="btn btn-outline-secondary btn-sm">
-                                    <i class="bi bi-chat"></i>
-                                    {{ post.comments.count }}
-                                </a>
-                            </div>
-                            <div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <nav class="main-nav">
+                <a href="{% url 'core:home' %}" class="nav-item active">
+                    <i class="bi bi-house-fill"></i>
+                    <span>ホーム</span>
+                </a>
+                <a href="{% url 'core:profile' user.username %}" class="nav-item">
+                    <i class="bi bi-person-fill"></i>
+                    <span>プロフィール</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="bi bi-music-note-list"></i>
+                    <span>プレイリスト</span>
+                </a>
+                <a href="{% url 'core:edit_music_taste' %}" class="nav-item">
+                    <i class="bi bi-sliders"></i>
+                    <span>音楽の好み</span>
+                </a>
+            </nav>
+
+            {% if not user.profile.spotify_connected %}
+                <div class="spotify-connect-prompt">
+                    <i class="bi bi-spotify"></i>
+                    <p>Spotifyと連携して、より多くの機能を利用しましょう</p>
+                    <a href="{% url 'core:spotify_connect' %}" class="spotify-connect-button">連携する</a>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- メインコンテンツ -->
+        <main class="main-content">
+            <!-- ストーリーセクション -->
+            <div class="stories-section">
+                <div class="stories-container">
+                    <!-- ストーリー追加ボタン -->
+                    <div class="story-item add-story">
+                        <div class="story-add-button">
+                            <i class="bi bi-plus-lg"></i>
+                        </div>
+                        <span>ストーリーを追加</span>
+                    </div>
+                    
+                    <!-- ストーリーアイテム -->
+                    {% for story in stories %}
+                    <div class="story-item" data-story-id="{{ story.id }}">
+                        <div class="story-avatar {% if not story.viewed %}not-viewed{% endif %}">
+                            {% if story.user.profile.avatar %}
+                                <img src="{{ story.user.profile.avatar.url }}" alt="{{ story.user.username }}">
+                            {% else %}
+                                <img src="{% static 'images/default-avatar.svg' %}" alt="{{ story.user.username }}">
+                            {% endif %}
+                        </div>
+                        <span class="story-username">{{ story.user.username }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="content-header">
+                <div class="feed-filters">
+                    <button class="filter-button active">すべて</button>
+                    <button class="filter-button">フォロー中</button>
+                    <button class="filter-button">人気</button>
+                </div>
+                <a href="{% url 'core:create_post' %}" class="create-post-button">
+                    <i class="bi bi-plus-lg"></i>
+                    投稿する
+                </a>
+            </div>
+
+            <div class="posts-grid">
+                {% for post in posts %}
+                    <div class="post-card">
+                        {% if post.image %}
+                            <div class="post-image">
+                                <img src="{{ post.image.url }}" alt="{{ post.title }}">
                                 {% if post.spotify_link %}
-                                    <a href="{{ post.spotify_link }}" target="_blank" class="btn btn-success btn-sm">
-                                        <i class="bi bi-spotify"></i> Spotify
+                                    <a href="https://open.spotify.com/track/{{ post.spotify_link }}" class="play-button" target="_blank">
+                                        <i class="bi bi-play-fill"></i>
                                     </a>
                                 {% endif %}
-                                {% if post.youtube_link %}
-                                    <a href="{{ post.youtube_link }}" target="_blank" class="btn btn-danger btn-sm">
-                                        <i class="bi bi-youtube"></i> YouTube
-                                    </a>
+                            </div>
+                        {% endif %}
+                        <div class="post-content">
+                            <div class="post-header">
+                                <a href="{% url 'core:profile' post.user.username %}" class="post-user">
+                                    {% if post.user.profile.avatar %}
+                                        <img src="{{ post.user.profile.avatar.url }}" alt="{{ post.user.username }}">
+                                    {% else %}
+                                        <img src="{% static 'images/default-avatar.svg' %}" alt="{{ post.user.username }}">
+                                    {% endif %}
+                                    <span>{{ post.user.username }}</span>
+                                </a>
+                                <span class="post-time">{{ post.created_at|timesince }}前</span>
+                            </div>
+                            <h3 class="post-title">{{ post.title }}</h3>
+                            <p class="post-artist">{{ post.artist }}</p>
+                            {% if post.description %}
+                                <p class="post-description">{{ post.description }}</p>
+                            {% endif %}
+                            <div class="post-meta">
+                                <button class="like-button {% if user in post.likes.all %}liked{% endif %}" data-post-id="{{ post.id }}">
+                                    <i class="bi bi-heart{% if user in post.likes.all %}-fill{% endif %}"></i>
+                                    <span class="like-count">{{ post.likes.count }}</span>
+                                </button>
+                                <a href="{% url 'core:post_detail' post.id %}" class="comment-button">
+                                    <i class="bi bi-chat"></i>
+                                    <span>{{ post.comments.count }}</span>
+                                </a>
+                                {% if post.mood %}
+                                    <span class="mood-tag">{{ post.get_mood_display }}</span>
                                 {% endif %}
                             </div>
                         </div>
                     </div>
+                {% empty %}
+                    <div class="no-posts">
+                        <i class="bi bi-music-note"></i>
+                        <p>投稿がありません</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </main>
+
+        <!-- 右サイドバー -->
+        <div class="sidebar-right">
+            <div class="trending-section">
+                <h3>トレンド</h3>
+                <div class="trending-posts">
+                    {% for post in trending_posts|slice:":5" %}
+                        <div class="trending-item">
+                            <span class="trending-number">#{{ forloop.counter }}</span>
+                            <div class="trending-content">
+                                <h4>{{ post.title }}</h4>
+                                <p>{{ post.artist }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
-        {% empty %}
-            <div class="col-12">
-                <div class="alert alert-info">
-                    投稿がありません。最初の投稿を作成してみましょう！
-                </div>
+
+            <div class="recommended-users">
+                <h3>おすすめユーザー</h3>
+                {% for rec in recommended_users %}
+                    <div class="recommended-user">
+                        <div class="user-info">
+                            {% if rec.user.profile.image %}
+                                <img src="{{ rec.user.profile.image.url }}" alt="{{ rec.user.username }}">
+                            {% else %}
+                                <img src="{% static 'images/default-avatar.svg' %}" alt="{{ rec.user.username }}">
+                            {% endif %}
+                            <div class="user-details">
+                                <a href="{% url 'core:profile' rec.user.username %}">{{ rec.user.username }}</a>
+                                <span class="compatibility">音楽の相性: {{ rec.compatibility_score }}%</span>
+                            </div>
+                        </div>
+                        <button class="follow-button" data-username="{{ rec.user.username }}">
+                            フォローする
+                        </button>
+                    </div>
+                {% endfor %}
             </div>
-        {% endfor %}
+        </div>
     </div>
 </div>
+
+<!-- ストーリーモーダル -->
+<div class="story-modal" style="display: none;">
+    <div class="story-modal-content">
+        <button class="close-modal"><i class="bi bi-x-lg"></i></button>
+        <div class="story-view-container">
+            <button class="story-nav prev"><i class="bi bi-chevron-left"></i></button>
+            <div class="story-main">
+                <div class="story-header">
+                    <div class="story-user-info">
+                        <img src="" alt="" class="story-user-avatar">
+                        <div class="story-user-details">
+                            <span class="story-user-name"></span>
+                            <span class="story-time"></span>
+                        </div>
+                    </div>
+                    <div class="story-progress">
+                        <div class="progress-bar"></div>
+                    </div>
+                </div>
+                <div class="story-content">
+                    <div class="music-preview">
+                        <div class="album-art">
+                            <img src="" alt="">
+                            <button class="preview-play-button">
+                                <i class="bi bi-play-fill"></i>
+                            </button>
+                        </div>
+                        <div class="music-info">
+                            <h4 class="music-title"></h4>
+                            <p class="music-artist"></p>
+                        </div>
+                    </div>
+                    <div class="story-mood">
+                        <span class="mood-emoji"></span>
+                        <p class="mood-text"></p>
+                    </div>
+                </div>
+            </div>
+            <button class="story-nav next"><i class="bi bi-chevron-right"></i></button>
+        </div>
+    </div>
+</div>
+
+<!-- ストーリー作成モーダル -->
+<div class="create-story-modal" style="display: none;">
+    <div class="modal-content">
+        <button class="close-modal"><i class="bi bi-x-lg"></i></button>
+        <h3>ストーリーを作成</h3>
+        
+        <div class="search-section">
+            <div class="search-box">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="曲を検索..." id="song-search">
+            </div>
+            <div class="search-results" style="display: none;"></div>
+        </div>
+        
+        <div class="selected-track" style="display: none;">
+            <div class="track-info">
+                <img src="" alt="" class="track-image">
+                <div class="track-details">
+                    <h4 class="track-title"></h4>
+                    <p class="track-artist"></p>
+                </div>
+                <button class="preview-button">
+                    <i class="bi bi-play-fill"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="mood-section">
+            <h4>気分を選択</h4>
+            <div class="mood-options">
+                <button class="mood-option" data-mood="happy" data-emoji="😊">
+                    <span class="mood-emoji">😊</span>
+                    <span class="mood-label">ハッピー</span>
+                </button>
+                <button class="mood-option" data-mood="chill" data-emoji="😌">
+                    <span class="mood-emoji">😌</span>
+                    <span class="mood-label">リラックス</span>
+                </button>
+                <button class="mood-option" data-mood="energetic" data-emoji="⚡️">
+                    <span class="mood-emoji">⚡️</span>
+                    <span class="mood-label">エネルギッシュ</span>
+                </button>
+                <button class="mood-option" data-mood="sad" data-emoji="😢">
+                    <span class="mood-emoji">😢</span>
+                    <span class="mood-label">メランコリー</span>
+                </button>
+                <button class="mood-option" data-mood="love" data-emoji="❤️">
+                    <span class="mood-emoji">❤️</span>
+                    <span class="mood-label">ラブ</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="comment-section">
+            <textarea placeholder="コメントを追加..." maxlength="200"></textarea>
+            <span class="character-count">0/200</span>
+        </div>
+        
+        <button class="create-button" disabled>ストーリーを作成</button>
+    </div>
+</div>
+
+<style>
+.spotify-container {
+    background: linear-gradient(to bottom, #535353, #121212);
+    min-height: 100vh;
+    padding: 2rem;
+    color: #fff;
+}
+
+.home-layout {
+    display: grid;
+    grid-template-columns: 250px 1fr 300px;
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* 左サイドバー */
+.sidebar {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 1.5rem;
+    height: fit-content;
+    position: sticky;
+    top: 2rem;
+}
+
+.user-profile-mini {
+    margin-bottom: 2rem;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.profile-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-info h3 {
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.nickname {
+    color: #b3b3b3;
+    font-size: 0.9rem;
+}
+
+.main-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem;
+    color: #b3b3b3;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.nav-item:hover, .nav-item.active {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.nav-item i {
+    font-size: 1.2rem;
+}
+
+.spotify-connect-prompt {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: rgba(29, 185, 84, 0.1);
+    border-radius: 8px;
+    text-align: center;
+}
+
+.spotify-connect-prompt i {
+    font-size: 2rem;
+    color: #1DB954;
+    margin-bottom: 1rem;
+}
+
+.spotify-connect-button {
+    display: inline-block;
+    background: #1DB954;
+    color: #fff;
+    padding: 0.8rem 1.5rem;
+    border-radius: 500px;
+    text-decoration: none;
+    margin-top: 1rem;
+    transition: all 0.3s;
+}
+
+.spotify-connect-button:hover {
+    background: #1ed760;
+    transform: scale(1.02);
+}
+
+/* メインコンテンツ */
+.main-content {
+    flex: 1;
+}
+
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.feed-filters {
+    display: flex;
+    gap: 1rem;
+}
+
+.filter-button {
+    background: transparent;
+    border: 1px solid #b3b3b3;
+    color: #b3b3b3;
+    padding: 0.5rem 1rem;
+    border-radius: 500px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.filter-button:hover, .filter-button.active {
+    background: #fff;
+    color: #000;
+    border-color: #fff;
+}
+
+.create-post-button {
+    background: #1DB954;
+    color: #fff;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 500px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s;
+}
+
+.create-post-button:hover {
+    background: #1ed760;
+    transform: scale(1.02);
+}
+
+.posts-grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.post-card {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+
+.post-card:hover {
+    transform: translateY(-4px);
+}
+
+.post-image {
+    position: relative;
+    aspect-ratio: 16/9;
+}
+
+.post-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.play-button {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    background: #1DB954;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.play-button:hover {
+    transform: scale(1.1);
+    background: #1ed760;
+}
+
+.post-content {
+    padding: 1.5rem;
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.post-user {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #fff;
+    text-decoration: none;
+}
+
+.post-user img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.post-time {
+    color: #b3b3b3;
+    font-size: 0.9rem;
+}
+
+.post-title {
+    font-size: 1.2rem;
+    margin: 0 0 0.5rem;
+}
+
+.post-artist {
+    color: #b3b3b3;
+    margin: 0 0 1rem;
+}
+
+.post-description {
+    color: #b3b3b3;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.post-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.like-button, .comment-button {
+    background: transparent;
+    border: none;
+    color: #b3b3b3;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: color 0.3s;
+    text-decoration: none;
+}
+
+.like-button:hover, .comment-button:hover {
+    color: #fff;
+}
+
+.like-button.liked {
+    color: #1DB954;
+}
+
+.mood-tag {
+    background: rgba(29, 185, 84, 0.2);
+    color: #1DB954;
+    padding: 0.2rem 0.8rem;
+    border-radius: 500px;
+    font-size: 0.8rem;
+}
+
+.no-posts {
+    text-align: center;
+    padding: 3rem;
+    color: #b3b3b3;
+}
+
+.no-posts i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+/* 右サイドバー */
+.sidebar-right {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 1.5rem;
+    height: fit-content;
+    position: sticky;
+    top: 2rem;
+}
+
+.trending-section, .recommended-users {
+    margin-bottom: 2rem;
+}
+
+.trending-section h3, .recommended-users h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.trending-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.trending-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.trending-number {
+    color: #1DB954;
+    font-weight: bold;
+}
+
+.trending-content h4 {
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.trending-content p {
+    color: #b3b3b3;
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+.recommended-user {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.recommended-user:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.user-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-details a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.compatibility {
+    color: #1DB954;
+    font-size: 0.8rem;
+}
+
+.follow-button {
+    background: transparent;
+    border: 1px solid #1DB954;
+    color: #1DB954;
+    padding: 0.5rem 1rem;
+    border-radius: 500px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.follow-button:hover {
+    background: #1DB954;
+    color: #fff;
+}
+
+@media (max-width: 1200px) {
+    .home-layout {
+        grid-template-columns: 250px 1fr;
+    }
+    .sidebar-right {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .home-layout {
+        grid-template-columns: 1fr;
+    }
+    .sidebar {
+        display: none;
+    }
+    .spotify-container {
+        padding: 1rem;
+    }
+}
+
+.loading {
+    text-align: center;
+    padding: 3rem;
+    color: #b3b3b3;
+}
+
+.loading i {
+    font-size: 2rem;
+}
+
+.spinning {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.error {
+    text-align: center;
+    padding: 3rem;
+    color: #ff4444;
+}
+
+/* ストーリーセクション */
+.stories-section {
+    margin-bottom: 2rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.stories-container {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding: 0.5rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.stories-container::-webkit-scrollbar {
+    display: none;
+}
+
+.story-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    min-width: 80px;
+}
+
+.story-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    padding: 3px;
+    background: linear-gradient(45deg, #1DB954, #1ed760);
+    transition: transform 0.3s;
+}
+
+.story-avatar.not-viewed {
+    background: linear-gradient(45deg, #1DB954, #1ed760);
+}
+
+.story-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid #000;
+    object-fit: cover;
+}
+
+.story-username {
+    font-size: 0.8rem;
+    color: #fff;
+    text-align: center;
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.add-story .story-add-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(29, 185, 84, 0.1);
+    border: 2px dashed #1DB954;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #1DB954;
+    transition: all 0.3s;
+}
+
+.add-story:hover .story-add-button {
+    background: rgba(29, 185, 84, 0.2);
+    transform: scale(1.05);
+}
+
+/* ストーリーモーダル */
+.story-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.story-modal-content {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    height: 80vh;
+    background: #121212;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.close-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.story-view-container {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.story-nav {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 1rem;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.story-nav:hover {
+    opacity: 1;
+}
+
+.story-main {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.story-header {
+    padding: 1rem;
+}
+
+.story-user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.story-user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.story-user-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.story-user-name {
+    font-weight: 500;
+}
+
+.story-time {
+    font-size: 0.8rem;
+    color: #b3b3b3;
+}
+
+.story-progress {
+    height: 3px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: #1DB954;
+    width: 0;
+    transition: width 0.1s linear;
+}
+
+.story-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.music-preview {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+}
+
+.album-art {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 1rem;
+}
+
+.album-art img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.preview-play-button {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #1DB954;
+    border: none;
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.preview-play-button:hover {
+    transform: scale(1.1);
+    background: #1ed760;
+}
+
+.music-info {
+    margin-top: 1rem;
+}
+
+.music-title {
+    font-size: 1.2rem;
+    margin: 0 0 0.5rem;
+}
+
+.music-artist {
+    color: #b3b3b3;
+    margin: 0;
+}
+
+.story-mood {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.mood-emoji {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.mood-text {
+    color: #b3b3b3;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .story-modal-content {
+        height: 100%;
+        max-width: none;
+        border-radius: 0;
+    }
+    
+    .story-nav {
+        padding: 0.5rem;
+    }
+}
+
+/* ストーリー作成モーダル */
+.create-story-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.create-story-modal .modal-content {
+    background: #121212;
+    border-radius: 12px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.create-story-modal h3 {
+    margin: 0 0 2rem;
+    text-align: center;
+}
+
+.search-section {
+    margin-bottom: 2rem;
+}
+
+.search-box {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.search-box i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #b3b3b3;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 1rem 1rem 1rem 3rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 500px;
+    color: #fff;
+    font-size: 1rem;
+}
+
+.search-box input::placeholder {
+    color: #b3b3b3;
+}
+
+.search-results {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.search-result-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.search-result-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.search-result-item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 4px;
+}
+
+.result-details h4 {
+    margin: 0 0 0.2rem;
+    font-size: 1rem;
+}
+
+.result-details p {
+    margin: 0;
+    color: #b3b3b3;
+    font-size: 0.9rem;
+}
+
+.selected-track {
+    margin-bottom: 2rem;
+}
+
+.track-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.track-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 4px;
+}
+
+.track-details {
+    flex: 1;
+}
+
+.track-details h4 {
+    margin: 0 0 0.5rem;
+}
+
+.track-details p {
+    margin: 0;
+    color: #b3b3b3;
+}
+
+.preview-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #1DB954;
+    border: none;
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.preview-button:hover {
+    transform: scale(1.1);
+    background: #1ed760;
+}
+
+.preview-button.playing {
+    background: #ff4444;
+}
+
+.mood-section {
+    margin-bottom: 2rem;
+}
+
+.mood-section h4 {
+    margin: 0 0 1rem;
+}
+
+.mood-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 1rem;
+}
+
+.mood-option {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 8px;
+    padding: 1rem;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mood-option:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.mood-option.selected {
+    background: rgba(29, 185, 84, 0.2);
+    border: 2px solid #1DB954;
+}
+
+.mood-emoji {
+    font-size: 1.5rem;
+}
+
+.mood-label {
+    font-size: 0.9rem;
+}
+
+.comment-section {
+    margin-bottom: 2rem;
+}
+
+.comment-section textarea {
+    width: 100%;
+    height: 100px;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    resize: none;
+    margin-bottom: 0.5rem;
+}
+
+.character-count {
+    color: #b3b3b3;
+    font-size: 0.9rem;
+    float: right;
+}
+
+.create-button {
+    width: 100%;
+    padding: 1rem;
+    background: #1DB954;
+    border: none;
+    border-radius: 500px;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.create-button:hover:not(:disabled) {
+    background: #1ed760;
+    transform: scale(1.02);
+}
+
+.create-button:disabled {
+    background: #1DB954;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // いいねボタンの処理
+    const setupLikeButtons = () => {
+        document.querySelectorAll('.like-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const postId = this.dataset.postId;
+                fetch(`/post/${postId}/like/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const likeCount = this.querySelector('.like-count');
+                    likeCount.textContent = data.like_count;
+                    if (data.liked) {
+                        this.classList.add('liked');
+                        this.querySelector('i').classList.add('bi-heart-fill');
+                        this.querySelector('i').classList.remove('bi-heart');
+                    } else {
+                        this.classList.remove('liked');
+                        this.querySelector('i').classList.remove('bi-heart-fill');
+                        this.querySelector('i').classList.add('bi-heart');
+                    }
+                });
+            });
+        });
+    };
+
+    // フィルターボタンの処理
+    document.querySelectorAll('.filter-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const filterType = this.textContent.trim() === 'すべて' ? 'all' : 
+                             this.textContent.trim() === 'フォロー中' ? 'following' : 'popular';
+            
+            document.querySelectorAll('.filter-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            this.classList.add('active');
+
+            // ローディング表示
+            const postsGrid = document.querySelector('.posts-grid');
+            postsGrid.innerHTML = '<div class="loading"><i class="bi bi-arrow-repeat spinning"></i></div>';
+
+            // フィルター適用
+            fetch(`/filter-posts/?filter=${filterType}`)
+                .then(response => response.json())
+                .then(data => {
+                    postsGrid.innerHTML = data.html;
+                    // いいねボタンのイベントリスナーを再設定
+                    setupLikeButtons();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    postsGrid.innerHTML = '<div class="error">投稿の読み込みに失敗しました</div>';
+                });
+        });
+    });
+
+    // フォローボタンの処理
+    document.querySelectorAll('.follow-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const username = this.dataset.username;
+            fetch(`/follow/${username}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.is_following) {
+                    this.textContent = 'フォロー中';
+                    this.classList.add('following');
+                } else {
+                    this.textContent = 'フォローする';
+                    this.classList.remove('following');
+                }
+            });
+        });
+    });
+
+    // 初期設定
+    setupLikeButtons();
+});
+
+// ストーリー関連のJavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    const storyModal = document.querySelector('.story-modal');
+    const closeModal = document.querySelector('.close-modal');
+    const storyItems = document.querySelectorAll('.story-item:not(.add-story)');
+    const addStoryButton = document.querySelector('.add-story');
+    
+    // ストーリーアイテムクリック時の処理
+    storyItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const storyId = this.dataset.storyId;
+            openStoryModal(storyId);
+        });
+    });
+    
+    // ストーリー追加ボタンクリック時の処理
+    addStoryButton.addEventListener('click', function() {
+        // TODO: ストーリー作成モーダルを表示
+        console.log('Create new story');
+    });
+    
+    // モーダルを閉じる
+    closeModal.addEventListener('click', function() {
+        storyModal.style.display = 'none';
+    });
+    
+    // モーダル外クリックで閉じる
+    storyModal.addEventListener('click', function(e) {
+        if (e.target === storyModal) {
+            storyModal.style.display = 'none';
+        }
+    });
+    
+    function openStoryModal(storyId) {
+        // TODO: ストーリーデータの取得とモーダル表示
+        storyModal.style.display = 'flex';
+    }
+});
+
+// ストーリー作成モーダルの処理
+document.addEventListener('DOMContentLoaded', function() {
+    const createStoryModal = document.querySelector('.create-story-modal');
+    const addStoryButton = document.querySelector('.add-story');
+    const closeModalButtons = document.querySelectorAll('.close-modal');
+    const songSearchInput = document.getElementById('song-search');
+    const searchResults = document.querySelector('.search-results');
+    const selectedTrack = document.querySelector('.selected-track');
+    const moodOptions = document.querySelectorAll('.mood-option');
+    const commentTextarea = document.querySelector('.comment-section textarea');
+    const characterCount = document.querySelector('.character-count');
+    const createButton = document.querySelector('.create-button');
+    
+    let selectedMood = null;
+    let selectedTrackData = null;
+    let audioPreview = null;
+    
+    // ストーリー作成ボタンクリック時
+    addStoryButton.addEventListener('click', function() {
+        createStoryModal.style.display = 'flex';
+    });
+    
+    // モーダルを閉じる
+    closeModalButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            createStoryModal.style.display = 'none';
+            resetModal();
+        });
+    });
+    
+    // 曲検索
+    let searchTimeout;
+    songSearchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        const query = this.value.trim();
+        
+        if (query.length < 2) {
+            searchResults.style.display = 'none';
+            return;
+        }
+        
+        searchTimeout = setTimeout(() => {
+            fetch(`/search-track/?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.tracks && data.tracks.length > 0) {
+                        searchResults.innerHTML = data.tracks.map(track => `
+                            <div class="search-result-item" data-track-id="${track.id}" 
+                                 data-preview-url="${track.preview_url || ''}"
+                                 data-image-url="${track.album.images[0].url}"
+                                 data-title="${track.name}"
+                                 data-artist="${track.artists[0].name}">
+                                <img src="${track.album.images[0].url}" alt="${track.name}">
+                                <div class="result-details">
+                                    <h4>${track.name}</h4>
+                                    <p>${track.artists[0].name}</p>
+                                </div>
+                            </div>
+                        `).join('');
+                        searchResults.style.display = 'block';
+                        
+                        // 検索結果クリック時の処理
+                        document.querySelectorAll('.search-result-item').forEach(item => {
+                            item.addEventListener('click', function() {
+                                selectedTrackData = {
+                                    id: this.dataset.trackId,
+                                    previewUrl: this.dataset.previewUrl,
+                                    imageUrl: this.dataset.imageUrl,
+                                    title: this.dataset.title,
+                                    artist: this.dataset.artist
+                                };
+                                
+                                selectedTrack.querySelector('.track-image').src = selectedTrackData.imageUrl;
+                                selectedTrack.querySelector('.track-title').textContent = selectedTrackData.title;
+                                selectedTrack.querySelector('.track-artist').textContent = selectedTrackData.artist;
+                                
+                                selectedTrack.style.display = 'block';
+                                searchResults.style.display = 'none';
+                                songSearchInput.value = '';
+                                
+                                updateCreateButton();
+                            });
+                        });
+                    }
+                });
+        }, 500);
+    });
+    
+    // プレビュー再生の処理
+    document.querySelector('.preview-button').addEventListener('click', function() {
+        if (!selectedTrackData.previewUrl) return;
+        
+        if (!audioPreview) {
+            audioPreview = new Audio(selectedTrackData.previewUrl);
+            audioPreview.addEventListener('ended', () => {
+                this.classList.remove('playing');
+                this.innerHTML = '<i class="bi bi-play-fill"></i>';
+                audioPreview = null;
+            });
+            audioPreview.play();
+            this.classList.add('playing');
+            this.innerHTML = '<i class="bi bi-pause-fill"></i>';
+        } else {
+            audioPreview.pause();
+            audioPreview = null;
+            this.classList.remove('playing');
+            this.innerHTML = '<i class="bi bi-play-fill"></i>';
+        }
+    });
+    
+    // 気分選択の処理
+    moodOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            moodOptions.forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
+            selectedMood = {
+                mood: this.dataset.mood,
+                emoji: this.dataset.emoji
+            };
+            updateCreateButton();
+        });
+    });
+    
+    // コメント入力の処理
+    commentTextarea.addEventListener('input', function() {
+        const length = this.value.length;
+        characterCount.textContent = `${length}/200`;
+        updateCreateButton();
+    });
+    
+    // 作成ボタンの有効/無効を更新
+    function updateCreateButton() {
+        createButton.disabled = !selectedTrackData || !selectedMood;
+    }
+    
+    // ストーリー作成
+    createButton.addEventListener('click', function() {
+        if (!selectedTrackData || !selectedMood) return;
+        
+        const data = {
+            spotify_track_id: selectedTrackData.id,
+            mood: selectedMood.mood,
+            mood_emoji: selectedMood.emoji,
+            comment: commentTextarea.value.trim()
+        };
+        
+        fetch('/story/create/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                createStoryModal.style.display = 'none';
+                resetModal();
+                // ページをリロードしてストーリーを表示
+                window.location.reload();
+            } else {
+                alert('ストーリーの作成に失敗しました');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('ストーリーの作成に失敗しました');
+        });
+    });
+    
+    // モーダルをリセット
+    function resetModal() {
+        songSearchInput.value = '';
+        searchResults.style.display = 'none';
+        selectedTrack.style.display = 'none';
+        moodOptions.forEach(opt => opt.classList.remove('selected'));
+        commentTextarea.value = '';
+        characterCount.textContent = '0/200';
+        selectedMood = null;
+        selectedTrackData = null;
+        if (audioPreview) {
+            audioPreview.pause();
+            audioPreview = null;
+        }
+        updateCreateButton();
+    }
+});
+</script>
 {% endblock %} 

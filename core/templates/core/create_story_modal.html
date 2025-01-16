@@ -1,0 +1,218 @@
+{% load static %}
+
+<div class="create-story-modal" style="display: none;">
+    <div class="modal-content">
+        <button class="close-modal"><i class="bi bi-x-lg"></i></button>
+        <h3>ストーリーを作成</h3>
+        
+        <!-- 曲検索セクション -->
+        <div class="search-section">
+            <div class="search-box">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="曲を検索..." id="song-search">
+            </div>
+            <div class="search-results" style="display: none;"></div>
+        </div>
+        
+        <!-- 選択された曲の情報 -->
+        <div class="selected-track" style="display: none;">
+            <div class="track-info">
+                <img src="" alt="" class="track-image">
+                <div class="track-details">
+                    <h4 class="track-title"></h4>
+                    <p class="track-artist"></p>
+                </div>
+                <button class="preview-button">
+                    <i class="bi bi-play-fill"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- リスニングステータス -->
+        <div class="listening-status-section">
+            <h4>シェアの種類</h4>
+            <div class="status-options">
+                <button class="status-option" data-status="now_playing">
+                    <i class="bi bi-music-note-beamed"></i>
+                    <span>今聴いている</span>
+                </button>
+                <button class="status-option" data-status="just_discovered">
+                    <i class="bi bi-lightbulb"></i>
+                    <span>発見した</span>
+                </button>
+                <button class="status-option" data-status="recommendation">
+                    <i class="bi bi-heart"></i>
+                    <span>おすすめ</span>
+                </button>
+                <button class="status-option" data-status="memory">
+                    <i class="bi bi-clock-history"></i>
+                    <span>思い出の一曲</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 気分セクション -->
+        <div class="mood-section">
+            <h4>気分を選択</h4>
+            <div class="mood-options">
+                <button class="mood-option" data-mood="happy" data-emoji="😊">
+                    <span class="mood-emoji">😊</span>
+                    <span class="mood-label">ハッピー</span>
+                </button>
+                <button class="mood-option" data-mood="chill" data-emoji="😌">
+                    <span class="mood-emoji">😌</span>
+                    <span class="mood-label">リラックス</span>
+                </button>
+                <button class="mood-option" data-mood="energetic" data-emoji="⚡️">
+                    <span class="mood-emoji">⚡️</span>
+                    <span class="mood-label">エネルギッシュ</span>
+                </button>
+                <button class="mood-option" data-mood="sad" data-emoji="😢">
+                    <span class="mood-emoji">😢</span>
+                    <span class="mood-label">メランコリー</span>
+                </button>
+                <button class="mood-option" data-mood="love" data-emoji="❤️">
+                    <span class="mood-emoji">❤️</span>
+                    <span class="mood-label">ラブ</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 背景テーマ -->
+        <div class="theme-section">
+            <h4>背景エフェクト</h4>
+            <div class="theme-options">
+                <button class="theme-option" data-theme="default">
+                    <i class="bi bi-square"></i>
+                    <span>デフォルト</span>
+                </button>
+                <button class="theme-option" data-theme="wave">
+                    <i class="bi bi-water"></i>
+                    <span>波形</span>
+                </button>
+                <button class="theme-option" data-theme="stars">
+                    <i class="bi bi-stars"></i>
+                    <span>星空</span>
+                </button>
+                <button class="theme-option" data-theme="gradient">
+                    <i class="bi bi-rainbow"></i>
+                    <span>グラデーション</span>
+                </button>
+                <button class="theme-option" data-theme="vinyl">
+                    <i class="bi bi-disc"></i>
+                    <span>レコード</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- コメントセクション -->
+        <div class="comment-section">
+            <textarea placeholder="コメントを追加..." maxlength="200"></textarea>
+            <span class="character-count">0/200</span>
+        </div>
+        
+        <button class="create-button" disabled>ストーリーを作成</button>
+    </div>
+</div>
+
+<style>
+/* 既存のスタイルに追加 */
+.listening-status-section,
+.theme-section {
+    margin-bottom: 2rem;
+}
+
+.status-options,
+.theme-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+}
+
+.status-option,
+.theme-option {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 8px;
+    padding: 1rem;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.status-option i,
+.theme-option i {
+    font-size: 1.5rem;
+}
+
+.status-option:hover,
+.theme-option:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.status-option.selected,
+.theme-option.selected {
+    background: rgba(29, 185, 84, 0.2);
+    border: 2px solid #1DB954;
+}
+
+/* プレビューエフェクト */
+.preview-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.preview-effect.wave {
+    background: linear-gradient(45deg, rgba(29, 185, 84, 0.1), rgba(29, 185, 84, 0.2));
+    animation: wave 2s infinite linear;
+}
+
+.preview-effect.stars {
+    background-image: radial-gradient(circle, #fff 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: twinkle 2s infinite;
+}
+
+.preview-effect.gradient {
+    background: linear-gradient(45deg, #1DB954, #1ed760, #1DB954);
+    background-size: 200% 200%;
+    animation: gradient 5s ease infinite;
+}
+
+.preview-effect.vinyl {
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    animation: rotate 4s linear infinite;
+}
+
+@keyframes wave {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+@keyframes twinkle {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
+@keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+</style> 

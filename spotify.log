@@ -1,0 +1,630 @@
+INFO 2025-01-16 15:11:58,674 views 75826 6191312896 Spotifyデータ取得開始: user=a
+INFO 2025-01-16 15:11:58,675 spotify_utils 75826 6191312896 Spotifyクライアント取得開始: user=a, refresh_token=AQBtZodePP...
+INFO 2025-01-16 15:11:58,949 spotify_utils 75826 6191312896 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:11:58,950 spotify_utils 75826 6191312896 Spotifyクライアント取得成功
+INFO 2025-01-16 15:11:58,950 views 75826 6191312896 Spotifyクライアント取得成功
+INFO 2025-01-16 15:11:58,950 spotify_utils 75826 6191312896 最近再生した曲の取得開始
+INFO 2025-01-16 15:11:59,104 spotify_utils 75826 6191312896 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:11:59,229 views 75826 6191312896 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+INFO 2025-01-16 15:12:01,767 views 75826 6191312896 Spotify未連携: user=a
+INFO 2025-01-16 15:12:09,598 views 75826 6191312896 Spotifyコールバック処理開始: user=a
+INFO 2025-01-16 15:12:09,788 views 75826 6191312896 Spotify連携成功: user=a
+INFO 2025-01-16 15:12:09,798 views 75826 6191312896 Spotifyデータ取得開始: user=a
+INFO 2025-01-16 15:12:09,798 spotify_utils 75826 6191312896 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 15:12:09,953 spotify_utils 75826 6191312896 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:12:09,953 spotify_utils 75826 6191312896 Spotifyクライアント取得成功
+INFO 2025-01-16 15:12:09,953 views 75826 6191312896 Spotifyクライアント取得成功
+INFO 2025-01-16 15:12:09,953 spotify_utils 75826 6191312896 最近再生した曲の取得開始
+INFO 2025-01-16 15:12:10,115 spotify_utils 75826 6191312896 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:12:10,234 views 75826 6191312896 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+INFO 2025-01-16 15:13:03,008 views 75826 6191312896 Spotifyデータ取得開始: user=a
+INFO 2025-01-16 15:13:03,008 spotify_utils 75826 6191312896 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 15:13:03,201 spotify_utils 75826 6191312896 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:13:03,202 spotify_utils 75826 6191312896 Spotifyクライアント取得成功
+INFO 2025-01-16 15:13:03,202 views 75826 6191312896 Spotifyクライアント取得成功
+INFO 2025-01-16 15:13:03,202 spotify_utils 75826 6191312896 最近再生した曲の取得開始
+INFO 2025-01-16 15:13:03,363 spotify_utils 75826 6191312896 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:13:03,482 views 75826 6191312896 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+INFO 2025-01-16 15:13:25,428 views 75826 6208139264 Spotify未連携: user=takumi
+INFO 2025-01-16 15:13:30,456 views 75826 6225539072 Spotifyコールバック処理開始: user=takumi
+INFO 2025-01-16 15:13:30,632 views 75826 6225539072 Spotify連携成功: user=takumi
+INFO 2025-01-16 15:13:30,642 views 75826 6225539072 Spotifyデータ取得開始: user=takumi
+INFO 2025-01-16 15:13:30,642 spotify_utils 75826 6225539072 Spotifyクライアント取得開始: user=takumi, refresh_token=AQD3iK0AHk...
+INFO 2025-01-16 15:13:30,821 spotify_utils 75826 6225539072 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:13:30,821 spotify_utils 75826 6225539072 Spotifyクライアント取得成功
+INFO 2025-01-16 15:13:30,821 views 75826 6225539072 Spotifyクライアント取得成功
+INFO 2025-01-16 15:13:30,821 spotify_utils 75826 6225539072 最近再生した曲の取得開始
+INFO 2025-01-16 15:13:30,973 spotify_utils 75826 6225539072 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:13:31,099 views 75826 6225539072 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+INFO 2025-01-16 15:13:59,570 views 75826 6191312896 Spotifyデータ取得開始: user=takumi
+INFO 2025-01-16 15:13:59,570 spotify_utils 75826 6191312896 Spotifyクライアント取得開始: user=takumi, refresh_token=AQD3iK0AHk...
+INFO 2025-01-16 15:13:59,752 spotify_utils 75826 6191312896 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:13:59,752 spotify_utils 75826 6191312896 Spotifyクライアント取得成功
+INFO 2025-01-16 15:13:59,752 views 75826 6191312896 Spotifyクライアント取得成功
+INFO 2025-01-16 15:13:59,753 spotify_utils 75826 6191312896 最近再生した曲の取得開始
+INFO 2025-01-16 15:13:59,946 spotify_utils 75826 6191312896 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:14:00,090 views 75826 6191312896 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+INFO 2025-01-16 15:14:01,129 views 75826 6191312896 Spotifyデータ取得開始: user=takumi
+INFO 2025-01-16 15:14:01,129 spotify_utils 75826 6191312896 Spotifyクライアント取得開始: user=takumi, refresh_token=AQD3iK0AHk...
+INFO 2025-01-16 15:14:01,305 spotify_utils 75826 6191312896 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:14:01,305 spotify_utils 75826 6191312896 Spotifyクライアント取得成功
+INFO 2025-01-16 15:14:01,306 views 75826 6191312896 Spotifyクライアント取得成功
+INFO 2025-01-16 15:14:01,306 spotify_utils 75826 6191312896 最近再生した曲の取得開始
+INFO 2025-01-16 15:14:01,465 spotify_utils 75826 6191312896 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:14:01,608 views 75826 6191312896 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+INFO 2025-01-16 15:18:30,658 views 76333 6164901888 Spotifyデータ取得開始: user=takumi
+INFO 2025-01-16 15:18:30,658 spotify_utils 76333 6164901888 Spotifyクライアント取得開始: user=takumi, refresh_token=AQD3iK0AHk...
+INFO 2025-01-16 15:18:30,953 spotify_utils 76333 6164901888 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:18:30,953 spotify_utils 76333 6164901888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:18:30,953 views 76333 6164901888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:18:30,953 spotify_utils 76333 6164901888 最近再生した曲の取得開始
+INFO 2025-01-16 15:18:31,126 spotify_utils 76333 6164901888 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:18:31,242 views 76333 6164901888 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+INFO 2025-01-16 15:19:51,941 views 76579 6195654656 Spotifyデータ取得開始: user=takumi
+INFO 2025-01-16 15:19:51,941 spotify_utils 76579 6195654656 Spotifyクライアント取得開始: user=takumi, refresh_token=AQD3iK0AHk...
+INFO 2025-01-16 15:19:52,214 spotify_utils 76579 6195654656 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:19:52,214 spotify_utils 76579 6195654656 Spotifyクライアント取得成功
+INFO 2025-01-16 15:19:52,214 views 76579 6195654656 Spotifyクライアント取得成功
+INFO 2025-01-16 15:19:52,214 spotify_utils 76579 6195654656 最近再生した曲の取得開始
+INFO 2025-01-16 15:19:52,358 spotify_utils 76579 6195654656 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:19:52,487 views 76579 6195654656 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+ERROR 2025-01-16 15:19:52,496 models 76579 6195654656 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 15:22:32,718 views 76739 6122745856 Spotifyデータ取得開始: user=takumi
+INFO 2025-01-16 15:22:32,719 spotify_utils 76739 6122745856 Spotifyクライアント取得開始: user=takumi, refresh_token=AQD3iK0AHk...
+INFO 2025-01-16 15:22:32,929 spotify_utils 76739 6122745856 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:22:32,929 spotify_utils 76739 6122745856 Spotifyクライアント取得成功
+INFO 2025-01-16 15:22:32,929 views 76739 6122745856 Spotifyクライアント取得成功
+INFO 2025-01-16 15:22:32,929 spotify_utils 76739 6122745856 最近再生した曲の取得開始
+INFO 2025-01-16 15:22:33,084 spotify_utils 76739 6122745856 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:22:33,193 views 76739 6122745856 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+ERROR 2025-01-16 15:22:33,199 models 76739 6122745856 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 15:22:33,218 models 76739 6122745856 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 15:22:58,175 views 76739 6122745856 Spotifyデータ取得開始: user=a
+INFO 2025-01-16 15:22:58,176 spotify_utils 76739 6122745856 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 15:22:58,349 spotify_utils 76739 6122745856 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:22:58,349 spotify_utils 76739 6122745856 Spotifyクライアント取得成功
+INFO 2025-01-16 15:22:58,350 views 76739 6122745856 Spotifyクライアント取得成功
+INFO 2025-01-16 15:22:58,350 spotify_utils 76739 6122745856 最近再生した曲の取得開始
+INFO 2025-01-16 15:22:58,513 spotify_utils 76739 6122745856 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:22:58,641 views 76739 6122745856 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+INFO 2025-01-16 15:23:21,727 views 76739 6156972032 Spotifyデータ取得開始: user=takumi
+INFO 2025-01-16 15:23:21,728 spotify_utils 76739 6156972032 Spotifyクライアント取得開始: user=takumi, refresh_token=AQD3iK0AHk...
+INFO 2025-01-16 15:23:21,911 spotify_utils 76739 6156972032 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:23:21,912 spotify_utils 76739 6156972032 Spotifyクライアント取得成功
+INFO 2025-01-16 15:23:21,912 views 76739 6156972032 Spotifyクライアント取得成功
+INFO 2025-01-16 15:23:21,912 spotify_utils 76739 6156972032 最近再生した曲の取得開始
+INFO 2025-01-16 15:23:22,095 spotify_utils 76739 6156972032 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:23:22,229 views 76739 6156972032 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+ERROR 2025-01-16 15:23:22,231 models 76739 6156972032 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 15:23:22,234 models 76739 6156972032 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 15:23:44,614 views 76739 6156972032 Spotify未連携: user=takumi
+ERROR 2025-01-16 15:23:44,616 models 76739 6156972032 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 15:23:44,619 models 76739 6156972032 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 15:23:47,707 views 76739 6156972032 Spotifyコールバック処理開始: user=takumi
+INFO 2025-01-16 15:23:47,880 views 76739 6156972032 Spotify連携成功: user=takumi
+INFO 2025-01-16 15:23:47,889 views 76739 6156972032 Spotifyデータ取得開始: user=takumi
+INFO 2025-01-16 15:23:47,889 spotify_utils 76739 6156972032 Spotifyクライアント取得開始: user=takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 15:23:48,068 spotify_utils 76739 6156972032 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:23:48,069 spotify_utils 76739 6156972032 Spotifyクライアント取得成功
+INFO 2025-01-16 15:23:48,069 views 76739 6156972032 Spotifyクライアント取得成功
+INFO 2025-01-16 15:23:48,069 spotify_utils 76739 6156972032 最近再生した曲の取得開始
+INFO 2025-01-16 15:23:48,229 spotify_utils 76739 6156972032 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:23:48,544 views 76739 6156972032 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+ERROR 2025-01-16 15:23:48,551 models 76739 6156972032 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 15:23:48,557 models 76739 6156972032 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 15:28:26,259 views 76739 6156972032 Spotifyデータ取得開始: user=takumi
+INFO 2025-01-16 15:28:26,260 spotify_utils 76739 6156972032 Spotifyクライアント取得開始: user=takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 15:28:26,453 spotify_utils 76739 6156972032 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:28:26,453 spotify_utils 76739 6156972032 Spotifyクライアント取得成功
+INFO 2025-01-16 15:28:26,454 views 76739 6156972032 Spotifyクライアント取得成功
+INFO 2025-01-16 15:28:26,454 spotify_utils 76739 6156972032 最近再生した曲の取得開始
+INFO 2025-01-16 15:28:26,634 spotify_utils 76739 6156972032 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:28:26,751 views 76739 6156972032 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+ERROR 2025-01-16 15:28:26,758 models 76739 6156972032 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 15:28:26,771 models 76739 6156972032 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 15:31:31,604 views 77427 6135361536 Spotifyデータ取得開始: user=たくみ
+INFO 2025-01-16 15:31:31,604 spotify_utils 77427 6135361536 Spotifyクライアント取得開始: user=たくみ, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 15:31:31,804 spotify_utils 77427 6135361536 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:31:31,804 spotify_utils 77427 6135361536 Spotifyクライアント取得成功
+INFO 2025-01-16 15:31:31,805 views 77427 6135361536 Spotifyクライアント取得成功
+INFO 2025-01-16 15:31:31,805 spotify_utils 77427 6135361536 最近再生した曲の取得開始
+INFO 2025-01-16 15:31:31,984 spotify_utils 77427 6135361536 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:31:32,109 views 77427 6135361536 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+ERROR 2025-01-16 15:31:32,114 models 77427 6135361536 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 15:31:32,129 models 77427 6135361536 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 15:32:22,072 views 77427 6135361536 Spotifyデータ取得開始: user=たくみ
+INFO 2025-01-16 15:32:22,072 spotify_utils 77427 6135361536 Spotifyクライアント取得開始: user=たくみ, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 15:32:22,227 spotify_utils 77427 6135361536 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:32:22,227 spotify_utils 77427 6135361536 Spotifyクライアント取得成功
+INFO 2025-01-16 15:32:22,227 views 77427 6135361536 Spotifyクライアント取得成功
+INFO 2025-01-16 15:32:22,227 spotify_utils 77427 6135361536 最近再生した曲の取得開始
+INFO 2025-01-16 15:32:22,402 spotify_utils 77427 6135361536 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:32:22,515 views 77427 6135361536 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+ERROR 2025-01-16 15:32:22,516 models 77427 6135361536 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 15:32:22,519 models 77427 6135361536 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 15:33:19,740 views 77427 6135361536 Spotifyデータ取得開始: user=たくみ
+INFO 2025-01-16 15:33:19,740 spotify_utils 77427 6135361536 Spotifyクライアント取得開始: user=たくみ, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 15:33:19,943 spotify_utils 77427 6135361536 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:33:19,943 spotify_utils 77427 6135361536 Spotifyクライアント取得成功
+INFO 2025-01-16 15:33:19,943 views 77427 6135361536 Spotifyクライアント取得成功
+INFO 2025-01-16 15:33:19,944 spotify_utils 77427 6135361536 最近再生した曲の取得開始
+INFO 2025-01-16 15:33:20,099 spotify_utils 77427 6135361536 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:33:20,229 views 77427 6135361536 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+ERROR 2025-01-16 15:33:20,232 models 77427 6135361536 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 15:33:20,237 models 77427 6135361536 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 15:37:49,604 views 78095 6191083520 Spotifyデータ取得開始: user=たくみ
+INFO 2025-01-16 15:37:49,604 spotify_utils 78095 6191083520 Spotifyクライアント取得開始: user=たくみ, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 15:37:49,827 spotify_utils 78095 6191083520 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:37:49,828 spotify_utils 78095 6191083520 Spotifyクライアント取得成功
+INFO 2025-01-16 15:37:49,828 views 78095 6191083520 Spotifyクライアント取得成功
+INFO 2025-01-16 15:37:49,828 spotify_utils 78095 6191083520 最近再生した曲の取得開始
+INFO 2025-01-16 15:37:50,051 spotify_utils 78095 6191083520 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:37:50,183 views 78095 6191083520 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+ERROR 2025-01-16 15:37:50,189 models 78095 6191083520 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 15:37:50,207 models 78095 6191083520 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 15:38:21,413 views 78095 6207909888 Spotifyデータ取得開始: user=engineering_takumi
+INFO 2025-01-16 15:38:21,413 spotify_utils 78095 6207909888 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 15:38:21,583 spotify_utils 78095 6207909888 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:38:21,584 spotify_utils 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:38:21,586 views 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:38:21,587 spotify_utils 78095 6207909888 最近再生した曲の取得開始
+INFO 2025-01-16 15:38:21,756 spotify_utils 78095 6207909888 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:38:21,878 views 78095 6207909888 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+ERROR 2025-01-16 15:38:21,883 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 15:38:21,888 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 15:39:06,180 views 78095 6207909888 Spotifyデータ取得開始: user=engineering_takumi
+INFO 2025-01-16 15:39:06,180 spotify_utils 78095 6207909888 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 15:39:06,380 spotify_utils 78095 6207909888 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:39:06,381 spotify_utils 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:39:06,381 views 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:39:06,381 spotify_utils 78095 6207909888 最近再生した曲の取得開始
+INFO 2025-01-16 15:39:06,542 spotify_utils 78095 6207909888 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:39:06,665 views 78095 6207909888 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+ERROR 2025-01-16 15:39:06,673 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 15:39:06,681 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 15:39:33,854 views 78095 6207909888 Spotifyデータ取得開始: user=engineering_takumi
+INFO 2025-01-16 15:39:33,854 spotify_utils 78095 6207909888 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 15:39:34,050 spotify_utils 78095 6207909888 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:39:34,050 spotify_utils 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:39:34,050 views 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:39:34,050 spotify_utils 78095 6207909888 最近再生した曲の取得開始
+INFO 2025-01-16 15:39:34,228 spotify_utils 78095 6207909888 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:39:34,338 views 78095 6207909888 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+ERROR 2025-01-16 15:39:34,339 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 15:39:34,344 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 15:41:22,990 views 78095 6207909888 Spotifyデータ取得開始: user=engineering_takumi
+INFO 2025-01-16 15:41:22,991 spotify_utils 78095 6207909888 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 15:41:23,184 spotify_utils 78095 6207909888 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:41:23,184 spotify_utils 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:41:23,184 views 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:41:23,184 spotify_utils 78095 6207909888 最近再生した曲の取得開始
+INFO 2025-01-16 15:41:23,332 spotify_utils 78095 6207909888 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:41:23,453 views 78095 6207909888 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+ERROR 2025-01-16 15:41:23,460 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 15:41:23,477 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 15:41:26,024 views 78095 6207909888 Spotifyデータ取得開始: user=engineering_takumi
+INFO 2025-01-16 15:41:26,024 spotify_utils 78095 6207909888 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 15:41:26,183 spotify_utils 78095 6207909888 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:41:26,183 spotify_utils 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:41:26,183 views 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:41:26,183 spotify_utils 78095 6207909888 最近再生した曲の取得開始
+INFO 2025-01-16 15:41:26,337 spotify_utils 78095 6207909888 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:41:26,451 views 78095 6207909888 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+ERROR 2025-01-16 15:41:26,458 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 15:41:26,466 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 15:41:33,952 views 78095 6207909888 Spotifyデータ取得開始: user=engineering_takumi
+INFO 2025-01-16 15:41:33,953 spotify_utils 78095 6207909888 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 15:41:34,136 spotify_utils 78095 6207909888 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:41:34,137 spotify_utils 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:41:34,137 views 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:41:34,137 spotify_utils 78095 6207909888 最近再生した曲の取得開始
+INFO 2025-01-16 15:41:36,306 spotify_utils 78095 6207909888 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:41:36,431 views 78095 6207909888 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+ERROR 2025-01-16 15:41:36,436 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 15:41:36,444 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 15:41:52,378 views 78095 6207909888 Spotifyデータ取得開始: user=engineering_takumi
+INFO 2025-01-16 15:41:52,378 spotify_utils 78095 6207909888 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 15:41:52,561 spotify_utils 78095 6207909888 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:41:52,561 spotify_utils 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:41:52,561 views 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:41:52,562 spotify_utils 78095 6207909888 最近再生した曲の取得開始
+INFO 2025-01-16 15:41:52,708 spotify_utils 78095 6207909888 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:41:52,825 views 78095 6207909888 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+ERROR 2025-01-16 15:41:52,830 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 15:41:52,837 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 15:43:22,506 views 78095 6207909888 Spotifyデータ取得開始: user=engineering_takumi
+INFO 2025-01-16 15:43:22,507 spotify_utils 78095 6207909888 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 15:43:22,711 spotify_utils 78095 6207909888 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:43:22,711 spotify_utils 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:43:22,711 views 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:43:22,711 spotify_utils 78095 6207909888 最近再生した曲の取得開始
+INFO 2025-01-16 15:43:22,890 spotify_utils 78095 6207909888 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:43:23,009 views 78095 6207909888 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+ERROR 2025-01-16 15:43:23,016 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 15:43:23,031 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 15:43:51,078 views 78095 6207909888 Spotifyデータ取得開始: user=engineering_takumi
+INFO 2025-01-16 15:43:51,078 spotify_utils 78095 6207909888 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 15:43:51,238 spotify_utils 78095 6207909888 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:43:51,238 spotify_utils 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:43:51,238 views 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:43:51,238 spotify_utils 78095 6207909888 最近再生した曲の取得開始
+INFO 2025-01-16 15:43:51,432 spotify_utils 78095 6207909888 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:43:51,551 views 78095 6207909888 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+ERROR 2025-01-16 15:43:51,552 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 15:43:51,556 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 15:43:56,762 views 78095 6207909888 Spotifyデータ取得開始: user=engineering_takumi
+INFO 2025-01-16 15:43:56,762 spotify_utils 78095 6207909888 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 15:43:56,930 spotify_utils 78095 6207909888 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:43:56,930 spotify_utils 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:43:56,930 views 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:43:56,930 spotify_utils 78095 6207909888 最近再生した曲の取得開始
+INFO 2025-01-16 15:43:57,090 spotify_utils 78095 6207909888 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:43:57,239 views 78095 6207909888 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+ERROR 2025-01-16 15:43:57,240 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 15:43:57,244 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 15:44:04,064 views 78095 6207909888 Spotifyデータ取得開始: user=engineering_takumi
+INFO 2025-01-16 15:44:04,065 spotify_utils 78095 6207909888 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 15:44:04,251 spotify_utils 78095 6207909888 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:44:04,254 spotify_utils 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:44:04,257 views 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:44:04,268 spotify_utils 78095 6207909888 最近再生した曲の取得開始
+INFO 2025-01-16 15:44:04,440 spotify_utils 78095 6207909888 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:44:04,551 views 78095 6207909888 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+ERROR 2025-01-16 15:44:04,554 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 15:44:04,560 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 15:44:06,775 views 78095 6207909888 Spotifyデータ取得開始: user=engineering_takumi
+INFO 2025-01-16 15:44:06,775 spotify_utils 78095 6207909888 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 15:44:06,947 spotify_utils 78095 6207909888 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:44:06,948 spotify_utils 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:44:06,948 views 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:44:06,948 spotify_utils 78095 6207909888 最近再生した曲の取得開始
+INFO 2025-01-16 15:44:07,107 spotify_utils 78095 6207909888 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:44:07,237 views 78095 6207909888 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+ERROR 2025-01-16 15:44:07,240 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 15:44:07,245 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 15:44:28,239 views 78095 6207909888 Spotifyデータ取得開始: user=engineering_takumi
+INFO 2025-01-16 15:44:28,239 spotify_utils 78095 6207909888 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 15:44:28,437 spotify_utils 78095 6207909888 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:44:28,437 spotify_utils 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:44:28,437 views 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:44:28,437 spotify_utils 78095 6207909888 最近再生した曲の取得開始
+INFO 2025-01-16 15:44:28,591 spotify_utils 78095 6207909888 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:44:28,710 views 78095 6207909888 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+ERROR 2025-01-16 15:44:28,715 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 15:44:28,722 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 15:45:42,677 views 78095 6207909888 Spotifyデータ取得開始: user=engineering_takumi
+INFO 2025-01-16 15:45:42,678 spotify_utils 78095 6207909888 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 15:45:42,882 spotify_utils 78095 6207909888 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:45:42,885 spotify_utils 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:45:42,886 views 78095 6207909888 Spotifyクライアント取得成功
+INFO 2025-01-16 15:45:42,887 spotify_utils 78095 6207909888 最近再生した曲の取得開始
+INFO 2025-01-16 15:45:43,065 spotify_utils 78095 6207909888 最近再生した曲を0件取得しました
+INFO 2025-01-16 15:45:43,189 views 78095 6207909888 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+ERROR 2025-01-16 15:45:43,192 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 15:45:43,200 models 78095 6207909888 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 15:57:45,403 views 79614 6166409216 Spotifyデータ取得開始: user=a
+INFO 2025-01-16 15:57:45,403 spotify_utils 79614 6166409216 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 15:57:45,623 spotify_utils 79614 6166409216 アクセストークンの更新に成功しました
+INFO 2025-01-16 15:57:45,623 spotify_utils 79614 6166409216 Spotifyクライアント取得成功
+INFO 2025-01-16 15:57:45,623 views 79614 6166409216 Spotifyクライアント取得成功
+INFO 2025-01-16 15:57:45,624 spotify_utils 79614 6166409216 最近再生した曲の取得開始
+ERROR 2025-01-16 16:00:01,169 views 80278 6162624512 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 16:00:30,048 views 80278 6162624512 Spotifyデータ取得開始: user=a
+INFO 2025-01-16 16:00:30,048 spotify_utils 80278 6162624512 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:00:30,312 spotify_utils 80278 6162624512 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:00:30,312 spotify_utils 80278 6162624512 Spotifyクライアント取得成功
+INFO 2025-01-16 16:00:30,312 views 80278 6162624512 Spotifyクライアント取得成功
+INFO 2025-01-16 16:00:30,312 spotify_utils 80278 6162624512 最近再生した曲の取得開始
+INFO 2025-01-16 16:00:30,476 spotify_utils 80278 6162624512 最近再生した曲を0件取得しました
+INFO 2025-01-16 16:00:30,599 views 80278 6162624512 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+ERROR 2025-01-16 16:00:30,606 models 80278 6162624512 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 16:00:30,626 models 80278 6162624512 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 16:00:39,373 views 80278 6162624512 Spotifyデータ取得開始: user=a
+INFO 2025-01-16 16:00:39,373 spotify_utils 80278 6162624512 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:00:39,543 spotify_utils 80278 6162624512 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:00:39,543 spotify_utils 80278 6162624512 Spotifyクライアント取得成功
+INFO 2025-01-16 16:00:39,543 views 80278 6162624512 Spotifyクライアント取得成功
+INFO 2025-01-16 16:00:39,543 spotify_utils 80278 6162624512 最近再生した曲の取得開始
+INFO 2025-01-16 16:00:39,711 spotify_utils 80278 6162624512 最近再生した曲を0件取得しました
+INFO 2025-01-16 16:00:39,831 views 80278 6162624512 Spotifyデータ取得完了: recently_played=0件, top_tracks=0件
+ERROR 2025-01-16 16:00:39,837 models 80278 6162624512 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 16:00:39,852 models 80278 6162624512 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+ERROR 2025-01-16 16:00:41,227 views 80278 6162624512 おすすめユーザーの取得に失敗: Cannot use QuerySet for "Profile": Use a QuerySet for "User".
+INFO 2025-01-16 16:07:48,268 spotify_utils 80989 6164721664 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:07:48,844 spotify_utils 80989 6164721664 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:07:48,844 spotify_utils 80989 6164721664 Spotifyクライアント取得成功
+INFO 2025-01-16 16:07:48,844 spotify_utils 80989 6164721664 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 16:07:49,006 spotify_utils 80989 6164721664 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:07:49,006 spotify_utils 80989 6164721664 Spotifyクライアント取得成功
+INFO 2025-01-16 16:13:45,656 spotify_utils 81303 6135934976 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:13:45,855 spotify_utils 81303 6135934976 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:13:45,855 spotify_utils 81303 6135934976 Spotifyクライアント取得成功
+INFO 2025-01-16 16:13:45,856 spotify_utils 81303 6135934976 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 16:13:46,027 spotify_utils 81303 6135934976 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:13:46,027 spotify_utils 81303 6135934976 Spotifyクライアント取得成功
+INFO 2025-01-16 16:14:15,069 views 81303 6135934976 Spotifyデータ取得開始: user=engineering_takumi
+INFO 2025-01-16 16:14:15,069 spotify_utils 81303 6135934976 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 16:14:15,260 spotify_utils 81303 6135934976 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:14:15,260 spotify_utils 81303 6135934976 Spotifyクライアント取得成功
+INFO 2025-01-16 16:14:15,260 views 81303 6135934976 Spotifyクライアント取得成功
+INFO 2025-01-16 16:14:15,260 spotify_utils 81303 6135934976 最近再生した曲の取得開始
+INFO 2025-01-16 16:14:15,477 spotify_utils 81303 6135934976 最近再生した曲を1件取得しました
+INFO 2025-01-16 16:25:07,876 spotify_utils 82759 6192050176 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:25:08,074 spotify_utils 82759 6192050176 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:25:08,074 spotify_utils 82759 6192050176 Spotifyクライアント取得成功
+INFO 2025-01-16 16:25:08,074 spotify_utils 82759 6192050176 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 16:25:08,249 spotify_utils 82759 6192050176 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:25:08,250 spotify_utils 82759 6192050176 Spotifyクライアント取得成功
+INFO 2025-01-16 16:33:47,175 spotify_utils 83680 6171357184 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:33:47,414 spotify_utils 83680 6171357184 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:33:47,414 spotify_utils 83680 6171357184 Spotifyクライアント取得成功
+INFO 2025-01-16 16:33:47,414 spotify_utils 83680 6171357184 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 16:33:47,572 spotify_utils 83680 6171357184 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:33:47,572 spotify_utils 83680 6171357184 Spotifyクライアント取得成功
+INFO 2025-01-16 16:33:51,297 spotify_utils 83680 6171357184 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:33:51,459 spotify_utils 83680 6171357184 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:33:51,459 spotify_utils 83680 6171357184 Spotifyクライアント取得成功
+INFO 2025-01-16 16:33:51,459 spotify_utils 83680 6171357184 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 16:33:51,623 spotify_utils 83680 6171357184 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:33:51,624 spotify_utils 83680 6171357184 Spotifyクライアント取得成功
+INFO 2025-01-16 16:34:37,948 views 83850 6155546624 Spotifyデータ取得開始: user=a
+INFO 2025-01-16 16:34:37,949 spotify_utils 83850 6155546624 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:34:38,135 spotify_utils 83850 6155546624 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:34:38,135 spotify_utils 83850 6155546624 Spotifyクライアント取得成功
+INFO 2025-01-16 16:34:38,135 views 83850 6155546624 Spotifyクライアント取得成功
+ERROR 2025-01-16 16:34:38,135 views 83850 6155546624 Spotifyデータの取得に失敗: name 'get_recently_played_tracks' is not defined
+ERROR 2025-01-16 16:34:38,136 models 83850 6155546624 おすすめユーザーの取得に失敗: 'User' object has no attribute 'following'
+INFO 2025-01-16 16:35:20,907 views 83930 6155923456 Spotifyデータ取得開始: user=a
+INFO 2025-01-16 16:35:20,907 spotify_utils 83930 6155923456 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:35:21,100 spotify_utils 83930 6155923456 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:35:21,100 spotify_utils 83930 6155923456 Spotifyクライアント取得成功
+INFO 2025-01-16 16:35:21,100 views 83930 6155923456 Spotifyクライアント取得成功
+ERROR 2025-01-16 16:35:21,100 views 83930 6155923456 Spotifyデータの取得に失敗: name 'get_recently_played_tracks' is not defined
+ERROR 2025-01-16 16:35:21,102 models 83930 6155923456 おすすめユーザーの取得に失敗: 'User' object has no attribute 'following'
+ERROR 2025-01-16 16:35:21,115 models 83930 6155923456 おすすめユーザーの取得に失敗: 'User' object has no attribute 'following'
+INFO 2025-01-16 16:35:43,569 spotify_utils 83930 6155923456 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:35:43,779 spotify_utils 83930 6155923456 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:35:43,779 spotify_utils 83930 6155923456 Spotifyクライアント取得成功
+INFO 2025-01-16 16:35:43,779 spotify_utils 83930 6155923456 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 16:35:43,961 spotify_utils 83930 6155923456 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:35:43,961 spotify_utils 83930 6155923456 Spotifyクライアント取得成功
+INFO 2025-01-16 16:37:18,391 spotify_utils 84098 6162706432 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:37:18,555 spotify_utils 84098 6162706432 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:37:18,555 spotify_utils 84098 6162706432 Spotifyクライアント取得成功
+INFO 2025-01-16 16:37:18,555 spotify_utils 84098 6162706432 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 16:37:18,721 spotify_utils 84098 6162706432 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:37:18,722 spotify_utils 84098 6162706432 Spotifyクライアント取得成功
+INFO 2025-01-16 16:37:43,956 spotify_utils 84098 6162706432 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:37:44,130 spotify_utils 84098 6162706432 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:37:44,131 spotify_utils 84098 6162706432 Spotifyクライアント取得成功
+INFO 2025-01-16 16:37:44,131 spotify_utils 84098 6162706432 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 16:37:44,296 spotify_utils 84098 6162706432 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:37:44,297 spotify_utils 84098 6162706432 Spotifyクライアント取得成功
+INFO 2025-01-16 16:37:50,297 views 84098 6162706432 Spotifyデータ取得開始: user=engineering_takumi
+INFO 2025-01-16 16:37:50,298 spotify_utils 84098 6162706432 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 16:37:50,466 spotify_utils 84098 6162706432 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:37:50,466 spotify_utils 84098 6162706432 Spotifyクライアント取得成功
+INFO 2025-01-16 16:37:50,466 views 84098 6162706432 Spotifyクライアント取得成功
+ERROR 2025-01-16 16:37:50,466 views 84098 6162706432 Spotifyデータの取得に失敗: name 'get_recently_played_tracks' is not defined
+INFO 2025-01-16 16:43:33,387 spotify_utils 84887 6161870848 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:43:33,600 spotify_utils 84887 6161870848 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:43:33,601 spotify_utils 84887 6161870848 Spotifyクライアント取得成功
+INFO 2025-01-16 16:43:33,601 spotify_utils 84887 6161870848 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 16:43:33,778 spotify_utils 84887 6161870848 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:43:33,778 spotify_utils 84887 6161870848 Spotifyクライアント取得成功
+INFO 2025-01-16 16:43:38,205 views 84887 6161870848 Spotifyデータ取得開始: user=a
+INFO 2025-01-16 16:43:38,205 spotify_utils 84887 6161870848 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:43:38,370 spotify_utils 84887 6161870848 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:43:38,371 spotify_utils 84887 6161870848 Spotifyクライアント取得成功
+INFO 2025-01-16 16:43:38,371 views 84887 6161870848 Spotifyクライアント取得成功
+ERROR 2025-01-16 16:43:38,371 views 84887 6161870848 Spotifyデータの取得に失敗: name 'get_recently_played_tracks' is not defined
+INFO 2025-01-16 16:43:49,070 views 84887 6178697216 Spotifyデータ取得開始: user=a
+INFO 2025-01-16 16:43:49,070 spotify_utils 84887 6178697216 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:43:49,229 spotify_utils 84887 6178697216 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:43:49,230 spotify_utils 84887 6178697216 Spotifyクライアント取得成功
+INFO 2025-01-16 16:43:49,230 views 84887 6178697216 Spotifyクライアント取得成功
+ERROR 2025-01-16 16:43:49,230 views 84887 6178697216 Spotifyデータの取得に失敗: name 'get_recently_played_tracks' is not defined
+INFO 2025-01-16 16:44:08,051 spotify_utils 84887 6178697216 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:44:08,211 spotify_utils 84887 6178697216 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:44:08,211 spotify_utils 84887 6178697216 Spotifyクライアント取得成功
+INFO 2025-01-16 16:44:08,211 spotify_utils 84887 6178697216 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 16:44:08,374 spotify_utils 84887 6178697216 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:44:08,375 spotify_utils 84887 6178697216 Spotifyクライアント取得成功
+INFO 2025-01-16 16:44:29,010 views 84887 6178697216 Spotifyデータ取得開始: user=a
+INFO 2025-01-16 16:44:29,010 spotify_utils 84887 6178697216 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:44:29,175 spotify_utils 84887 6178697216 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:44:29,176 spotify_utils 84887 6178697216 Spotifyクライアント取得成功
+INFO 2025-01-16 16:44:29,176 views 84887 6178697216 Spotifyクライアント取得成功
+ERROR 2025-01-16 16:44:29,176 views 84887 6178697216 Spotifyデータの取得に失敗: name 'get_recently_played_tracks' is not defined
+INFO 2025-01-16 16:46:54,513 views 85252 6202519552 Spotifyデータ取得開始: user=a
+INFO 2025-01-16 16:46:54,513 spotify_utils 85252 6202519552 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:46:54,724 spotify_utils 85252 6202519552 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:46:54,724 spotify_utils 85252 6202519552 Spotifyクライアント取得成功
+INFO 2025-01-16 16:46:54,724 views 85252 6202519552 Spotifyクライアント取得成功
+ERROR 2025-01-16 16:46:54,724 views 85252 6202519552 Spotifyデータの取得に失敗: name 'get_recently_played_tracks' is not defined
+INFO 2025-01-16 16:47:02,329 views 85252 6202519552 Spotifyデータ取得開始: user=a
+INFO 2025-01-16 16:47:02,329 spotify_utils 85252 6202519552 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:47:04,530 spotify_utils 85252 6202519552 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:47:04,530 spotify_utils 85252 6202519552 Spotifyクライアント取得成功
+INFO 2025-01-16 16:47:04,530 views 85252 6202519552 Spotifyクライアント取得成功
+ERROR 2025-01-16 16:47:04,531 views 85252 6202519552 Spotifyデータの取得に失敗: name 'get_recently_played_tracks' is not defined
+INFO 2025-01-16 16:47:06,650 spotify_utils 85252 6202519552 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:47:06,827 spotify_utils 85252 6202519552 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:47:06,827 spotify_utils 85252 6202519552 Spotifyクライアント取得成功
+INFO 2025-01-16 16:47:06,828 spotify_utils 85252 6202519552 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 16:47:07,002 spotify_utils 85252 6202519552 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:47:07,002 spotify_utils 85252 6202519552 Spotifyクライアント取得成功
+INFO 2025-01-16 16:47:14,715 views 85252 6219345920 Spotifyデータ取得開始: user=a
+INFO 2025-01-16 16:47:14,716 spotify_utils 85252 6219345920 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:47:14,884 spotify_utils 85252 6219345920 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:47:14,884 spotify_utils 85252 6219345920 Spotifyクライアント取得成功
+INFO 2025-01-16 16:47:14,884 views 85252 6219345920 Spotifyクライアント取得成功
+ERROR 2025-01-16 16:47:14,884 views 85252 6219345920 Spotifyデータの取得に失敗: name 'get_recently_played_tracks' is not defined
+INFO 2025-01-16 16:47:24,620 views 85252 6219345920 Spotifyデータ取得開始: user=a
+INFO 2025-01-16 16:47:24,620 spotify_utils 85252 6219345920 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:47:24,789 spotify_utils 85252 6219345920 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:47:24,789 spotify_utils 85252 6219345920 Spotifyクライアント取得成功
+INFO 2025-01-16 16:47:24,789 views 85252 6219345920 Spotifyクライアント取得成功
+ERROR 2025-01-16 16:47:24,789 views 85252 6219345920 Spotifyデータの取得に失敗: name 'get_recently_played_tracks' is not defined
+INFO 2025-01-16 16:49:34,172 spotify_utils 85489 6205140992 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:49:34,340 spotify_utils 85489 6205140992 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:49:34,341 spotify_utils 85489 6205140992 Spotifyクライアント取得成功
+INFO 2025-01-16 16:49:34,341 spotify_utils 85489 6205140992 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 16:49:34,510 spotify_utils 85489 6205140992 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:49:34,511 spotify_utils 85489 6205140992 Spotifyクライアント取得成功
+INFO 2025-01-16 16:49:39,288 views 85489 6205140992 Spotifyデータ取得開始: user=a
+INFO 2025-01-16 16:49:39,288 spotify_utils 85489 6205140992 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:49:39,464 spotify_utils 85489 6205140992 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:49:39,464 spotify_utils 85489 6205140992 Spotifyクライアント取得成功
+INFO 2025-01-16 16:49:39,464 views 85489 6205140992 Spotifyクライアント取得成功
+ERROR 2025-01-16 16:49:39,464 views 85489 6205140992 Spotifyデータの取得に失敗: name 'get_recently_played_tracks' is not defined
+ERROR 2025-01-16 16:51:05,183 views 85659 6167506944 Spotifyデータ取得中にエラー: http status: 404, code:-1 - https://api.spotify.com/v1/recommendations/available-genre-seeds:
+ None, reason: None
+ERROR 2025-01-16 16:51:08,525 views 85659 6167506944 Spotifyデータ取得中にエラー: http status: 404, code:-1 - https://api.spotify.com/v1/recommendations/available-genre-seeds:
+ None, reason: None
+INFO 2025-01-16 16:51:09,947 spotify_utils 85659 6167506944 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:51:10,133 spotify_utils 85659 6167506944 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:51:10,133 spotify_utils 85659 6167506944 Spotifyクライアント取得成功
+INFO 2025-01-16 16:51:10,134 spotify_utils 85659 6167506944 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-16 16:51:10,307 spotify_utils 85659 6167506944 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:51:10,308 spotify_utils 85659 6167506944 Spotifyクライアント取得成功
+INFO 2025-01-16 16:51:13,853 views 85659 6167506944 Spotifyデータ取得開始: user=a
+INFO 2025-01-16 16:51:13,853 spotify_utils 85659 6167506944 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-16 16:51:14,027 spotify_utils 85659 6167506944 アクセストークンの更新に成功しました
+INFO 2025-01-16 16:51:14,027 spotify_utils 85659 6167506944 Spotifyクライアント取得成功
+INFO 2025-01-16 16:51:14,027 views 85659 6167506944 Spotifyクライアント取得成功
+ERROR 2025-01-16 16:51:14,027 views 85659 6167506944 Spotifyデータの取得に失敗: name 'get_recently_played_tracks' is not defined
+ERROR 2025-01-16 16:51:16,556 views 85659 6167506944 Spotifyデータ取得中にエラー: http status: 404, code:-1 - https://api.spotify.com/v1/recommendations/available-genre-seeds:
+ None, reason: None
+INFO 2025-01-16 16:53:39,666 views 85824 6202290176 MusicTaste取得: user=a, created=False
+INFO 2025-01-16 16:53:39,666 views 85824 6202290176 人気アーティストの取得を開始
+INFO 2025-01-16 16:53:40,054 views 85824 6202290176 人気アーティスト取得完了: 10件
+ERROR 2025-01-16 16:53:40,167 views 85824 6202290176 Spotifyデータ取得中にエラー: http status: 404, code:-1 - https://api.spotify.com/v1/recommendations/available-genre-seeds:
+ None, reason: None
+Traceback (most recent call last):
+  File "/Users/kusakatakumi/Desktop/練習/venv/lib/python3.13/site-packages/spotipy/client.py", line 275, in _internal_call
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/kusakatakumi/Desktop/練習/venv/lib/python3.13/site-packages/requests/models.py", line 1024, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://api.spotify.com/v1/recommendations/available-genre-seeds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/kusakatakumi/Desktop/music/core/views.py", line 564, in edit_music_taste
+    genre_results = spotify.recommendation_genre_seeds()
+  File "/Users/kusakatakumi/Desktop/練習/venv/lib/python3.13/site-packages/spotipy/client.py", line 1771, in recommendation_genre_seeds
+    return self._get("recommendations/available-genre-seeds")
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kusakatakumi/Desktop/練習/venv/lib/python3.13/site-packages/spotipy/client.py", line 327, in _get
+    return self._internal_call("GET", url, payload, kwargs)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kusakatakumi/Desktop/練習/venv/lib/python3.13/site-packages/spotipy/client.py", line 297, in _internal_call
+    raise SpotifyException(
+    ...<5 lines>...
+    )
+spotipy.exceptions.SpotifyException: http status: 404, code:-1 - https://api.spotify.com/v1/recommendations/available-genre-seeds:
+ None, reason: None
+INFO 2025-01-16 16:53:40,172 views 85824 6202290176 コンテキストデータ: artists=0, genres=0, moods=10
+INFO 2025-01-16 16:53:42,792 views 85824 6202290176 MusicTaste取得: user=a, created=False
+INFO 2025-01-16 16:53:42,793 views 85824 6202290176 人気アーティストの取得を開始
+INFO 2025-01-16 16:53:43,180 views 85824 6202290176 人気アーティスト取得完了: 10件
+ERROR 2025-01-16 16:53:43,278 views 85824 6202290176 Spotifyデータ取得中にエラー: http status: 404, code:-1 - https://api.spotify.com/v1/recommendations/available-genre-seeds:
+ None, reason: None
+Traceback (most recent call last):
+  File "/Users/kusakatakumi/Desktop/練習/venv/lib/python3.13/site-packages/spotipy/client.py", line 275, in _internal_call
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/kusakatakumi/Desktop/練習/venv/lib/python3.13/site-packages/requests/models.py", line 1024, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://api.spotify.com/v1/recommendations/available-genre-seeds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/kusakatakumi/Desktop/music/core/views.py", line 564, in edit_music_taste
+    genre_results = spotify.recommendation_genre_seeds()
+  File "/Users/kusakatakumi/Desktop/練習/venv/lib/python3.13/site-packages/spotipy/client.py", line 1771, in recommendation_genre_seeds
+    return self._get("recommendations/available-genre-seeds")
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kusakatakumi/Desktop/練習/venv/lib/python3.13/site-packages/spotipy/client.py", line 327, in _get
+    return self._internal_call("GET", url, payload, kwargs)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kusakatakumi/Desktop/練習/venv/lib/python3.13/site-packages/spotipy/client.py", line 297, in _internal_call
+    raise SpotifyException(
+    ...<5 lines>...
+    )
+spotipy.exceptions.SpotifyException: http status: 404, code:-1 - https://api.spotify.com/v1/recommendations/available-genre-seeds:
+ None, reason: None
+INFO 2025-01-16 16:53:43,280 views 85824 6202290176 コンテキストデータ: artists=0, genres=0, moods=10
+INFO 2025-01-16 16:55:10,374 views 86051 6161362944 MusicTaste取得: user=a, created=False
+INFO 2025-01-16 16:55:10,374 views 86051 6161362944 人気アーティストの取得を開始
+INFO 2025-01-16 16:55:10,767 views 86051 6161362944 人気アーティスト取得完了: 10件
+INFO 2025-01-16 16:55:10,767 views 86051 6161362944 利用可能なジャンル: 20件
+INFO 2025-01-16 16:55:10,771 views 86051 6161362944 コンテキストデータ: artists=10, genres=20, moods=10
+INFO 2025-01-16 16:55:11,940 views 86051 6161362944 MusicTaste取得: user=a, created=False
+INFO 2025-01-16 16:55:11,940 views 86051 6161362944 人気アーティストの取得を開始
+INFO 2025-01-16 16:55:12,303 views 86051 6161362944 人気アーティスト取得完了: 10件
+INFO 2025-01-16 16:55:12,303 views 86051 6161362944 利用可能なジャンル: 20件
+INFO 2025-01-16 16:55:12,303 views 86051 6161362944 コンテキストデータ: artists=10, genres=20, moods=10
+INFO 2025-01-16 16:56:01,685 views 86051 6161362944 MusicTaste取得: user=a, created=False
+INFO 2025-01-16 16:56:01,686 views 86051 6161362944 人気アーティストの取得を開始
+INFO 2025-01-16 16:56:02,157 views 86051 6161362944 人気アーティスト取得完了: 10件
+INFO 2025-01-16 16:56:02,157 views 86051 6161362944 利用可能なジャンル: 20件
+INFO 2025-01-16 16:56:02,157 views 86051 6161362944 コンテキストデータ: artists=10, genres=20, moods=10
+INFO 2025-01-16 16:56:05,359 views 86051 6161362944 MusicTaste取得: user=a, created=False
+INFO 2025-01-16 16:56:05,359 views 86051 6161362944 AJAXリクエスト受信: action=add_artist
+INFO 2025-01-16 16:56:05,359 views 86051 6161362944 アーティスト追加: name=YOASOBI, id=64tJ2EAv1R6UaZqc4iOCyj
+INFO 2025-01-16 16:56:05,361 views 86051 6161362944 アーティストを追加しました
+INFO 2025-01-16 16:56:06,138 views 86051 6161362944 MusicTaste取得: user=a, created=False
+INFO 2025-01-16 16:56:06,139 views 86051 6161362944 AJAXリクエスト受信: action=add_artist
+INFO 2025-01-16 16:56:06,139 views 86051 6161362944 アーティスト追加: name=YOASOBI, id=64tJ2EAv1R6UaZqc4iOCyj
+INFO 2025-01-16 16:56:06,139 views 86051 6161362944 アーティストは既に追加されています
+INFO 2025-01-16 16:56:08,881 views 86051 6161362944 MusicTaste取得: user=a, created=False
+INFO 2025-01-16 16:56:08,881 views 86051 6161362944 人気アーティストの取得を開始
+INFO 2025-01-16 16:56:09,207 views 86051 6161362944 人気アーティスト取得完了: 10件
+INFO 2025-01-16 16:56:09,207 views 86051 6161362944 利用可能なジャンル: 20件
+INFO 2025-01-16 16:56:09,207 views 86051 6161362944 コンテキストデータ: artists=10, genres=20, moods=10
+INFO 2025-01-16 16:56:10,686 views 86051 6161362944 MusicTaste取得: user=a, created=False
+INFO 2025-01-16 16:56:10,686 views 86051 6161362944 AJAXリクエスト受信: action=update_genres
+INFO 2025-01-16 16:56:11,297 views 86051 6161362944 MusicTaste取得: user=a, created=False
+INFO 2025-01-16 16:56:11,297 views 86051 6161362944 AJAXリクエスト受信: action=update_genres
+INFO 2025-01-16 16:56:20,300 views 86051 6161362944 MusicTaste取得: user=a, created=False
+INFO 2025-01-16 16:56:20,300 views 86051 6161362944 人気アーティストの取得を開始
+INFO 2025-01-16 16:56:20,695 views 86051 6161362944 人気アーティスト取得完了: 10件
+INFO 2025-01-16 16:56:20,695 views 86051 6161362944 利用可能なジャンル: 20件
+INFO 2025-01-16 16:56:20,697 views 86051 6161362944 コンテキストデータ: artists=10, genres=20, moods=10
+INFO 2025-01-16 16:56:24,016 views 86051 6161362944 MusicTaste取得: user=a, created=False
+INFO 2025-01-16 16:56:24,016 views 86051 6161362944 AJAXリクエスト受信: action=search_artists
+INFO 2025-01-16 16:56:24,016 views 86051 6161362944 アーティスト検索: query=ms
+INFO 2025-01-16 16:56:24,017 views 86051 6161362944 Spotifyクライアントの初期化を開始
+INFO 2025-01-16 16:56:24,017 views 86051 6161362944 Spotifyクライアントの初期化が完了
+INFO 2025-01-16 16:56:24,372 views 86051 6161362944 検索結果: 5件のアーティストが見つかりました
+INFO 2025-01-16 16:56:26,027 views 86051 6161362944 MusicTaste取得: user=a, created=False
+INFO 2025-01-16 16:56:26,027 views 86051 6161362944 AJAXリクエスト受信: action=search_artists
+INFO 2025-01-16 16:56:26,027 views 86051 6161362944 アーティスト検索: query=ミセス
+INFO 2025-01-16 16:56:26,027 views 86051 6161362944 Spotifyクライアントの初期化を開始
+INFO 2025-01-16 16:56:26,027 views 86051 6161362944 Spotifyクライアントの初期化が完了
+INFO 2025-01-16 16:56:26,362 views 86051 6161362944 検索結果: 5件のアーティストが見つかりました
+INFO 2025-01-16 16:56:30,132 views 86051 6178189312 MusicTaste取得: user=a, created=False
+INFO 2025-01-16 16:56:30,132 views 86051 6178189312 人気アーティストの取得を開始
+INFO 2025-01-16 16:56:30,483 views 86051 6178189312 人気アーティスト取得完了: 10件
+INFO 2025-01-16 16:56:30,484 views 86051 6178189312 利用可能なジャンル: 20件
+INFO 2025-01-16 16:56:30,486 views 86051 6178189312 コンテキストデータ: artists=10, genres=20, moods=10
+INFO 2025-01-16 16:56:33,575 views 86051 6178189312 MusicTaste取得: user=a, created=False
+INFO 2025-01-16 16:56:33,576 views 86051 6178189312 AJAXリクエスト受信: action=search_artists
+INFO 2025-01-16 16:56:33,576 views 86051 6178189312 アーティスト検索: query=ミセス
+INFO 2025-01-16 16:56:33,576 views 86051 6178189312 Spotifyクライアントの初期化を開始
+INFO 2025-01-16 16:56:33,576 views 86051 6178189312 Spotifyクライアントの初期化が完了
+INFO 2025-01-16 16:56:33,778 views 86051 6195589120 MusicTaste取得: user=a, created=False
+INFO 2025-01-16 16:56:33,779 views 86051 6195589120 人気アーティストの取得を開始
+INFO 2025-01-16 16:56:33,916 views 86051 6178189312 検索結果: 5件のアーティストが見つかりました
+INFO 2025-01-16 16:56:34,213 views 86051 6195589120 人気アーティスト取得完了: 10件
+INFO 2025-01-16 16:56:34,213 views 86051 6195589120 利用可能なジャンル: 20件
+INFO 2025-01-16 16:56:34,214 views 86051 6195589120 コンテキストデータ: artists=10, genres=20, moods=10
+INFO 2025-01-16 16:58:09,543 views 86349 6170046464 MusicTaste取得: user=a, created=False
+INFO 2025-01-16 16:58:09,544 views 86349 6170046464 人気アーティストの取得を開始
+INFO 2025-01-16 16:58:09,982 views 86349 6170046464 人気アーティスト取得完了: 10件
+INFO 2025-01-16 16:58:09,982 views 86349 6170046464 利用可能なジャンル: 20件
+INFO 2025-01-16 16:58:09,984 views 86349 6170046464 コンテキストデータ: artists=10, genres=20, moods=10

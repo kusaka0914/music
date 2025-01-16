@@ -1,0 +1,52 @@
+{% load static %}
+
+{% for post in posts %}
+    <div class="post-card">
+        {% if post.image %}
+            <div class="post-image">
+                <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                {% if post.spotify_link %}
+                    <a href="https://open.spotify.com/track/{{ post.spotify_link }}" class="play-button" target="_blank">
+                        <i class="bi bi-play-fill"></i>
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+        <div class="post-content">
+            <div class="post-header">
+                <a href="{% url 'core:profile' post.user.username %}" class="post-user">
+                    {% if post.user.profile.avatar %}
+                        <img src="{{ post.user.profile.avatar.url }}" alt="{{ post.user.username }}">
+                    {% else %}
+                        <img src="{% static 'images/default-avatar.svg' %}" alt="{{ post.user.username }}">
+                    {% endif %}
+                    <span>{{ post.user.username }}</span>
+                </a>
+                <span class="post-time">{{ post.created_at|timesince }}前</span>
+            </div>
+            <h3 class="post-title">{{ post.title }}</h3>
+            <p class="post-artist">{{ post.artist }}</p>
+            {% if post.description %}
+                <p class="post-description">{{ post.description }}</p>
+            {% endif %}
+            <div class="post-meta">
+                <button class="like-button {% if user in post.likes.all %}liked{% endif %}" data-post-id="{{ post.id }}">
+                    <i class="bi bi-heart{% if user in post.likes.all %}-fill{% endif %}"></i>
+                    <span class="like-count">{{ post.likes.count }}</span>
+                </button>
+                <a href="{% url 'core:post_detail' post.id %}" class="comment-button">
+                    <i class="bi bi-chat"></i>
+                    <span>{{ post.comments.count }}</span>
+                </a>
+                {% if post.mood %}
+                    <span class="mood-tag">{{ post.get_mood_display }}</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% empty %}
+    <div class="no-posts">
+        <i class="bi bi-music-note"></i>
+        <p>投稿がありません</p>
+    </div>
+{% endfor %} 

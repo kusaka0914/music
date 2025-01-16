@@ -6,7 +6,11 @@
 <div class="spotify-container">
     <div class="profile-header">
         <div class="profile-info">
-            <img src="{{ profile_user.profile.avatar.url|default:'/static/images/default-avatar.png' }}" alt="{{ profile_user.username }}" class="profile-avatar">
+            {% if profile_user.profile.avatar %}
+                <img src="{{ profile_user.profile.avatar.url }}" alt="{{ profile_user.username }}" class="profile-avatar">
+            {% else %}
+                <img src="{% static 'images/default-avatar.svg' %}" alt="{{ profile_user.username }}" class="profile-avatar">
+            {% endif %}
             <div class="profile-details">
                 <h1>{{ profile_user.username }}</h1>
                 {% if profile_user.profile.bio %}
@@ -124,6 +128,11 @@
         <div class="favorite-artists-section">
             <div class="section-header">
                 <h2>好きなアーティスト</h2>
+                {% if user == profile_user %}
+                    <a href="{% url 'core:edit_music_taste' %}" class="edit-button">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                {% endif %}
             </div>
             <div class="artists-grid">
                 {% for artist in profile_user.music_taste.favorite_artists %}
@@ -139,6 +148,57 @@
             </div>
         </div>
         {% endif %}
+
+        <div class="spotify-section">
+            {% if profile_user.profile.spotify_connected %}
+                {% if recently_played or top_tracks %}
+                    <div class="spotify-content">
+                        {% if recently_played %}
+                            <div class="recently-played">
+                                <h3>最近聴いた曲</h3>
+                                <div class="track-grid">
+                                    {% for track in recently_played %}
+                                        <div class="track-card">
+                                            <img src="{{ track.image|default:'/static/images/default-track.png' }}" alt="{{ track.name }}">
+                                            <div class="track-info">
+                                                <p class="track-name">{{ track.name }}</p>
+                                                <p class="track-artist">{{ track.artist }}</p>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if top_tracks %}
+                            <div class="favorite-tracks">
+                                <h3>よく聴く曲</h3>
+                                <div class="track-grid">
+                                    {% for track in top_tracks %}
+                                        <div class="track-card">
+                                            <img src="{{ track.image|default:'/static/images/default-track.png' }}" alt="{{ track.name }}">
+                                            <div class="track-info">
+                                                <p class="track-name">{{ track.name }}</p>
+                                                <p class="track-artist">{{ track.artist }}</p>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <p class="no-history">再生履歴がありません</p>
+                {% endif %}
+            {% else %}
+                <div class="spotify-connect-prompt">
+                    <p>Spotifyと連携すると、再生履歴が表示されます</p>
+                    {% if user == profile_user %}
+                        <a href="{% url 'core:spotify_connect' %}" class="spotify-connect-button">Spotifyと連携する</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
 
         <div class="playlists-section">
             <div class="section-header">
@@ -210,6 +270,126 @@
                 {% endfor %}
             </div>
         </div>
+
+        {% if user == profile_user %}
+            <div class="spotify-connection">
+                {% if not user.profile.spotify_connected %}
+                    <a href="{% url 'core:spotify_connect' %}" class="spotify-connect-button">
+                        <i class="bi bi-spotify"></i> Spotifyと連携する
+                    </a>
+                {% else %}
+                    <div class="spotify-connected">
+                        <span class="connected-status">
+                            <i class="bi bi-spotify"></i> Spotify連携中
+                        </span>
+                        <a href="{% url 'core:spotify_disconnect' %}" class="spotify-disconnect-button">
+                            連携を解除
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        <!-- 共通の音楽趣味セクション -->
+        {% if user != profile_user and user.is_authenticated %}
+            <div class="common-interests-section">
+                <h3>{{ profile_user.username }}さんとの共通点</h3>
+                {% if common_interests %}
+                    <div class="compatibility-score">
+                        <div class="score-circle">
+                            {{ compatibility_score }}%
+                        </div>
+                        <p>音楽の相性</p>
+                    </div>
+                    
+                    {% if common_interests.genres %}
+                        <div class="common-genres">
+                            <h4>共通のジャンル</h4>
+                            <div class="genre-tags">
+                                {% for genre in common_interests.genres %}
+                                    <span class="genre-tag">{{ genre }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                    
+                    {% if common_interests.artists %}
+                        <div class="common-artists">
+                            <h4>共通のアーティスト</h4>
+                            <div class="artist-list">
+                                {% for artist in common_interests.artists %}
+                                    <span class="artist-tag">{{ artist }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <p>まだ共通点が見つかっていません。</p>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        <!-- バッジセクション -->
+        <div class="badges-section">
+            <h3>獲得バッジ</h3>
+            {% with badges=profile_user.profile.get_achievement_badges %}
+                {% if badges %}
+                    <div class="badge-grid">
+                        {% for badge in badges %}
+                            <div class="badge-item" title="{{ badge.description }}">
+                                <span class="badge-icon">{{ badge.icon }}</span>
+                                <span class="badge-name">{{ badge.name }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>まだバッジを獲得していません。</p>
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <!-- おすすめユーザーセクション -->
+        {% if user == profile_user %}
+            <div class="recommended-users-section">
+                <h3>おすすめのユーザー</h3>
+                {% with recommended_users=user.profile.get_recommended_users %}
+                    {% if recommended_users %}
+                        <div class="user-recommendations">
+                            {% for rec in recommended_users %}
+                                <div class="recommended-user">
+                                    <div class="user-info">
+                                        <img src="{{ rec.user.profile.avatar.url|default:'/static/images/default-avatar.png' }}" alt="{{ rec.user.username }}" class="user-avatar">
+                                        <div class="user-details">
+                                            <a href="{% url 'core:profile' rec.user.username %}" class="user-name">{{ rec.user.username }}</a>
+                                            <div class="compatibility">
+                                                <span class="compatibility-score">{{ rec.compatibility_score }}%</span>
+                                                <span class="compatibility-label">音楽の相性</span>
+                                            </div>
+                                            {% if rec.common_interests.genres or rec.common_interests.artists %}
+                                                <div class="common-interests-preview">
+                                                    {% if rec.common_interests.genres %}
+                                                        <span class="common-genre">{{ rec.common_interests.genres.0 }}</span>
+                                                    {% endif %}
+                                                    {% if rec.common_interests.artists %}
+                                                        <span class="common-artist">{{ rec.common_interests.artists.0 }}</span>
+                                                    {% endif %}
+                                                    {% if rec.common_interests.genres|length > 1 or rec.common_interests.artists|length > 1 %}
+                                                        <span class="more-interests">+もっと見る</span>
+                                                    {% endif %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <button class="follow-button" data-username="{{ rec.user.username }}">フォローする</button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p>現在おすすめのユーザーはいません。</p>
+                    {% endif %}
+                {% endwith %}
+            </div>
+        {% endif %}
     </div>
 </div>
 
@@ -559,6 +739,7 @@
     border-radius: 500px;
     transition: width 0.5s ease;
     position: relative;
+    width: 0;
 }
 
 .score-text {
@@ -683,6 +864,168 @@
     font-size: 0.8rem;
 }
 
+.spotify-activity-section {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.recent-tracks, .favorite-tracks {
+    margin-bottom: 2rem;
+}
+
+.tracks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.track-card {
+    background: #181818;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.track-card:hover {
+    background: #282828;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.track-image {
+    width: 100%;
+    aspect-ratio: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+.track-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.play-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.play-overlay i {
+    font-size: 3rem;
+    color: #1db954;
+}
+
+.track-card:hover .play-overlay {
+    opacity: 1;
+}
+
+.track-info {
+    padding: 1rem;
+}
+
+.track-info h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track-info p {
+    font-size: 0.9rem;
+    color: #b3b3b3;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.played-at {
+    font-size: 0.8rem;
+    color: #b3b3b3;
+    display: block;
+    margin-top: 0.5rem;
+}
+
+.spotify-link {
+    color: #1db954;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.spotify-link:hover {
+    color: #1ed760;
+}
+
+.spotify-connection {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.spotify-connect-button {
+    background: #1DB954;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 500px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.spotify-connect-button:hover {
+    background: #1ed760;
+    transform: scale(1.02);
+}
+
+.spotify-connected {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.connected-status {
+    color: #1DB954;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+}
+
+.spotify-disconnect-button {
+    color: #b3b3b3;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.spotify-disconnect-button:hover {
+    color: #ff5555;
+}
+
 @media (max-width: 768px) {
     .profile-info {
         flex-direction: column;
@@ -706,6 +1049,163 @@
     .artists-grid {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     }
+}
+
+/* 共通の音楽趣味セクションのスタイル */
+.common-interests-section {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.compatibility-score {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.score-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1DB954, #1ed760);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    margin: 0 auto 10px;
+}
+
+.genre-tags, .artist-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.genre-tag, .artist-tag {
+    background: rgba(29, 185, 84, 0.2);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+/* バッジセクションのスタイル */
+.badges-section {
+    margin: 20px 0;
+}
+
+.badge-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.badge-item {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.badge-item:hover {
+    transform: translateY(-2px);
+}
+
+.badge-icon {
+    font-size: 24px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.badge-name {
+    font-size: 14px;
+    color: #fff;
+}
+
+/* おすすめユーザーセクションのスタイル */
+.recommended-users-section {
+    margin: 20px 0;
+}
+
+.user-recommendations {
+    display: grid;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.recommended-user {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.user-name {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.compatibility {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+}
+
+.compatibility-score {
+    color: #1DB954;
+    font-weight: bold;
+}
+
+.common-interests-preview {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.follow-button {
+    background: #1DB954;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.follow-button:hover {
+    background: #1ed760;
+}
+
+.more-interests {
+    color: #1DB954;
+    cursor: pointer;
 }
 </style>
 

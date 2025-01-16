@@ -2,53 +2,315 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-8 mx-auto">
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="card-title mb-4">プロフィール編集</h2>
-                    <form method="post">
-                        {% csrf_token %}
-                        
-                        <div class="mb-3">
-                            <label for="{{ user_form.username.id_for_label }}" class="form-label">ユーザー名</label>
-                            {{ user_form.username }}
-                            {% if user_form.username.errors %}
-                                <div class="alert alert-danger mt-2">
-                                    {{ user_form.username.errors }}
-                                </div>
-                            {% endif %}
-                        </div>
+<div class="edit-profile-container">
+    <div class="edit-profile-content">
+        <div class="edit-header">
+            <h1>プロフィールを編集</h1>
+            <p class="subtitle">プロフィール情報を更新して、あなたらしさを表現しましょう</p>
+        </div>
 
-                        <div class="mb-3">
-                            <label for="{{ user_form.email.id_for_label }}" class="form-label">メールアドレス</label>
-                            {{ user_form.email }}
-                            {% if user_form.email.errors %}
-                                <div class="alert alert-danger mt-2">
-                                    {{ user_form.email.errors }}
-                                </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="{{ profile_form.bio.id_for_label }}" class="form-label">自己紹介</label>
-                            {{ profile_form.bio }}
-                            {% if profile_form.bio.errors %}
-                                <div class="alert alert-danger mt-2">
-                                    {{ profile_form.bio.errors }}
-                                </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">更新する</button>
-                            <a href="{% url 'core:profile' user.username %}" class="btn btn-secondary">キャンセル</a>
-                        </div>
-                    </form>
+        <form method="POST" enctype="multipart/form-data" class="edit-form">
+            {% csrf_token %}
+            
+            <div class="avatar-section">
+                <div class="current-avatar">
+                    {% if user.profile.avatar %}
+                        <img src="{{ user.profile.avatar.url }}" alt="現在のアバター" id="avatar-preview">
+                    {% else %}
+                        <img src="{% static 'images/default-avatar.svg' %}" alt="デフォルトアバター" id="avatar-preview">
+                    {% endif %}
+                </div>
+                <div class="avatar-upload">
+                    <label for="id_avatar" class="upload-button">
+                        <i class="bi bi-camera"></i>
+                        画像を変更
+                    </label>
+                    {{ form.avatar }}
                 </div>
             </div>
-        </div>
+
+            <div class="form-group">
+                <label for="id_username">ユーザー名</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <div class="error-message">
+                        {% for error in form.username.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_bio">自己紹介</label>
+                {{ form.bio }}
+                <div class="character-count">
+                    <span id="bio-count">0</span>/500
+                </div>
+                {% if form.bio.errors %}
+                    <div class="error-message">
+                        {% for error in form.bio.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_website">ウェブサイト</label>
+                {{ form.website }}
+                {% if form.website.errors %}
+                    <div class="error-message">
+                        {% for error in form.website.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="save-button">
+                    <i class="bi bi-check2"></i>
+                    変更を保存
+                </button>
+                <a href="{% url 'core:profile' user.username %}" class="cancel-button">
+                    キャンセル
+                </a>
+            </div>
+        </form>
     </div>
 </div>
+
+<style>
+.edit-profile-container {
+    background: linear-gradient(to bottom, #535353, #121212);
+    min-height: 100vh;
+    padding: 2rem;
+    color: #fff;
+}
+
+.edit-profile-content {
+    max-width: 600px;
+    margin: 0 auto;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 2rem;
+}
+
+.edit-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.edit-header h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    color: #b3b3b3;
+    font-size: 1rem;
+}
+
+.avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.current-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 60px rgba(0, 0, 0, 0.5);
+}
+
+.current-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-upload {
+    position: relative;
+}
+
+.upload-button {
+    background: #1db954;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 500px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.upload-button:hover {
+    background: #1ed760;
+    transform: scale(1.02);
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #fff;
+    font-weight: 500;
+}
+
+.form-group input[type="text"],
+.form-group input[type="url"],
+.form-group textarea {
+    width: 100%;
+    padding: 0.8rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="url"]:focus,
+.form-group textarea:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #1db954;
+    outline: none;
+}
+
+.form-group input[type="text"]::placeholder,
+.form-group input[type="url"]::placeholder,
+.form-group textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* フォーム内の入力テキストの色を白に */
+.form-group input[type="text"],
+.form-group input[type="url"],
+.form-group textarea {
+    color: #fff !important;
+}
+
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.character-count {
+    text-align: right;
+    color: #b3b3b3;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+}
+
+.error-message {
+    color: #ff5555;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.save-button {
+    background: #1db954;
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 500px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.save-button:hover {
+    background: #1ed760;
+    transform: scale(1.02);
+}
+
+.cancel-button {
+    background: transparent;
+    color: #fff;
+    border: 1px solid #fff;
+    padding: 0.8rem 2rem;
+    border-radius: 500px;
+    text-decoration: none;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.cancel-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 768px) {
+    .edit-profile-container {
+        padding: 1rem;
+    }
+
+    .edit-profile-content {
+        padding: 1.5rem;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .save-button,
+    .cancel-button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+</style>
+
+<script>
+// アバタープレビュー
+document.getElementById('id_avatar').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('avatar-preview').src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+    }
+});
+
+// 文字数カウント
+document.getElementById('id_bio').addEventListener('input', function(e) {
+    const count = e.target.value.length;
+    document.getElementById('bio-count').textContent = count;
+});
+
+// 初期文字数表示
+window.addEventListener('load', function() {
+    const bioField = document.getElementById('id_bio');
+    if (bioField) {
+        document.getElementById('bio-count').textContent = bioField.value.length;
+    }
+});
+</script>
 {% endblock %} 
