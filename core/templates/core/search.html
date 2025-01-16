@@ -1,0 +1,60 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <form action="{% url 'core:search' %}" method="get" class="mb-4">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="曲名、アーティスト名、ユーザー名で検索..." value="{{ request.GET.q }}">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search"></i> 検索
+                    </button>
+                </div>
+            </form>
+
+            {% if query %}
+                <h2 class="mb-4">"{{ query }}" の検索結果</h2>
+                {% if posts %}
+                    {% for post in posts %}
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <img src="{% static 'images/default-avatar.png' %}" alt="{{ post.user.username }}" class="rounded-circle me-2" style="width: 40px; height: 40px;">
+                                    <div>
+                                        <a href="{% url 'core:profile' post.user.username %}" class="text-decoration-none">{{ post.user.username }}</a>
+                                        <div class="text-muted small">{{ post.created_at|date:"Y/m/d H:i" }}</div>
+                                    </div>
+                                </div>
+                                
+                                <h5 class="card-title">{{ post.title }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ post.artist }}</h6>
+                                <p class="card-text">{{ post.description }}</p>
+
+                                <div class="d-flex gap-2">
+                                    <a href="{% url 'core:post_detail' post.pk %}" class="btn btn-primary btn-sm">詳細</a>
+                                    {% if post.spotify_link %}
+                                        <a href="{{ post.spotify_link }}" target="_blank" class="btn btn-success btn-sm">
+                                            <i class="bi bi-spotify"></i> Spotify
+                                        </a>
+                                    {% endif %}
+                                    {% if post.youtube_link %}
+                                        <a href="{{ post.youtube_link }}" target="_blank" class="btn btn-danger btn-sm">
+                                            <i class="bi bi-youtube"></i> YouTube
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-info">
+                        検索結果が見つかりませんでした。別のキーワードで試してみてください。
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,91 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <img src="{% static 'images/default-avatar.png' %}" alt="{{ profile_user.username }}" class="rounded-circle" width="150">
+                    </div>
+                    <h2 class="card-title text-center">{{ profile_user.username }}</h2>
+                    <p class="card-text text-center">{{ profile_user.profile.bio|default:"自己紹介文がありません" }}</p>
+                    
+                    <div class="d-flex justify-content-around text-center mb-3">
+                        <div>
+                            <h5>投稿</h5>
+                            <p>{{ profile_user.musicpost_set.count }}</p>
+                        </div>
+                        <div>
+                            <h5>フォロワー</h5>
+                            <p>{{ profile_user.profile.followers.count }}</p>
+                        </div>
+                        <div>
+                            <h5>フォロー中</h5>
+                            <p>{{ profile_user.following.count }}</p>
+                        </div>
+                    </div>
+
+                    {% if user == profile_user %}
+                        <a href="{% url 'core:profile_edit' %}" class="btn btn-primary btn-block">プロフィールを編集</a>
+                    {% else %}
+                        <form action="{% url 'core:follow_user' profile_user.username %}" method="post" class="text-center">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary">
+                                {% if user in profile_user.profile.followers.all %}
+                                    フォロー解除
+                                {% else %}
+                                    フォローする
+                                {% endif %}
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">投稿一覧</h3>
+                    {% if posts %}
+                        {% for post in posts %}
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ post.title }}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">{{ post.artist }}</h6>
+                                    <p class="card-text">{{ post.description }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <small class="text-muted">{{ post.created_at|date:"Y/m/d H:i" }}</small>
+                                        </div>
+                                        <div>
+                                            {% if post.spotify_link %}
+                                                <a href="{{ post.spotify_link }}" class="btn btn-success btn-sm" target="_blank">
+                                                    <i class="bi bi-spotify"></i> Spotify
+                                                </a>
+                                            {% endif %}
+                                            {% if post.youtube_link %}
+                                                <a href="{{ post.youtube_link }}" class="btn btn-danger btn-sm" target="_blank">
+                                                    <i class="bi bi-youtube"></i> YouTube
+                                                </a>
+                                            {% endif %}
+                                            <a href="{% url 'core:post_detail' post.pk %}" class="btn btn-primary btn-sm">
+                                                詳細を見る
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-center">投稿がありません。</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

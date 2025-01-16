@@ -1,0 +1,23 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">プロフィール編集</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="bio" class="form-label">自己紹介</label>
+                        <textarea class="form-control" id="bio" name="bio" rows="4">{{ profile.bio }}</textarea>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">更新</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,50 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">フォロー中のユーザーの投稿</h2>
+    {% if posts %}
+        <div class="row">
+            {% for post in posts %}
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="{% static 'images/default-avatar.png' %}" alt="{{ post.user.username }}" class="rounded-circle me-2" style="width: 40px; height: 40px;">
+                                <div>
+                                    <a href="{% url 'core:profile' post.user.username %}" class="text-decoration-none">{{ post.user.username }}</a>
+                                    <div class="text-muted small">{{ post.created_at|date:"Y/m/d H:i" }}</div>
+                                </div>
+                            </div>
+                            <h5 class="card-title">{{ post.title }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ post.artist }}</h6>
+                            <p class="card-text">{{ post.description }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <a href="{% url 'core:post_detail' post.pk %}" class="btn btn-primary btn-sm">詳細</a>
+                                    {% if post.spotify_link %}
+                                        <a href="{{ post.spotify_link }}" target="_blank" class="btn btn-success btn-sm">Spotify</a>
+                                    {% endif %}
+                                    {% if post.youtube_link %}
+                                        <a href="{{ post.youtube_link }}" target="_blank" class="btn btn-danger btn-sm">YouTube</a>
+                                    {% endif %}
+                                </div>
+                                <div class="text-muted">
+                                    <i class="bi bi-heart-fill"></i> {{ post.likes.count }}
+                                    <i class="bi bi-chat-fill ms-2"></i> {{ post.comments.count }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            フォローしているユーザーの投稿がありません。<br>
+            <a href="{% url 'core:home' %}" class="alert-link">ホーム</a>に戻って、興味のあるユーザーをフォローしてみましょう。
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 

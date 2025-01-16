@@ -1,0 +1,66 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <h2 class="mb-4">通知</h2>
+            {% if notifications %}
+                {% for notification in notifications %}
+                    <div class="card mb-3 notification" data-notification-id="{{ notification.pk }}">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <a href="{% url 'profile' notification.sender.username %}" class="text-decoration-none">
+                                        <strong>{{ notification.sender.username }}</strong>
+                                    </a>
+                                    {% if notification.notification_type == 'like' %}
+                                        があなたの投稿「<a href="{% url 'post_detail' notification.post.pk %}">{{ notification.post.title }}</a>」にいいねしました
+                                    {% elif notification.notification_type == 'comment' %}
+                                        があなたの投稿「<a href="{% url 'post_detail' notification.post.pk %}">{{ notification.post.title }}</a>」にコメントしました
+                                    {% elif notification.notification_type == 'follow' %}
+                                        があなたをフォローしました
+                                    {% endif %}
+                                </div>
+                                <small class="text-muted">{{ notification.created_at|date:"Y/m/d H:i" }}</small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-secondary mt-2 mark-as-read">
+                                <i class="bi bi-check2"></i> 既読にする
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-info">
+                    新しい通知はありません。
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+document.querySelectorAll('.mark-as-read').forEach(button => {
+    button.addEventListener('click', function() {
+        const notification = this.closest('.notification');
+        const notificationId = notification.dataset.notificationId;
+        
+        fetch(`/notifications/${notificationId}/read/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                notification.remove();
+                if (document.querySelectorAll('.notification').length === 0) {
+                    location.reload();
+                }
+            }
+        });
+    });
+});
+</script>
+{% endblock %} 

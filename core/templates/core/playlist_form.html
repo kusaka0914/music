@@ -1,0 +1,52 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">{{ title }}</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="{{ form.title.id_for_label }}" class="form-label">タイトル</label>
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.title.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.description.id_for_label }}" class="form-label">説明</label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.description.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3 form-check">
+                            {{ form.is_public }}
+                            <label class="form-check-label" for="{{ form.is_public.id_for_label }}">公開する</label>
+                            {% if form.is_public.errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.is_public.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary">保存</button>
+                            <a href="{% url 'core:home' %}" class="btn btn-secondary">キャンセル</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
