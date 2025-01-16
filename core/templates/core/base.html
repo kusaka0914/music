@@ -22,6 +22,11 @@
                         <a class="nav-link" href="{% url 'core:create_playlist' %}">プレイリスト作成</a>
                     </li>
                 {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'core:music_compatibility' %}">
+                        <i class="fas fa-music"></i> 音楽の相性
+                    </a>
+                </li>
             </ul>
 
             <form class="search-form" action="{% url 'core:search' %}" method="get">
@@ -52,6 +57,11 @@
                             <li>
                                 <a class="dropdown-item" href="{% url 'core:profile_edit' %}">
                                     <i class="bi bi-gear"></i> 設定
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'core:edit_music_taste' %}">
+                                    <i class="bi bi-music-note"></i> 音楽の好みを編集
                                 </a>
                             </li>
                             <li><hr class="dropdown-divider"></li>

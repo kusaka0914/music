@@ -21,26 +21,18 @@ body {
 
 /* ナビゲーションバー */
 .navbar {
-    background-color: rgba(0, 0, 0, 0.8) !important;
-    padding: 0.5rem 2rem !important;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
+    background-color: var(--spotify-black);
+    padding: 0 !important;
     height: 64px;
-    display: flex;
-    align-items: center;
+    border-bottom: 1px solid var(--spotify-divider);
 }
 
 .navbar .container {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
+    height: 100%;
+    padding: 0 2rem;
 }
 
 .navbar-brand {
@@ -49,6 +41,12 @@ body {
     font-weight: bold;
     text-decoration: none;
     margin-right: 2rem;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
 .navbar-nav {
@@ -151,16 +149,21 @@ body {
 
 /* ユーザーメニュー */
 .user-menu {
+    position: relative;
+}
+
+.user-menu .dropdown-toggle {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 2px;
+    color: var(--spotify-text-secondary);
+    text-decoration: none;
+    padding: 0.5rem;
     border-radius: 500px;
-    background-color: rgba(0, 0, 0, 0.7);
-    cursor: pointer;
 }
 
-.user-menu:hover {
+.user-menu .dropdown-toggle:hover {
+    color: var(--spotify-white);
     background-color: var(--spotify-light-gray);
 }
 
@@ -168,45 +171,32 @@ body {
     width: 28px;
     height: 28px;
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .user-menu .username {
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: var(--spotify-white);
-    margin-right: 0.5rem;
+    font-weight: 500;
 }
 
-.user-menu .dropdown-toggle {
-    text-decoration: none;
-    color: inherit;
+.dropdown-menu {
+    background-color: var(--spotify-light-black);
+    border: 1px solid var(--spotify-divider);
+    border-radius: 4px;
+    margin-top: 0.5rem;
+    min-width: 200px;
+}
+
+.dropdown-item {
+    color: var(--spotify-text-secondary);
+    padding: 0.75rem 1rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.user-menu .dropdown-toggle::after {
-    display: none;
-}
-
-/* ドロップダウンメニュー */
-.dropdown-menu {
-    background-color: var(--spotify-light-gray) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    margin-top: 0.5rem !important;
-}
-
-.dropdown-item {
-    color: var(--spotify-text-secondary) !important;
-    padding: 0.75rem 1rem !important;
-    display: flex !important;
-    align-items: center;
-    gap: 0.75rem;
-}
-
 .dropdown-item:hover {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    color: var(--spotify-white) !important;
+    color: var(--spotify-white);
+    background-color: var(--spotify-light-gray);
 }
 
 .dropdown-divider {

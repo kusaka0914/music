@@ -134,3 +134,8 @@ LOGOUT_REDIRECT_URL = 'home'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Spotify API設定
+SPOTIFY_CLIENT_ID = 'a685bbc2aaba44a48cfc003d32756e01'
+SPOTIFY_CLIENT_SECRET = 'ef88fbeaec7f4ed19f53187dcd6ca3bc'
+SPOTIFY_REDIRECT_URI = 'http://127.0.0.1:8000/spotify/callback/'

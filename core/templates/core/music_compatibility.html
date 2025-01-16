@@ -1,0 +1,97 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">音楽の相性が高いユーザー</h2>
+    
+    <div class="row">
+        {% for score in compatibility_scores %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="{% static 'images/default-avatar.png' %}" alt="{{ score.user.username }}" class="rounded-circle me-3" width="50">
+                        <div>
+                            <h5 class="card-title mb-0">
+                                <a href="{% url 'core:profile' score.user.username %}" class="text-decoration-none">
+                                    {{ score.user.username }}
+                                </a>
+                            </h5>
+                            <div class="text-muted">相性スコア: {{ score.score }}%</div>
+                        </div>
+                    </div>
+
+                    {% if score.common_genres %}
+                    <div class="mb-3">
+                        <h6>共通のジャンル:</h6>
+                        <div class="d-flex flex-wrap gap-1">
+                            {% for genre in score.common_genres %}
+                            <span class="badge bg-primary">{{ genre }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if score.common_moods %}
+                    <div class="mb-3">
+                        <h6>共通の曲調:</h6>
+                        <div class="d-flex flex-wrap gap-1">
+                            {% for mood in score.common_moods %}
+                            <span class="badge bg-success">{{ mood }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="text-center mt-3">
+                        {% if request.user not in score.user.profile.followers.all %}
+                        <button class="btn btn-outline-primary btn-sm follow-button" 
+                                data-username="{{ score.user.username }}">
+                            フォローする
+                        </button>
+                        {% else %}
+                        <button class="btn btn-primary btn-sm follow-button" 
+                                data-username="{{ score.user.username }}">
+                            フォロー中
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <p>まだ音楽の相性が計算できるユーザーがいません。</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.follow-button').forEach(button => {
+    button.addEventListener('click', async () => {
+        const username = button.dataset.username;
+        const response = await fetch(`/follow/${username}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            },
+        });
+        const data = await response.json();
+        
+        if (data.is_following) {
+            button.classList.remove('btn-outline-primary');
+            button.classList.add('btn-primary');
+            button.textContent = 'フォロー中';
+        } else {
+            button.classList.remove('btn-primary');
+            button.classList.add('btn-outline-primary');
+            button.textContent = 'フォローする';
+        }
+    });
+});
+</script>
+{% endblock %}
+{% endblock %} 

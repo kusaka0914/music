@@ -1,0 +1,401 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="spotify-container">
+    <div class="sidebar">
+        <h2 class="spotify-title">音楽の好みを編集</h2>
+        <div class="genre-mood-section">
+            <div class="form-group">
+                <label for="id_top_genres">好きなジャンル</label>
+                {{ form.top_genres }}
+            </div>
+            
+            <div class="form-group">
+                <label for="id_top_moods">好きな雰囲気</label>
+                {{ form.top_moods }}
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <form method="post" class="spotify-form">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            
+            <!-- アーティスト検索セクション -->
+            <div class="search-section">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="artist-search" class="spotify-search" placeholder="アーティストを検索">
+                </div>
+                <div id="artist-suggestions" class="suggestions-container"></div>
+            </div>
+
+            <!-- 選択済みアーティスト -->
+            <div class="selected-artists-section">
+                <h3>選択したアーティスト</h3>
+                <div id="selected-artists" class="selected-artists-grid"></div>
+                {{ form.favorite_artists.as_hidden }}
+            </div>
+
+            <!-- 人気のアーティスト -->
+            <div class="recommendation-section">
+                <h3>人気のアーティスト</h3>
+                <div id="popular-artists" class="artist-grid"></div>
+            </div>
+
+            <!-- おすすめのアーティスト -->
+            <div class="recommendation-section">
+                <h3>あなたにおすすめ</h3>
+                <div id="recommended-artists" class="artist-grid"></div>
+            </div>
+
+            <button type="submit" class="spotify-button">保存</button>
+        </form>
+    </div>
+</div>
+
+<style>
+.spotify-container {
+    display: flex;
+    min-height: 100vh;
+    background: #121212;
+    color: #fff;
+}
+
+.sidebar {
+    width: 300px;
+    background: #000;
+    padding: 2rem;
+    position: fixed;
+    height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    margin-left: 300px;
+    padding: 2rem;
+    background: linear-gradient(to bottom, #535353, #121212);
+}
+
+.spotify-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    color: #fff;
+}
+
+.genre-mood-section {
+    margin-top: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #b3b3b3;
+}
+
+.spotify-search {
+    width: 100%;
+    padding: 1rem 1rem 1rem 3rem;
+    border: none;
+    border-radius: 500px;
+    background: #242424;
+    color: #fff;
+    font-size: 1rem;
+}
+
+.search-container {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #b3b3b3;
+}
+
+.artist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.artist-card {
+    background: #181818;
+    padding: 1rem;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+    cursor: pointer;
+}
+
+.artist-card:hover {
+    background: #282828;
+}
+
+.artist-card img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.artist-card h4 {
+    color: #fff;
+    margin: 0.5rem 0;
+    font-size: 1rem;
+}
+
+.selected-artists-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.artist-chip {
+    background: #282828;
+    padding: 0.5rem 1rem;
+    border-radius: 500px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.artist-chip img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+.remove-artist {
+    color: #b3b3b3;
+    cursor: pointer;
+    margin-left: 0.5rem;
+}
+
+.spotify-button {
+    background: #1db954;
+    color: #fff;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 500px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 2rem;
+}
+
+.spotify-button:hover {
+    background: #1ed760;
+    transform: scale(1.02);
+}
+
+.suggestions-container {
+    position: absolute;
+    width: 100%;
+    background: #282828;
+    border-radius: 4px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.suggestion-item {
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.suggestion-item:hover {
+    background: #333;
+}
+
+.suggestion-item img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.recommendation-section {
+    margin-top: 3rem;
+}
+
+.recommendation-section h3 {
+    color: #fff;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+/* スクロールバーのカスタマイズ */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #121212;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #535353;
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #686868;
+}
+</style>
+
+<script>
+let debounceTimeout;
+
+// 初期アーティストの読み込みと表示
+document.addEventListener('DOMContentLoaded', function() {
+    const textarea = document.getElementById('id_favorite_artists');
+    const artists = textarea.value.split('\n').filter(a => a.trim());
+    artists.forEach(artist => addArtistChip(artist));
+    
+    loadPopularArtists();
+    loadRecommendedArtists();
+});
+
+// アーティストチップを追加する関数
+function addArtistChip(artistName, imageUrl = null) {
+    const selectedArtists = document.getElementById('selected-artists');
+    const chips = Array.from(selectedArtists.children);
+    
+    if (chips.some(chip => chip.querySelector('.artist-name').textContent === artistName)) {
+        return;
+    }
+    
+    const chip = document.createElement('div');
+    chip.className = 'artist-chip';
+    chip.innerHTML = `
+        ${imageUrl ? `<img src="${imageUrl}" alt="${artistName}">` : ''}
+        <span class="artist-name">${artistName}</span>
+        <span class="remove-artist">&times;</span>
+    `;
+    
+    chip.querySelector('.remove-artist').addEventListener('click', function() {
+        chip.remove();
+        updateHiddenInput();
+    });
+    
+    selectedArtists.appendChild(chip);
+    updateHiddenInput();
+}
+
+// 非表示のテキストエリアを更新する関数
+function updateHiddenInput() {
+    const chips = document.getElementById('selected-artists').children;
+    const artists = Array.from(chips).map(chip => 
+        chip.querySelector('.artist-name').textContent
+    );
+    document.getElementById('id_favorite_artists').value = artists.join('\n');
+}
+
+// アーティストカードを作成する関数
+function createArtistCard(artist, container) {
+    const card = document.createElement('div');
+    card.className = 'artist-card';
+    card.innerHTML = `
+        <img src="${artist.image || '/static/images/default-artist.png'}" alt="${artist.name}">
+        <h4>${artist.name}</h4>
+        <button class="spotify-button" style="width: 100%; padding: 0.5rem;">追加</button>
+    `;
+    
+    card.querySelector('button').addEventListener('click', function() {
+        addArtistChip(artist.name, artist.image);
+    });
+    
+    container.appendChild(card);
+}
+
+// 人気のアーティストを読み込む関数
+async function loadPopularArtists() {
+    try {
+        const response = await fetch('/popular-artists/');
+        const data = await response.json();
+        const container = document.getElementById('popular-artists');
+        container.innerHTML = '';
+        data.artists.forEach(artist => createArtistCard(artist, container));
+    } catch (error) {
+        console.error('Error loading popular artists:', error);
+    }
+}
+
+// おすすめのアーティストを読み込む関数
+async function loadRecommendedArtists() {
+    try {
+        const response = await fetch('/recommended-artists/');
+        const data = await response.json();
+        const container = document.getElementById('recommended-artists');
+        container.innerHTML = '';
+        data.artists.forEach(artist => createArtistCard(artist, container));
+    } catch (error) {
+        console.error('Error loading recommended artists:', error);
+    }
+}
+
+// アーティスト検索の処理
+document.getElementById('artist-search').addEventListener('input', function(e) {
+    clearTimeout(debounceTimeout);
+    const query = e.target.value;
+    
+    debounceTimeout = setTimeout(() => {
+        if (query.length < 2) {
+            document.getElementById('artist-suggestions').innerHTML = '';
+            return;
+        }
+        
+        fetch(`/search-artists/?q=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                const suggestions = document.getElementById('artist-suggestions');
+                suggestions.innerHTML = '';
+                
+                data.artists.forEach(artist => {
+                    const item = document.createElement('div');
+                    item.className = 'suggestion-item';
+                    item.innerHTML = `
+                        ${artist.image ? `<img src="${artist.image}" alt="${artist.name}">` : ''}
+                        <span>${artist.name}</span>
+                    `;
+                    
+                    item.addEventListener('click', function() {
+                        addArtistChip(artist.name, artist.image);
+                        document.getElementById('artist-search').value = '';
+                        suggestions.innerHTML = '';
+                    });
+                    
+                    suggestions.appendChild(item);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }, 300);
+});
+
+// クリック以外の場所をクリックした時に候補を非表示にする
+document.addEventListener('click', function(e) {
+    const suggestions = document.getElementById('artist-suggestions');
+    const searchInput = document.getElementById('artist-search');
+    
+    if (!suggestions.contains(e.target) && !searchInput.contains(e.target)) {
+        suggestions.innerHTML = '';
+    }
+});
+</script>
+{% endblock %} 

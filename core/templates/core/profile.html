@@ -85,6 +85,66 @@
                     {% endif %}
                 </div>
             </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="card-title">音楽の好み</h3>
+                    {% if user == profile_user %}
+                    <a href="{% url 'core:edit_music_taste' %}" class="btn btn-sm btn-outline-primary float-end">
+                        編集
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    {% if profile_user.music_taste %}
+                        {% if profile_user.music_taste.top_genres %}
+                        <div class="mb-3">
+                            <h5>好きなジャンル</h5>
+                            <div class="d-flex flex-wrap gap-1">
+                                {% for genre, strength in profile_user.music_taste.top_genres.items %}
+                                <span class="badge bg-primary">{{ genre }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if profile_user.music_taste.top_moods %}
+                        <div class="mb-3">
+                            <h5>好きな曲調</h5>
+                            <div class="d-flex flex-wrap gap-1">
+                                {% for mood, strength in profile_user.music_taste.top_moods.items %}
+                                <span class="badge bg-success">{{ mood }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if profile_user.profile.favorite_artists.artists %}
+                        <div>
+                            <h5>好きなアーティスト</h5>
+                            <p>{{ profile_user.profile.favorite_artists.artists|join:", " }}</p>
+                        </div>
+                        {% endif %}
+                    {% else %}
+                        <p class="text-muted">音楽の好みが設定されていません。</p>
+                    {% endif %}
+
+                    {% if user != profile_user and user.is_authenticated %}
+                    <div class="mt-3">
+                        <h5>音楽の相性</h5>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" 
+                                 style="width: {{ compatibility_score }}%"
+                                 aria-valuenow="{{ compatibility_score }}" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                                {{ compatibility_score }}%
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 </div>

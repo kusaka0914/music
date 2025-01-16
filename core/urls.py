@@ -27,4 +27,9 @@ urlpatterns = [
     path('notification/<int:pk>/read/', views.mark_notification_read, name='mark_notification_read'),
     path('following-posts/', views.following_posts, name='following_posts'),
     path('search/', views.search, name='search'),
+    path('music-taste/edit/', views.edit_music_taste, name='edit_music_taste'),
+    path('music-compatibility/', views.music_compatibility, name='music_compatibility'),
+    path('search-artists/', views.search_artists, name='search_artists'),
+    path('popular-artists/', views.popular_artists, name='popular_artists'),
+    path('recommended-artists/', views.recommended_artists, name='recommended_artists'),
 ] 
