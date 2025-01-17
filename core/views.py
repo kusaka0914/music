@@ -15,6 +15,7 @@ from spotipy.oauth2 import SpotifyClientCredentials, SpotifyOAuth
 import json
 import logging
 from django.contrib.auth import login, logout
+from django.core.paginator import Paginator
 
 logger = logging.getLogger(__name__)
 
@@ -38,10 +39,9 @@ def home(request):
                     'avatar_url': story.user.profile.avatar.url if story.user.profile.avatar else '/static/images/default-avatar.svg',
                 },
                 'stories': [],
-                'has_unviewed': 'false'  # JavaScriptのブーリアン値として文字列を使用
+                'has_unviewed': 'false'
             }
         
-        # ストーリーの情報を追加
         story_info = {
             'id': story.id,
             'track_name': story.track_name or '',
@@ -51,13 +51,12 @@ def home(request):
             'mood_emoji': story.mood_emoji or '',
             'comment': story.comment or '',
             'created_at': story.created_at.isoformat(),
-            'viewed': 'true' if request.user.is_authenticated and request.user in story.viewers.all() else 'false'  # JavaScriptのブーリアン値として文字列を使用
+            'viewed': 'true' if request.user.is_authenticated and request.user in story.viewers.all() else 'false'
         }
         stories_by_user[story.user]['stories'].append(story_info)
         
-        # 未閲覧のストーリーがあるかチェック
         if request.user.is_authenticated and not story_info['viewed']:
-            stories_by_user[story.user]['has_unviewed'] = 'true'  # JavaScriptのブーリアン値として文字列を使用
+            stories_by_user[story.user]['has_unviewed'] = 'true'
     
     # トレンド投稿を取得（過去7日間で最もエンゲージメントの高い投稿）
     week_ago = timezone.now() - timezone.timedelta(days=7)
@@ -66,6 +65,24 @@ def home(request):
     ).annotate(
         engagement=Count('likes') + Count('comments')
     ).order_by('-engagement')[:5]
+    
+    # おすすめユーザーを取得
+    recommended_users = []
+    if request.user.is_authenticated:
+        # 自分以外のユーザーを取得
+        other_users = Profile.objects.exclude(
+            user=request.user
+        ).select_related('user')[:5]
+        
+        for profile in other_users:
+            compatibility = calculate_music_compatibility(request.user.profile, profile)
+            recommended_users.append({
+                'user': profile.user,
+                'compatibility_score': int(compatibility)
+            })
+        
+        # 互換性スコアで降順ソート
+        recommended_users.sort(key=lambda x: x['compatibility_score'], reverse=True)
     
     # stories_by_userをリスト形式に変換
     stories_by_user_list = []
@@ -76,26 +93,8 @@ def home(request):
         'posts': posts,
         'stories_by_user': stories_by_user_list,
         'trending_posts': trending_posts,
+        'recommended_users': recommended_users[:3]  # 上位3人のみ表示
     }
-    
-    # ログインしているユーザーの場合のみ、おすすめユーザーを追加
-    if request.user.is_authenticated:
-        recommended_users = []
-        potential_users = User.objects.exclude(
-            Q(id=request.user.id) | 
-            Q(id__in=request.user.profile.following.all())
-        ).select_related('profile')[:5]
-        
-        for user in potential_users:
-            compatibility_score = calculate_music_compatibility(request.user.profile, user.profile)
-            recommended_users.append({
-                'user': user,
-                'compatibility_score': compatibility_score
-            })
-        
-        # 互換性スコアでソート
-        recommended_users.sort(key=lambda x: x['compatibility_score'], reverse=True)
-        context['recommended_users'] = recommended_users[:3]  # 上位3人のみを表示
     
     return render(request, 'core/home.html', context)
 
@@ -178,32 +177,40 @@ def register(request):
 @login_required
 def create_post(request):
     if request.method == 'POST':
-        form = MusicPostForm(request.POST, request.FILES)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.user = request.user
-            
-            # JSONフィールドの処理
-            for field in ['tags', 'music_elements', 'analysis_points']:
-                value = request.POST.get(field)
-                if value:
-                    try:
-                        setattr(post, field, json.loads(value))
-                    except json.JSONDecodeError:
-                        setattr(post, field, [])
-                else:
-                    setattr(post, field, [])
-            
-            post.save()
-            messages.success(request, '投稿が作成されました。')
+        try:
+            # フォームデータの取得
+            spotify_track_id = request.POST.get('spotify_track_id')
+            title = request.POST.get('title')
+            artist = request.POST.get('artist')
+            description = request.POST.get('description')
+            scene = request.POST.get('scene')
+            album_image = request.POST.get('album_image')
+
+            # バリデーション
+            if not all([spotify_track_id, title, artist, scene]):
+                messages.error(request, '必須項目が入力されていません。')
+                return redirect('core:create_post')
+
+            # 投稿の作成
+            post = MusicPost.objects.create(
+                user=request.user,
+                title=title,
+                artist=artist,
+                spotify_link=spotify_track_id,  # トラックIDのみを保存
+                description=description,
+                mood=scene,
+                image=album_image
+            )
+
+            messages.success(request, '投稿が作成されました！')
             return redirect('core:post_detail', post_id=post.id)
-    else:
-        form = MusicPostForm()
-    
-    return render(request, 'core/post_form.html', {
-        'form': form,
-        'title': '新規投稿'
-    })
+
+        except Exception as e:
+            logger.error(f"投稿作成中にエラーが発生: {str(e)}")
+            messages.error(request, '投稿の作成中にエラーが発生しました。')
+            return redirect('core:create_post')
+
+    return render(request, 'core/post_form.html')
 
 @login_required
 def post_detail(request, post_id):
@@ -260,8 +267,10 @@ def delete_post(request, pk):
 
 @login_required
 def like_post(request, post_id):
-    if request.method == 'POST':
+    """投稿のいいね処理"""
+    try:
         post = get_object_or_404(MusicPost, id=post_id)
+        
         if request.user in post.likes.all():
             post.likes.remove(request.user)
             liked = False
@@ -272,10 +281,14 @@ def like_post(request, post_id):
         return JsonResponse({
             'status': 'success',
             'liked': liked,
-            'likes_count': post.likes.count()
+            'like_count': post.likes.count()
         })
-    
-    return JsonResponse({'status': 'error'}, status=400)
+    except Exception as e:
+        logger.error(f"いいね処理中にエラーが発生: {str(e)}")
+        return JsonResponse({
+            'status': 'error',
+            'message': 'いいねの処理中にエラーが発生しました'
+        }, status=500)
 
 @login_required
 def add_comment(request, pk):
@@ -376,16 +389,70 @@ def follow_user(request, username):
 @login_required
 def create_playlist(request):
     if request.method == 'POST':
-        form = PlaylistForm(request.POST)
-        if form.is_valid():
-            playlist = form.save(commit=False)
-            playlist.user = request.user
-            playlist.save()
-            messages.success(request, 'プレイリストが作成されました。')
+        try:
+            title = request.POST.get('title')
+            description = request.POST.get('description')
+            is_public = request.POST.get('is_public') == 'on'
+            track_ids_str = request.POST.get('track_ids', '[]')
+            
+            try:
+                track_ids = json.loads(track_ids_str)
+            except json.JSONDecodeError:
+                logger.error(f"track_idsのJSONデコードに失敗: {track_ids_str}")
+                track_ids = []
+
+            if not title:
+                messages.error(request, 'プレイリスト名を入力してください。')
+                return redirect('core:create_playlist')
+
+            if not track_ids:
+                messages.error(request, '少なくとも1曲は追加してください。')
+                return redirect('core:create_playlist')
+
+            # プレイリストの作成
+            playlist = Playlist.objects.create(
+                user=request.user,
+                title=title,
+                description=description,
+                is_public=is_public
+            )
+
+            # 選択された曲をプレイリストに追加
+            spotify = get_spotify_client()
+            
+            for track_id in track_ids:
+                # 既存の投稿を探す
+                post = MusicPost.objects.filter(spotify_link=track_id).first()
+                if post:
+                    # 既存の投稿があればそれを使用
+                    playlist.posts.add(post)
+                else:
+                    # Spotifyから曲の情報を取得
+                    try:
+                        track_info = spotify.track(track_id)
+                        # プレイリストの参照用に投稿を作成（ユーザーの投稿としては扱わない）
+                        post = MusicPost.objects.create(
+                            user=None,  # ユーザーは設定しない
+                            title=track_info['name'],
+                            artist=track_info['artists'][0]['name'],
+                            spotify_link=track_id,
+                            image=track_info['album']['images'][0]['url'] if track_info['album']['images'] else None,
+                            is_playlist_track=True  # プレイリスト用の曲であることを示すフラグ
+                        )
+                        playlist.posts.add(post)
+                    except Exception as e:
+                        logger.error(f"Spotify track情報の取得に失敗: {str(e)}")
+                        continue
+
+            messages.success(request, 'プレイリストを作成しました。')
             return redirect('core:playlist_detail', pk=playlist.pk)
-    else:
-        form = PlaylistForm()
-    return render(request, 'core/playlist_form.html', {'form': form, 'title': '新規プレイリスト'})
+
+        except Exception as e:
+            logger.error(f"プレイリスト作成エラー: {str(e)}")
+            messages.error(request, 'プレイリストの作成中にエラーが発生しました。')
+            return redirect('core:create_playlist')
+
+    return render(request, 'core/create_playlist.html')
 
 def playlist_detail(request, pk):
     playlist = get_object_or_404(Playlist, pk=pk)
@@ -825,25 +892,47 @@ def spotify_disconnect(request):
 
 @login_required
 def filter_posts(request):
+    """投稿のフィルタリング処理"""
     filter_type = request.GET.get('filter', 'all')
-    posts_query = MusicPost.objects.select_related('user', 'user__profile').prefetch_related('likes', 'comments')
     
-    if filter_type == 'following':
-        following_users = request.user.following.all()
-        posts_query = posts_query.filter(user__in=following_users)
-    elif filter_type == 'popular':
-        week_ago = timezone.now() - timezone.timedelta(days=7)
-        posts_query = posts_query.filter(created_at__gte=week_ago).annotate(
-            engagement=Count('likes') + Count('comments')
-        ).order_by('-engagement')
-    
-    posts = posts_query.order_by('-created_at')
-    html = render_to_string('core/includes/post_list.html', {'posts': posts})
-    
-    return JsonResponse({
-        'html': html,
-        'count': posts.count()
-    })
+    try:
+        if filter_type == 'following':
+            # フォローしているユーザーの投稿を取得
+            following_users = request.user.profile.following.all()
+            posts = MusicPost.objects.filter(user__in=following_users)
+        elif filter_type == 'popular':
+            # いいねの多い順に投稿を取得（過去7日間）
+            seven_days_ago = timezone.now() - timezone.timedelta(days=7)
+            posts = MusicPost.objects.annotate(
+                like_count=Count('likes')
+            ).filter(
+                created_at__gte=seven_days_ago
+            ).order_by('-like_count', '-created_at')
+        else:  # all
+            # すべての投稿を取得（新しい順）
+            posts = MusicPost.objects.all().order_by('-created_at')
+
+        # 投稿を10件ずつ表示
+        paginator = Paginator(posts, 10)
+        page = request.GET.get('page')
+        posts = paginator.get_page(page)
+
+        html = render_to_string('core/includes/post_list.html', {
+            'posts': posts,
+            'user': request.user
+        }, request=request)
+
+        return JsonResponse({
+            'status': 'success',
+            'html': html
+        })
+
+    except Exception as e:
+        logger.error(f"フィルタリング中にエラーが発生: {str(e)}")
+        return JsonResponse({
+            'status': 'error',
+            'message': 'フィルタリングに失敗しました'
+        }, status=500)
 
 @login_required
 def create_story(request):
@@ -1075,3 +1164,100 @@ def get_story_details(request, story_id):
     except Exception as e:
         logger.error(f"ストーリー詳細の取得に失敗: {str(e)}")
         return JsonResponse({'status': 'error', 'message': 'ストーリーの取得に失敗しました'}, status=500)
+
+@login_required
+def spotify_search(request):
+    """楽曲検索エンドポイント"""
+    query = request.GET.get('q', '')
+    if not query:
+        return JsonResponse({'tracks': []})
+
+    try:
+        # SpotifyClientCredentialsを直接使用
+        spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(
+            client_id=settings.SPOTIFY_CLIENT_ID,
+            client_secret=settings.SPOTIFY_CLIENT_SECRET
+        ))
+        
+        # 日本市場での検索
+        jp_results = spotify.search(q=query, type='track', market='JP', limit=5)
+        jp_tracks = jp_results['tracks']['items']
+        
+        # グローバル市場での検索（日本で見つからない場合のバックアップ）
+        if not jp_tracks:
+            global_results = spotify.search(q=query, type='track', limit=5)
+            tracks = global_results['tracks']['items']
+        else:
+            tracks = jp_tracks
+
+        # 検索結果を整形
+        formatted_tracks = []
+        seen_ids = set()
+        
+        for track in tracks:
+            track_id = track['id']
+            if track_id not in seen_ids:
+                seen_ids.add(track_id)
+                formatted_tracks.append({
+                    'id': track_id,
+                    'title': track['name'],
+                    'artist': track['artists'][0]['name'],
+                    'imageUrl': track['album']['images'][0]['url'] if track['album']['images'] else None,
+                    'preview_url': track['preview_url']
+                })
+
+        return JsonResponse({'tracks': formatted_tracks[:5]})  # 最大5曲まで返す
+
+    except Exception as e:
+        logger.error(f"Spotify検索エラー: {str(e)}")
+        return JsonResponse({'error': 'Spotifyの検索中にエラーが発生しました。'}, status=500)
+
+@login_required
+def story_detail(request, pk):
+    """ストーリーの詳細を表示"""
+    story = get_object_or_404(MusicStory, pk=pk)
+    
+    # ストーリーが期限切れの場合
+    if story.is_expired:
+        messages.error(request, 'このストーリーは期限切れです。')
+        return redirect('core:home')
+    
+    # 非公開ストーリーの場合、作成者のみアクセス可能
+    if not story.is_public and story.user != request.user:
+        messages.error(request, 'このストーリーにはアクセスできません。')
+        return redirect('core:home')
+    
+    # 閲覧履歴を記録
+    if request.user not in story.viewers.all():
+        story.viewers.add(request.user)
+    
+    # 前後のストーリーを取得
+    user_stories = MusicStory.objects.filter(
+        user=story.user,
+        expires_at__gt=timezone.now()
+    ).order_by('created_at')
+    
+    story_ids = list(user_stories.values_list('id', flat=True))
+    current_index = story_ids.index(story.id)
+    
+    context = {
+        'story': story,
+        'prev_story_id': story_ids[current_index - 1] if current_index > 0 else None,
+        'next_story_id': story_ids[current_index + 1] if current_index < len(story_ids) - 1 else None,
+        'viewers_count': story.viewers.count(),
+        'is_own_story': request.user == story.user
+    }
+    
+    return render(request, 'core/story_detail.html', context)
+
+@login_required
+def delete_story(request, pk):
+    """ストーリーの削除"""
+    story = get_object_or_404(MusicStory, pk=pk, user=request.user)
+    
+    if request.method == 'POST':
+        story.delete()
+        messages.success(request, 'ストーリーを削除しました。')
+        return redirect('core:home')
+    
+    return render(request, 'core/story_confirm_delete.html', {'story': story})

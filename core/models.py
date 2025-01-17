@@ -237,52 +237,30 @@ class Profile(models.Model):
             return []
 
 class MusicPost(models.Model):
-    POST_TYPE_CHOICES = [
-        ('review', 'レビュー'),
-        ('analysis', '楽曲分析'),
-        ('memory', '思い出'),
-        ('recommendation', 'おすすめ'),
-        ('playlist', 'プレイリスト紹介'),
-    ]
-
     MOOD_CHOICES = [
-        ('morning', '朝'),
-        ('night', '夜'),
-        ('rain', '雨の日'),
-        ('drive', 'ドライブ'),
-        ('work', '作業'),
-        ('relax', 'リラックス'),
-        ('party', 'パーティー'),
+        ('happy', '楽しい'),
+        ('sad', '悲しい'),
+        ('excited', 'テンション高め'),
+        ('relaxed', 'リラックス'),
+        ('energetic', 'エネルギッシュ'),
+        ('calm', '穏やか'),
+        ('romantic', 'ロマンティック'),
+        ('nostalgic', 'ノスタルジック'),
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=100)
-    artist = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    title = models.CharField(max_length=200)
+    artist = models.CharField(max_length=200)
     spotify_link = models.CharField(max_length=200)
-    youtube_link = models.CharField(max_length=200, blank=True)
     description = models.TextField(blank=True)
+    image = models.URLField(max_length=500, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(User, related_name='liked_posts', blank=True)
-    
-    # 新しいフィールド
-    mood = models.CharField(max_length=20, choices=MOOD_CHOICES, blank=True)
-    scheduled_time = models.DateTimeField(null=True, blank=True)
-    location = models.CharField(max_length=200, blank=True)
-    image = models.ImageField(upload_to='post_images/', blank=True, null=True)
-    tags = models.JSONField(default=list, blank=True)  # ハッシュタグ用
-    listening_context = models.TextField(blank=True)  # 曲との出会いや思い出
-    recommended_for = models.JSONField(default=list, blank=True)  # おすすめしたい場面やシチュエーション
-    related_artists = models.JSONField(default=list, blank=True)  # 関連アーティスト
-    
-    # 追加フィールド
-    post_type = models.CharField(max_length=20, choices=POST_TYPE_CHOICES, default='review')
-    rating = models.IntegerField(null=True, blank=True)
-    lyrics_excerpt = models.TextField(blank=True)
-    music_elements = models.JSONField(default=list, blank=True)
-    analysis_points = models.JSONField(default=list, blank=True)
+    mood = models.CharField(max_length=50, choices=MOOD_CHOICES, blank=True)
+    is_playlist_track = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.title} - {self.artist}'
+        return f"{self.title} by {self.artist}"
 
     class Meta:
         ordering = ['-created_at']

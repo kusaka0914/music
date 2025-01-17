@@ -85,11 +85,13 @@ class ProfileUpdateForm(forms.ModelForm):
 class MusicPostForm(forms.ModelForm):
     class Meta:
         model = MusicPost
-        fields = ['title', 'artist', 'spotify_link', 'description', 'mood', 'scheduled_time', 'location', 'image']
+        fields = ['title', 'artist', 'spotify_link', 'description', 'mood']
         widgets = {
-            'scheduled_time': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'artist': forms.TextInput(attrs={'class': 'form-control'}),
+            'spotify_link': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'mood': forms.Select(attrs={'class': 'form-control'}),
-            'location': forms.TextInput(attrs={'placeholder': '場所（任意）'}),
         }
 
 class CommentForm(forms.ModelForm):

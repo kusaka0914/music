@@ -2,77 +2,394 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="card">
-        <div class="card-body">
-            <div class="d-flex align-items-center mb-3">
-                <img src="{% static 'images/default-avatar.png' %}" alt="Profile" class="rounded-circle me-2" style="width: 40px; height: 40px;">
-                <div>
-                    <h4 class="card-title mb-0">{{ playlist.title }}</h4>
-                    <div class="text-muted">
-                        作成者: <a href="{% url 'core:profile' playlist.user.username %}" class="text-decoration-none text-white">{{ playlist.user.username }}</a>
-                    </div>
-                </div>
-            </div>
-
-            {% if playlist.description %}
-            <p class="card-text mb-4">{{ playlist.description }}</p>
-            {% endif %}
-
-            {% if playlist.posts.all %}
-            <div class="playlist-tracks">
-                {% for post in playlist.posts.all %}
-                <div class="card mb-3 bg-dark">
-                    <div class="card-body">
-                        <div class="d-flex flex-column">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div>
-                                    <h5 class="mb-1">{{ post.title }}</h5>
-                                    <p class="text-muted mb-0">{{ post.artist }}</p>
-                                </div>
-                            </div>
-                            {% if post.spotify_link %}
-                            <div class="spotify-player mb-3">
-                                <iframe src="https://open.spotify.com/embed/track/{{ post.spotify_link|slice:'31:' }}"
-                                        width="100%"
-                                        height="80"
-                                        frameborder="0"
-                                        allowtransparency="true"
-                                        allow="encrypted-media">
-                                </iframe>
-                            </div>
-                            {% endif %}
-                            {% if post.youtube_link %}
-                            <div class="youtube-player">
-                                <iframe width="100%"
-                                        height="315"
-                                        src="https://www.youtube.com/embed/{{ post.youtube_link|slice:'17:' }}"
-                                        frameborder="0"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowfullscreen>
-                                </iframe>
-                            </div>
-                            {% endif %}
+<div class="gradient-background">
+    <div class="container">
+        <div class="playlist-detail fade-in">
+            <div class="playlist-header spotify-card">
+                <div class="playlist-cover">
+                    {% if playlist.posts.first.image %}
+                        <img src="{{ playlist.posts.first.image.url }}" alt="{{ playlist.title }}">
+                    {% else %}
+                        <div class="default-cover">
+                            <i class="bi bi-music-note-list spotify-icon"></i>
                         </div>
+                    {% endif %}
+                    
+                    <div class="play-button">
+                        <i class="bi bi-play-fill"></i>
                     </div>
                 </div>
-                {% endfor %}
+                
+                <div class="playlist-info">
+                    <div class="playlist-meta">
+                        <span class="playlist-type">プレイリスト</span>
+                        {% if not playlist.is_public %}
+                            <span class="private-badge">
+                                <i class="bi bi-lock-fill"></i> 非公開
+                            </span>
+                        {% endif %}
+                    </div>
+                    
+                    <h1 class="spotify-title">{{ playlist.title }}</h1>
+                    
+                    {% if playlist.description %}
+                        <p class="spotify-subtitle">{{ playlist.description }}</p>
+                    {% endif %}
+                    
+                    <div class="playlist-stats">
+                        <div class="creator">
+                            <img src="{% if playlist.user.profile.avatar %}{{ playlist.user.profile.avatar.url }}{% else %}{% static 'images/default-avatar.svg' %}{% endif %}" 
+                                 alt="{{ playlist.user.username }}" 
+                                 class="creator-avatar">
+                            <a href="{% url 'core:profile' playlist.user.username %}" class="creator-name">
+                                {{ playlist.user.username }}
+                            </a>
+                        </div>
+                        <span class="track-count">
+                            <i class="bi bi-music-note spotify-icon"></i> {{ playlist.posts.count }}曲
+                        </span>
+                        <span class="created-at">
+                            <i class="bi bi-calendar3 spotify-icon"></i> {{ playlist.created_at|date:"Y年n月j日" }}作成
+                        </span>
+                    </div>
+                    
+                    {% if user == playlist.user %}
+                        <div class="playlist-actions">
+                            <a href="{% url 'core:edit_playlist' playlist.pk %}" class="spotify-button">
+                                <i class="bi bi-pencil"></i> 編集
+                            </a>
+                            <button onclick="confirmDelete()" class="spotify-button danger">
+                                <i class="bi bi-trash"></i> 削除
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
-            {% else %}
-            <p class="text-muted">このプレイリストには曲が追加されていません。</p>
-            {% endif %}
 
-            {% if user == playlist.user %}
-            <div class="mt-4">
-                <a href="{% url 'core:edit_playlist' playlist.pk %}" class="btn btn-outline-light me-2">
-                    <i class="bi bi-pencil"></i> 編集
-                </a>
-                <a href="{% url 'core:delete_playlist' playlist.pk %}" class="btn btn-outline-danger">
-                    <i class="bi bi-trash"></i> 削除
-                </a>
+            <div class="playlist-content spotify-card">
+                {% if playlist.posts.all %}
+                    <div class="track-list">
+                        {% for post in playlist.posts.all %}
+                            <div class="track-item">
+                                <div class="track-number">{{ forloop.counter }}</div>
+                                
+                                <div class="track-info">
+                                    {% if post.image %}
+                                        <img src="{{ post.image.url }}" alt="{{ post.title }}" class="track-image">
+                                    {% else %}
+                                        <div class="track-image-placeholder">
+                                            <i class="bi bi-music-note spotify-icon"></i>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <div class="track-details">
+                                        <h3 class="track-title">{{ post.title }}</h3>
+                                        <p class="track-artist">{{ post.artist }}</p>
+                                    </div>
+                                </div>
+
+                                {% if post.spotify_link %}
+                                    <div class="track-player">
+                                        <iframe src="https://open.spotify.com/embed/track/{{ post.spotify_link|slice:'31:' }}"
+                                                width="100%"
+                                                height="80"
+                                                frameborder="0"
+                                                allowtransparency="true"
+                                                allow="encrypted-media">
+                                        </iframe>
+                                    </div>
+                                {% endif %}
+
+                                {% if user == playlist.user %}
+                                    <button class="remove-track-btn spotify-icon" onclick="removeTrack({{ post.id }})">
+                                        <i class="bi bi-x-lg"></i>
+                                    </button>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-playlist">
+                        <i class="bi bi-music-note-list spotify-icon"></i>
+                        <p>このプレイリストには曲が追加されていません</p>
+                        {% if user == playlist.user %}
+                            <a href="{% url 'core:home' %}" class="spotify-button">
+                                <i class="bi bi-plus-lg"></i> 曲を追加する
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
             </div>
-            {% endif %}
         </div>
     </div>
 </div>
+
+<!-- 削除確認モーダル -->
+<div id="deleteModal" class="spotify-modal" style="display: none;">
+    <div class="modal-content">
+        <h3 class="spotify-title">プレイリストの削除</h3>
+        <p class="spotify-subtitle">このプレイリストを削除してもよろしいですか？<br>この操作は取り消せません。</p>
+        <div class="modal-actions">
+            <form action="{% url 'core:delete_playlist' playlist.pk %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="spotify-button danger">削除する</button>
+            </form>
+            <button onclick="closeDeleteModal()" class="spotify-button secondary">キャンセル</button>
+        </div>
+    </div>
+</div>
+
+<style>
+.playlist-detail {
+    padding: 2rem 0;
+}
+
+.playlist-header {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.playlist-cover {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.default-cover {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(45deg, var(--spotify-green), var(--spotify-green-hover));
+}
+
+.default-cover i {
+    font-size: 4rem;
+    color: var(--spotify-white);
+}
+
+.playlist-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.playlist-type {
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--spotify-text-secondary);
+}
+
+.private-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.8rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 500px;
+    font-size: 0.8rem;
+    color: var(--spotify-text-secondary);
+}
+
+.playlist-stats {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin: 1rem 0;
+    color: var(--spotify-text-secondary);
+}
+
+.creator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.creator-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.creator-name {
+    color: var(--spotify-white);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.creator-name:hover {
+    color: var(--spotify-green);
+}
+
+.playlist-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.track-list {
+    padding: 1rem;
+}
+
+.track-item {
+    display: grid;
+    grid-template-columns: 50px 1fr auto 50px;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.track-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.track-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.track-image, .track-image-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.track-image {
+    object-fit: cover;
+}
+
+.track-image-placeholder {
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.track-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.track-title {
+    color: var(--spotify-white);
+    font-size: 1rem;
+    margin: 0;
+}
+
+.track-artist {
+    color: var(--spotify-text-secondary);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.track-player {
+    width: 300px;
+}
+
+.remove-track-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.empty-playlist {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.empty-playlist i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    color: var(--spotify-text-secondary);
+}
+
+.empty-playlist p {
+    color: var(--spotify-text-secondary);
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+    .playlist-header {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    
+    .playlist-cover {
+        width: 200px;
+        height: 200px;
+        margin: 0 auto;
+    }
+    
+    .playlist-stats {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .playlist-actions {
+        justify-content: center;
+    }
+    
+    .track-item {
+        grid-template-columns: 1fr auto;
+        gap: 0.5rem;
+    }
+    
+    .track-number {
+        display: none;
+    }
+    
+    .track-player {
+        width: 100%;
+        grid-column: 1 / -1;
+    }
+}
+</style>
+
+<script>
+function confirmDelete() {
+    document.getElementById('deleteModal').style.display = 'flex';
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').style.display = 'none';
+}
+
+function removeTrack(postId) {
+    if (confirm('この曲をプレイリストから削除しますか？')) {
+        // 削除のAPIを呼び出す
+    }
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById('deleteModal');
+    if (event.target == modal) {
+        closeDeleteModal();
+    }
+}
+</script>
 {% endblock %} 
