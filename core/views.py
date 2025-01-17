@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.utils import timezone
-from django.db.models import Q, Count
+from django.db.models import Q, Count, Case, When, F
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -24,47 +24,57 @@ logger = logging.getLogger(__name__)
 
 
 def home(request):
-    # 通常の投稿を取得
-    posts = MusicPost.objects.select_related('user', 'user__profile').prefetch_related('likes', 'comments').order_by('-created_at')
+    # 通常の投稿を取得（ユーザー名が存在するものだけ）
+    posts = MusicPost.objects.select_related('user', 'user__profile').prefetch_related('likes', 'comments').filter(
+        user__isnull=False,
+        user__username__isnull=False
+    ).order_by('-created_at')
     
     # アクティブなストーリーを取得（24時間以内）
     active_stories = MusicStory.objects.filter(
-        expires_at__gt=timezone.now()
+        expires_at__gt=timezone.now(),
+        user__isnull=False,
+        user__username__isnull=False
     ).select_related('user', 'user__profile').order_by('-created_at')
     
     # ストーリーをユーザーごとにグループ化
     stories_by_user = {}
     for story in active_stories:
-        if story.user not in stories_by_user:
-            stories_by_user[story.user] = {
-                'user': {
-                    'username': story.user.username,
-                    'avatar_url': story.user.profile.avatar.url if story.user.profile.avatar else '/static/images/default-avatar.svg',
-                },
-                'stories': [],
-                'has_unviewed': 'false'
+        if story.user and story.user.username:  # ユーザーとユーザー名の存在を確認
+            if story.user not in stories_by_user:
+                stories_by_user[story.user] = {
+                    'user': {
+                        'username': story.user.username,
+                        'avatar_url': story.user.profile.avatar.url if story.user.profile.avatar else '/static/images/default-avatar.svg',
+                    },
+                    'stories': [],
+                    'has_unviewed': False
+                }
+            
+            story_info = {
+                'id': story.id,
+                'track_name': story.track_name or '',
+                'artist_name': story.artist_name or '',
+                'album_image_url': story.album_image_url or '',
+                'mood': story.mood or '',
+                'mood_emoji': story.mood_emoji or '',
+                'comment': story.comment or '',
+                'created_at': story.created_at.isoformat(),
+                'viewed': request.user.is_authenticated and request.user in story.viewers.all()
             }
-        
-        story_info = {
-            'id': story.id,
-            'track_name': story.track_name or '',
-            'artist_name': story.artist_name or '',
-            'album_image_url': story.album_image_url or '',
-            'mood': story.mood or '',
-            'mood_emoji': story.mood_emoji or '',
-            'comment': story.comment or '',
-            'created_at': story.created_at.isoformat(),
-            'viewed': 'true' if request.user.is_authenticated and request.user in story.viewers.all() else 'false'
-        }
-        stories_by_user[story.user]['stories'].append(story_info)
-        
-        if request.user.is_authenticated and not story_info['viewed']:
-            stories_by_user[story.user]['has_unviewed'] = 'true'
+            stories_by_user[story.user]['stories'].append(story_info)
+            
+            if request.user.is_authenticated and not story_info['viewed']:
+                stories_by_user[story.user]['has_unviewed'] = True
+    
+    # stories_by_userをリスト形式に変換
+    stories_by_user_list = [data for data in stories_by_user.values() if data['user']['username']]
     
     # トレンド投稿を取得（過去7日間で最もエンゲージメントの高い投稿）
     week_ago = timezone.now() - timezone.timedelta(days=7)
     trending_posts = MusicPost.objects.filter(
-        created_at__gte=week_ago
+        created_at__gte=week_ago,
+        user__isnull=False  # ユーザーが存在するものだけを取得
     ).annotate(
         engagement=Count('likes') + Count('comments')
     ).order_by('-engagement')[:5]
@@ -75,25 +85,23 @@ def home(request):
         # 自分以外のユーザーを取得
         other_users = Profile.objects.exclude(
             user=request.user
-        ).select_related('user')[:5]
+        ).select_related('user').filter(
+            user__isnull=False  # ユーザーが存在するものだけを取得
+        )[:5]
         
         for profile in other_users:
-            compatibility = calculate_music_compatibility(request.user.profile, profile)
-            recommended_users.append({
-                'user': profile.user,
-                'compatibility_score': int(compatibility)
-            })
+            if profile.user and profile.user.username:  # ユーザーとユーザー名が存在する場合のみ処理
+                compatibility = calculate_music_compatibility(request.user.profile, profile)
+                recommended_users.append({
+                    'user': profile.user,
+                    'compatibility_score': int(compatibility)
+                })
         
         # 互換性スコアで降順ソート
         recommended_users.sort(key=lambda x: x['compatibility_score'], reverse=True)
     
     # おすすめのプレイリストを取得
     recommended_playlists = get_recommended_playlists()
-    
-    # stories_by_userをリスト形式に変換
-    stories_by_user_list = []
-    for user_data in stories_by_user.values():
-        stories_by_user_list.append(user_data)
     
     context = {
         'posts': posts,
@@ -466,10 +474,62 @@ def create_playlist(request):
 
 def playlist_detail(request, pk):
     playlist = get_object_or_404(Playlist, pk=pk)
-    if not playlist.is_public and playlist.user != request.user:
-        messages.error(request, 'このプレイリストは非公開です。')
-        return redirect('core:home')
-    return render(request, 'core/playlist_detail.html', {'playlist': playlist})
+    
+    # プレイリストの曲を取得（順序を保持）
+    playlist_tracks = PlaylistMusic.objects.filter(
+        playlist=playlist
+    ).select_related('music').order_by('order')
+    
+    # おすすめプレイリストを取得
+    recommended_playlists = Playlist.objects.filter(
+        is_public=True
+    ).exclude(
+        pk=pk
+    ).annotate(
+        engagement=Count('likes') + Count('playlist_comments')
+    ).order_by('-engagement')[:5]
+
+    # Spotifyから人気の曲を取得
+    try:
+        spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(
+            client_id=settings.SPOTIFY_CLIENT_ID,
+            client_secret=settings.SPOTIFY_CLIENT_SECRET
+        ))
+        
+        # 日本の人気曲を検索（より多くの曲を取得してからランダムに選択）
+        results = spotify.search(
+            q='year:2024',
+            type='track',
+            market='JP',
+            limit=20  # より多くの曲を取得
+        )
+        
+        import random
+        trending_tracks = []
+        if 'tracks' in results and 'items' in results['tracks']:
+            # ランダムに5曲を選択
+            tracks = random.sample(results['tracks']['items'], min(5, len(results['tracks']['items'])))
+            for track in tracks:
+                track_data = {
+                    'title': track['name'],
+                    'artist': track['artists'][0]['name'] if track['artists'] else 'Unknown Artist',
+                    'image': track['album']['images'][0]['url'] if track['album']['images'] else None,
+                    'spotify_id': track['id']
+                }
+                trending_tracks.append(track_data)
+            
+    except Exception as e:
+        logger.error(f"Spotifyからの人気曲取得エラー: {str(e)}")
+        trending_tracks = []
+
+    context = {
+        'playlist': playlist,
+        'playlist_tracks': playlist_tracks,
+        'recommended_playlists': recommended_playlists,
+        'trending_tracks': trending_tracks,
+    }
+    
+    return render(request, 'core/playlist_detail.html', context)
 
 @login_required
 def edit_playlist(request, pk):

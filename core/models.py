@@ -413,19 +413,14 @@ class Music(models.Model):
         return f"{self.title} - {self.artist}"
 
 class Playlist(models.Model):
-    title = models.CharField(max_length=200, verbose_name='プレイリスト名')
-    description = models.TextField(verbose_name='説明', blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='playlists', verbose_name='作成者')
-    music = models.ManyToManyField(Music, through='PlaylistMusic', related_name='playlists', verbose_name='楽曲')
-    likes = models.ManyToManyField(User, related_name='liked_playlists', blank=True, verbose_name='いいね')
-    is_public = models.BooleanField(default=True, verbose_name='公開')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='playlists')
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True, null=True)
+    is_public = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        verbose_name = 'プレイリスト'
-        verbose_name_plural = 'プレイリスト'
-
+    likes = models.ManyToManyField(User, related_name='liked_playlists', blank=True)
+    
     def __str__(self):
         return self.title
     

@@ -16,3 +16,17 @@ def split(value, delimiter='\n'):
     if value:
         return value.split(delimiter)
     return [] 
+
+@register.filter
+def divide(value, arg):
+    try:
+        return int(value) / int(arg)
+    except (ValueError, ZeroDivisionError):
+        return 0
+
+@register.filter
+def modulo(value, arg):
+    try:
+        return int(value) % int(arg)
+    except (ValueError, ZeroDivisionError):
+        return 0 

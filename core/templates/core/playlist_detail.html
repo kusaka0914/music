@@ -1,134 +1,209 @@
 {% extends 'core/base.html' %}
 {% load static %}
+{% load custom_filters %}
 
 {% block content %}
 <div class="gradient-background">
-    <div class="container">
-        <div class="playlist-detail fade-in">
-            <div class="playlist-header spotify-card">
-                <div class="playlist-cover">
-                    {% if playlist.posts.first.image %}
-                        <img src="{{ playlist.posts.first.image.url }}" alt="{{ playlist.title }}">
-                    {% else %}
-                        <div class="default-cover">
-                            <i class="bi bi-music-note-list spotify-icon"></i>
+    <div class="spotify-container">
+        <div class="playlist-layout">
+            <!-- メインコンテンツ -->
+            <div class="playlist-main">
+                <div class="playlist-detail fade-in">
+                    <div class="playlist-header spotify-card">
+                        <div class="playlist-cover-container">
+                            <div class="playlist-cover">
+                                {% if playlist.music.first.album_art %}
+                                <img src="{{ playlist.music.first.album_art }}" alt="{{ playlist.title }}">
+                                {% else %}
+                                    <div class="default-cover">
+                                        <i class="bi bi-music-note-list"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="playlist-controls">
+                                <button class="play-button">
+                                    <i class="bi bi-play-fill"></i>
+                                </button>
+                                {% if user == playlist.user %}
+                                    <div class="playlist-actions">
+                                        <a href="{% url 'core:edit_playlist' playlist.pk %}" class="action-button edit-button">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button onclick="confirmDelete()" class="action-button delete-button">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                {% endif %}
+                            </div>
                         </div>
-                    {% endif %}
-                    
-                    <div class="play-button">
-                        <i class="bi bi-play-fill"></i>
+                        
+                        <div class="playlist-info">
+                            <div class="playlist-meta">
+                                <span class="playlist-type">プレイリスト</span>
+                                {% if not playlist.is_public %}
+                                    <span class="private-badge">
+                                        <i class="bi bi-lock-fill"></i> 非公開
+                                    </span>
+                                {% endif %}
+                            </div>
+                            
+                            <h1 class="playlist-title">{{ playlist.title }}</h1>
+                            
+                            {% if playlist.description %}
+                                <p class="playlist-description">{{ playlist.description }}</p>
+                            {% endif %}
+                            
+                            <div class="playlist-stats">
+                                <div class="creator">
+                                    <img src="{% if playlist.user.profile.avatar %}{{ playlist.user.profile.avatar.url }}{% else %}{% static 'images/default-avatar.svg' %}{% endif %}" 
+                                         alt="{{ playlist.user.username }}" 
+                                         class="creator-avatar">
+                                    <a href="{% url 'core:profile' playlist.user.username %}" class="creator-name">
+                                        {{ playlist.user.username }}
+                                    </a>
+                                </div>
+                                <button class="like-button {% if user in playlist.likes.all %}liked{% endif %}" 
+                                        data-playlist-id="{{ playlist.id }}"
+                                        onclick="likePlaylist({{ playlist.id }})">
+                                    <i class="bi bi-heart{% if user in playlist.likes.all %}-fill{% endif %}"></i>
+                                    <span class="like-count">{{ playlist.likes.count }}</span>
+                                </button>
+                                <span class="stats-item">
+                                    <i class="bi bi-music-note"></i> {{ playlist_tracks|length }}曲
+                                </span>
+                                <span class="stats-item">
+                                    <i class="bi bi-calendar3"></i> {{ playlist.created_at|date:"Y年n月j日" }}作成
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="playlist-info">
-                    <div class="playlist-meta">
-                        <span class="playlist-type">プレイリスト</span>
-                        {% if not playlist.is_public %}
-                            <span class="private-badge">
-                                <i class="bi bi-lock-fill"></i> 非公開
-                            </span>
+
+                    <div class="playlist-content spotify-card">
+                        {% if playlist_tracks %}
+                            <div class="track-list">
+                                
+                                {% for track in playlist_tracks %}
+                                    <div class="track-item" data-track-id="{{ track.music.id }}">
+                                        <!-- <div class="track-number">{{ forloop.counter }}</div>
+                                        
+                                        <div class="track-info">
+                                            {% if track.music.album_art %}
+                                                <img src="{{ track.music.album_art }}" alt="{{ track.music.title }}" class="track-image">
+                                            {% else %}
+                                                <div class="track-image-placeholder">
+                                                    <i class="bi bi-music-note"></i>
+                                                </div>
+                                            {% endif %}
+                                            
+                                            <div class="track-details">
+                                                <h3 class="track-title">{{ track.music.title }}</h3>
+                                                <p class="track-artist">{{ track.music.artist }}</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="track-duration">
+                                            {% if track.music.duration_ms %}
+                                                {{ track.music.duration_ms|divide:60000|floatformat:0 }}:{{ track.music.duration_ms|modulo:60000|divide:1000|stringformat:"02d" }}
+                                            {% else %}
+                                                --:--
+                                            {% endif %}
+                                        </div>
+
+                                        {% if user == playlist.user %}
+                                            <div class="track-actions">
+                                                <button class="remove-track-btn" onclick="removeTrack({{ track.music.id }})">
+                                                    <i class="bi bi-x-lg"></i>
+                                                </button>
+                                            </div>
+                                        {% endif %} -->
+
+                                        <div class="track-player">
+                                            <iframe src="https://open.spotify.com/embed/track/{{ track.music.spotify_id }}"
+                                                    width="100%"
+                                                    height="80"
+                                                    frameborder="0"
+                                                    allowtransparency="true"
+                                                    allow="encrypted-media">
+                                            </iframe>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="empty-playlist">
+                                <i class="bi bi-music-note-list"></i>
+                                <p>このプレイリストには曲が追加されていません</p>
+                                {% if user == playlist.user %}
+                                    <a href="{% url 'core:create_post' %}" class="spotify-button">
+                                        <i class="bi bi-plus-lg"></i> 曲を追加する
+                                    </a>
+                                {% endif %}
+                            </div>
                         {% endif %}
                     </div>
-                    
-                    <h1 class="spotify-title">{{ playlist.title }}</h1>
-                    
-                    {% if playlist.description %}
-                        <p class="spotify-subtitle">{{ playlist.description }}</p>
-                    {% endif %}
-                    
-                    <div class="playlist-stats">
-                        <div class="creator">
-                            <img src="{% if playlist.user.profile.avatar %}{{ playlist.user.profile.avatar.url }}{% else %}{% static 'images/default-avatar.svg' %}{% endif %}" 
-                                 alt="{{ playlist.user.username }}" 
-                                 class="creator-avatar">
-                            <a href="{% url 'core:profile' playlist.user.username %}" class="creator-name">
-                                {{ playlist.user.username }}
-                            </a>
-                        </div>
-                        <span class="track-count">
-                            <i class="bi bi-music-note spotify-icon"></i> {{ playlist.posts.count }}曲
-                        </span>
-                        <span class="created-at">
-                            <i class="bi bi-calendar3 spotify-icon"></i> {{ playlist.created_at|date:"Y年n月j日" }}作成
-                        </span>
-                    </div>
-                    
-                    {% if user == playlist.user %}
-                        <div class="playlist-actions">
-                            <a href="{% url 'core:edit_playlist' playlist.pk %}" class="spotify-button">
-                                <i class="bi bi-pencil"></i> 編集
-                            </a>
-                            <button onclick="confirmDelete()" class="spotify-button danger">
-                                <i class="bi bi-trash"></i> 削除
-                            </button>
-                        </div>
-                    {% endif %}
                 </div>
             </div>
 
-            <div class="playlist-content spotify-card">
-                {% if playlist.posts.all %}
-                    <div class="track-list">
-                        {% for post in playlist.posts.all %}
-                            <div class="track-item">
-                                <div class="track-number">{{ forloop.counter }}</div>
-                                
-                                <div class="track-info">
-                                    {% if post.image %}
-                                        <img src="{{ post.image.url }}" alt="{{ post.title }}" class="track-image">
+            <!-- 右サイドバー -->
+            <div class="sidebar-right">
+                <!-- おすすめプレイリスト -->
+                <div class="recommended-playlists">
+                    <h3>おすすめプレイリスト</h3>
+                    {% for playlist in recommended_playlists %}
+                        {% if playlist.user and playlist.user.username %}
+                            <div class="playlist-card">
+                                <div class="playlist-card-cover">
+                                    {% if playlist.music.first.album_art %}
+                                        <img src="{{ playlist.music.first.album_art }}" alt="{{ playlist.title }}">
                                     {% else %}
-                                        <div class="track-image-placeholder">
-                                            <i class="bi bi-music-note spotify-icon"></i>
+                                        <div class="playlist-card-default">
+                                            <i class="bi bi-music-note-list"></i>
                                         </div>
                                     {% endif %}
-                                    
-                                    <div class="track-details">
-                                        <h3 class="track-title">{{ post.title }}</h3>
-                                        <p class="track-artist">{{ post.artist }}</p>
-                                    </div>
                                 </div>
+                                <div class="playlist-card-info">
+                                    <h4>{{ playlist.title }}</h4>
+                                    <a href="{% url 'core:profile' playlist.user.username %}" class="creator-name">
+                                        {{ playlist.user.username }}
+                                    </a>
+                                    <span class="track-count">{{ playlist.posts.count }}曲</span>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
 
-                                {% if post.spotify_link %}
-                                    <div class="track-player">
-                                        <iframe src="https://open.spotify.com/embed/track/{{ post.spotify_link|slice:'31:' }}"
-                                                width="100%"
-                                                height="80"
-                                                frameborder="0"
-                                                allowtransparency="true"
-                                                allow="encrypted-media">
-                                        </iframe>
-                                    </div>
-                                {% endif %}
-
-                                {% if user == playlist.user %}
-                                    <button class="remove-track-btn spotify-icon" onclick="removeTrack({{ post.id }})">
-                                        <i class="bi bi-x-lg"></i>
-                                    </button>
-                                {% endif %}
+                <!-- 人気の曲セクション -->
+                <div class="popular-tracks-section">
+                    <h3>人気の曲</h3>
+                    <div class="popular-tracks-list">
+                        {% for track in trending_tracks %}
+                            <div class="track-player">
+                                <iframe src="https://open.spotify.com/embed/track/{{ track.spotify_id }}"
+                                        width="100%"
+                                        height="80"
+                                        frameborder="0"
+                                        allowtransparency="true"
+                                        allow="encrypted-media">
+                                </iframe>
+                            </div>
+                        {% empty %}
+                            <div class="no-tracks">
+                                <p>人気の曲を読み込めませんでした</p>
                             </div>
                         {% endfor %}
                     </div>
-                {% else %}
-                    <div class="empty-playlist">
-                        <i class="bi bi-music-note-list spotify-icon"></i>
-                        <p>このプレイリストには曲が追加されていません</p>
-                        {% if user == playlist.user %}
-                            <a href="{% url 'core:home' %}" class="spotify-button">
-                                <i class="bi bi-plus-lg"></i> 曲を追加する
-                            </a>
-                        {% endif %}
-                    </div>
-                {% endif %}
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <!-- 削除確認モーダル -->
-<div id="deleteModal" class="spotify-modal" style="display: none;">
+<div id="deleteModal" class="spotify-modal">
     <div class="modal-content">
-        <h3 class="spotify-title">プレイリストの削除</h3>
-        <p class="spotify-subtitle">このプレイリストを削除してもよろしいですか？<br>この操作は取り消せません。</p>
+        <h3>プレイリストの削除</h3>
+        <p>このプレイリストを削除してもよろしいですか？<br>この操作は取り消せません。</p>
         <div class="modal-actions">
             <form action="{% url 'core:delete_playlist' playlist.pk %}" method="post">
                 {% csrf_token %}
@@ -140,8 +215,24 @@
 </div>
 
 <style>
-.playlist-detail {
+:root {
+    --spotify-green: #1DB954;
+    --spotify-green-hover: #1ed760;
+    --spotify-black: #121212;
+    --spotify-dark-gray: #181818;
+    --spotify-light-gray: #282828;
+    --spotify-white: #FFFFFF;
+    --spotify-text-secondary: #B3B3B3;
+}
+
+.gradient-background {
+    background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, var(--spotify-black) 100%);
+    min-height: 100vh;
     padding: 2rem 0;
+}
+
+.playlist-detail {
+    animation: fadeIn 0.5s ease-in-out;
 }
 
 .playlist-header {
@@ -150,14 +241,44 @@
     gap: 2rem;
     padding: 2rem;
     margin-bottom: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+}
+
+.playlist-cover-container {
+    position: relative;
+    width: 300px;
 }
 
 .playlist-cover {
-    position: relative;
     width: 300px;
     height: 300px;
     border-radius: 8px;
     overflow: hidden;
+    box-shadow: 0 4px 60px rgba(0,0,0,0.5);
+    transition: transform 0.3s ease;
+    position: relative;
+    background: var(--spotify-dark-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.playlist-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.playlist-cover:hover {
+    transform: scale(1.02);
+}
+
+.cover-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .default-cover {
@@ -172,6 +293,73 @@
 .default-cover i {
     font-size: 4rem;
     color: var(--spotify-white);
+}
+
+.playlist-controls {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    display: flex;
+    gap: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.playlist-cover-container:hover .playlist-controls {
+    opacity: 1;
+}
+
+.play-button {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--spotify-green);
+    border: none;
+    color: var(--spotify-white);
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+}
+
+.play-button:hover {
+    background: var(--spotify-green-hover);
+    transform: scale(1.05);
+}
+
+.action-button {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.7);
+    border: none;
+    color: var(--spotify-white);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.action-button:hover {
+    background: rgba(0,0,0,0.9);
+    transform: scale(1.1);
+}
+
+.playlist-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 0.5rem 0;
+    color: var(--spotify-white);
+}
+
+.playlist-description {
+    color: var(--spotify-text-secondary);
+    font-size: 1rem;
+    margin: 1rem 0;
 }
 
 .playlist-meta {
@@ -229,26 +417,39 @@
 
 .creator-name:hover {
     color: var(--spotify-green);
+    text-decoration: underline;
 }
 
-.playlist-actions {
+.stats-item {
     display: flex;
-    gap: 1rem;
-    margin-top: 1.5rem;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
 }
 
 .track-list {
-    padding: 1rem;
+    padding: 0 1rem;
+}
+
+.track-list-header {
+    display: grid;
+    grid-template-columns: 50px 1fr 120px auto;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    color: var(--spotify-text-secondary);
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 1rem;
 }
 
 .track-item {
     display: grid;
-    grid-template-columns: 50px 1fr auto 50px;
+    grid-template-columns: 50px 1fr 120px auto;
     align-items: center;
-    gap: 1rem;
-    padding: 0.8rem;
+    padding: 0.5rem 1rem;
     border-radius: 4px;
     transition: background-color 0.3s ease;
+    margin-bottom: 1rem;
 }
 
 .track-item:hover {
@@ -259,55 +460,87 @@
     display: flex;
     align-items: center;
     gap: 1rem;
+    min-width: 0;
 }
 
-.track-image, .track-image-placeholder {
+.track-image {
     width: 40px;
     height: 40px;
     border-radius: 4px;
     overflow: hidden;
 }
 
-.track-image {
+.track-image img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
 }
 
-.track-image-placeholder {
-    background: rgba(255, 255, 255, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 .track-details {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
+    flex: 1;
+    min-width: 0;
 }
 
 .track-title {
     color: var(--spotify-white);
     font-size: 1rem;
     margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .track-artist {
     color: var(--spotify-text-secondary);
     font-size: 0.9rem;
     margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track-duration {
+    color: var(--spotify-text-secondary);
+    font-size: 0.9rem;
+    text-align: right;
 }
 
 .track-player {
-    width: 300px;
+    grid-column: 1 / -1;
+    margin-top: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.track-player iframe {
+    display: block;
+    width: 100%;
+    border: none;
+}
+
+.track-actions {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.track-item:hover .track-actions {
+    opacity: 1;
 }
 
 .remove-track-btn {
     background: none;
     border: none;
+    color: var(--spotify-text-secondary);
     cursor: pointer;
     padding: 0.5rem;
     border-radius: 50%;
     transition: all 0.3s ease;
+}
+
+.remove-track-btn:hover {
+    color: var(--spotify-white);
+    transform: scale(1.1);
 }
 
 .empty-playlist {
@@ -327,10 +560,54 @@
     margin-bottom: 2rem;
 }
 
+.spotify-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(5px);
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: var(--spotify-dark-gray);
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+}
+
+.modal-content h3 {
+    color: var(--spotify-white);
+    margin-bottom: 1rem;
+}
+
+.modal-content p {
+    color: var(--spotify-text-secondary);
+    margin-bottom: 1.5rem;
+}
+
 .modal-actions {
     display: flex;
     gap: 1rem;
-    margin-top: 2rem;
+    justify-content: center;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @media (max-width: 768px) {
@@ -339,10 +616,14 @@
         text-align: center;
     }
     
+    .playlist-cover-container {
+        width: 200px;
+        margin: 0 auto;
+    }
+    
     .playlist-cover {
         width: 200px;
         height: 200px;
-        margin: 0 auto;
     }
     
     .playlist-stats {
@@ -350,8 +631,8 @@
         flex-wrap: wrap;
     }
     
-    .playlist-actions {
-        justify-content: center;
+    .track-list-header {
+        display: none;
     }
     
     .track-item {
@@ -363,25 +644,244 @@
         display: none;
     }
     
-    .track-player {
-        width: 100%;
-        grid-column: 1 / -1;
+    .track-duration {
+        display: none;
     }
+    
+    .track-player {
+        grid-column: 1 / -1;
+        margin-top: 1rem;
+    }
+}
+
+.spotify-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.playlist-layout {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 2rem;
+    position: relative;
+}
+
+.playlist-main {
+    width: 100%;
+    min-width: 0;
+}
+
+.sidebar-right {
+    position: sticky;
+    top: 2rem;
+    height: calc(100vh - 4rem);
+    overflow-y: auto;
+    padding-right: 1rem;
+    width: 350px;
+}
+
+.recommended-playlists,
+.popular-tracks {
+    background: var(--spotify-dark-gray);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.recommended-playlists h3,
+.popular-tracks h3 {
+    color: var(--spotify-white);
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.playlist-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    margin-bottom: 0.5rem;
+}
+
+.playlist-card:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.playlist-card-cover {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--spotify-dark-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.playlist-card-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.playlist-card-default {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, var(--spotify-green), var(--spotify-green-hover));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.playlist-card-default i {
+    font-size: 1.5rem;
+    color: var(--spotify-white);
+}
+
+.playlist-card-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.playlist-card-info h4 {
+    color: var(--spotify-white);
+    font-size: 1rem;
+    margin: 0;
+    margin-bottom: 0.4rem;
+}
+
+.playlist-card-info p {
+    color: var(--spotify-text-secondary);
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+.track-count {
+    font-size: 0.8rem;
+    color: var(--spotify-text-secondary);
+}
+
+.track-card {
+    margin-bottom: 1rem;
+}
+
+.track-card:last-child {
+    margin-bottom: 0;
+}
+
+@media (max-width: 1400px) {
+    .playlist-layout {
+        grid-template-columns: 1fr 320px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .playlist-layout {
+        grid-template-columns: 1fr 300px;
+    }
+}
+
+@media (max-width: 992px) {
+    .playlist-layout {
+        grid-template-columns: 1fr;
+    }
+    .sidebar-right {
+        display: none;
+    }
+}
+
+.popular-tracks-section {
+    background: var(--spotify-dark-gray);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.popular-tracks-section h3 {
+    color: var(--spotify-white);
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.popular-tracks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.popular-tracks-list .track-player {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.popular-tracks-list .no-tracks {
+    text-align: center;
+    padding: 2rem;
+    color: var(--spotify-text-secondary);
+}
+
+.popular-tracks-list .no-tracks p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.like-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    color: var(--spotify-text-secondary);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.like-button:hover {
+    color: var(--spotify-white);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.like-button.liked {
+    color: var(--spotify-green);
+}
+
+.like-button.liked:hover {
+    color: var(--spotify-green-hover);
+}
+
+.like-button i {
+    font-size: 1.2rem;
+}
+
+.like-count {
+    font-size: 0.9rem;
 }
 </style>
 
 <script>
 function confirmDelete() {
-    document.getElementById('deleteModal').style.display = 'flex';
+    const modal = document.getElementById('deleteModal');
+    modal.style.display = 'flex';
 }
 
 function closeDeleteModal() {
-    document.getElementById('deleteModal').style.display = 'none';
+    const modal = document.getElementById('deleteModal');
+    modal.style.display = 'none';
 }
 
 function removeTrack(postId) {
     if (confirm('この曲をプレイリストから削除しますか？')) {
-        // 削除のAPIを呼び出す
+        // 削除のAPIを呼び出す処理をここに実装
+        console.log('Track ' + postId + ' will be removed');
     }
 }
 
@@ -390,6 +890,64 @@ window.onclick = function(event) {
     if (event.target == modal) {
         closeDeleteModal();
     }
+}
+
+// ホバーエフェクトの強化
+document.querySelectorAll('.track-item').forEach(track => {
+    track.addEventListener('mouseenter', () => {
+        track.style.transform = 'scale(1.01)';
+        track.style.transition = 'transform 0.2s ease';
+    });
+    
+    track.addEventListener('mouseleave', () => {
+        track.style.transform = 'scale(1)';
+    });
+});
+
+function likePlaylist(playlistId) {
+    fetch(`/playlist/${playlistId}/like/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            const likeButton = document.querySelector(`[data-playlist-id="${playlistId}"]`);
+            const likeIcon = likeButton.querySelector('i');
+            const likeCount = likeButton.querySelector('.like-count');
+            
+            if (data.liked) {
+                likeButton.classList.add('liked');
+                likeIcon.classList.remove('bi-heart');
+                likeIcon.classList.add('bi-heart-fill');
+            } else {
+                likeButton.classList.remove('liked');
+                likeIcon.classList.remove('bi-heart-fill');
+                likeIcon.classList.add('bi-heart');
+            }
+            
+            likeCount.textContent = data.like_count;
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }
 </script>
 {% endblock %} 

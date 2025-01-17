@@ -36,4 +36,5 @@ urlpatterns = [
     path('spotify/search-track/', views.search_track, name='search_track'),
     path('spotify/search-track-for-story/', views.search_track_for_story, name='search_track_for_story'),
     path('music-compatibility/', views.music_compatibility, name='music_compatibility'),
+    path('playlist/<int:playlist_id>/like/', views.like_playlist, name='like_playlist'),
 ] 

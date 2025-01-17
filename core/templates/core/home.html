@@ -4,66 +4,7 @@
 {% block content %}
 {% csrf_token %}
 <div class="spotify-container">
-    <div class="home-layout">
-        <!-- 左サイドバー -->
-        <div class="sidebar">
-            <div class="user-profile-mini">
-                {% if user.is_authenticated %}
-                    <div class="profile-header">
-                        {% if user.profile.avatar %}
-                            <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" class="profile-avatar">
-                        {% else %}
-                            <img src="{% static 'images/default-avatar.svg' %}" alt="{{ user.username }}" class="profile-avatar">
-                        {% endif %}
-                        <div class="profile-info">
-                            <h3>{{ user.username }}</h3>
-                            {% if user.profile.nickname %}
-                                <span class="nickname">{{ user.profile.nickname }}</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                {% endif %}
-            </div>
-
-            <nav class="main-nav">
-                <a href="{% url 'core:home' %}" class="nav-item active">
-                    <i class="bi bi-house-fill"></i>
-                    <span>ホーム</span>
-                </a>
-                {% if user.is_authenticated %}
-                    <a href="{% url 'core:profile' user.username %}" class="nav-item">
-                        <i class="bi bi-person-fill"></i>
-                        <span>プロフィール</span>
-                    </a>
-                    <a href="#" class="nav-item">
-                        <i class="bi bi-music-note-list"></i>
-                        <span>プレイリスト</span>
-                    </a>
-                    <a href="{% url 'core:edit_music_taste' %}" class="nav-item">
-                        <i class="bi bi-sliders"></i>
-                        <span>音楽の好み</span>
-                    </a>
-                {% else %}
-                    <a href="{% url 'core:login' %}" class="nav-item">
-                        <i class="bi bi-box-arrow-in-right"></i>
-                        <span>ログイン</span>
-                    </a>
-                    <a href="{% url 'core:register' %}" class="nav-item">
-                        <i class="bi bi-person-plus"></i>
-                        <span>新規登録</span>
-                    </a>
-                {% endif %}
-            </nav>
-
-            {% if not user.profile.spotify_connected %}
-                <div class="spotify-connect-prompt">
-                    <i class="bi bi-spotify"></i>
-                    <p>Spotifyと連携して、より多くの機能を利用しましょう</p>
-                    <a href="{% url 'core:spotify_connect' %}" class="spotify-connect-button">連携する</a>
-                </div>
-            {% endif %}
-        </div>
-
+    <div class="main-layout">
         <!-- メインコンテンツ -->
         <main class="main-content">
             <!-- ストーリーセクション -->
@@ -81,16 +22,18 @@
                     
                     <!-- ストーリーアイテム -->
                     {% for user_data in stories_by_user %}
-                        <div class="story-item" data-first-story-id="{{ user_data.stories.0.id }}">
-                            <div class="story-avatar {% if user_data.has_unviewed %}not-viewed{% endif %}">
-                                {% if user_data.user.avatar_url %}
-                                    <img src="{{ user_data.user.avatar_url }}" alt="{{ user_data.user.username }}">
-                                {% else %}
-                                    <img src="{% static 'images/default-avatar.svg' %}" alt="{{ user_data.user.username }}">
-                                {% endif %}
+                        {% if user_data.user.username %}
+                            <div class="story-item" data-first-story-id="{{ user_data.stories.0.id }}">
+                                <div class="story-avatar {% if user_data.has_unviewed %}not-viewed{% endif %}">
+                                    {% if user_data.user.avatar_url %}
+                                        <img src="{{ user_data.user.avatar_url }}" alt="{{ user_data.user.username }}">
+                                    {% else %}
+                                        <img src="{% static 'images/default-avatar.svg' %}" alt="{{ user_data.user.username }}">
+                                    {% endif %}
+                                </div>
+                                <span class="story-username">{{ user_data.user.username }}</span>
                             </div>
-                            <span class="story-username">{{ user_data.user.username }}</span>
-                        </div>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>
@@ -109,49 +52,43 @@
 
             <div class="posts-grid">
                 {% for post in posts %}
-                    <div class="post-card">
-                        {% if post.spotify_link %}
-                            <div class="spotify-player">
-                                <iframe 
-                                    src="https://open.spotify.com/embed/track/{{ post.spotify_link|slice:'31:' }}" 
-                                    width="100%" 
-                                    height="152" 
-                                    frameborder="0" 
-                                    allowtransparency="true" 
-                                    allow="encrypted-media">
-                                </iframe>
-                            </div>
-                        {% endif %}
-                        <div class="post-content">
-                            <div class="post-header">
-                                <a href="{% url 'core:profile' post.user.username %}" class="post-user">
-                                    {% if post.user.profile.avatar %}
-                                        <img src="{{ post.user.profile.avatar.url }}" alt="{{ post.user.username }}">
-                                    {% else %}
-                                        <img src="{% static 'images/default-avatar.svg' %}" alt="{{ post.user.username }}">
-                                    {% endif %}
-                                    <span>{{ post.user.username }}</span>
-                                </a>
-                                <span class="post-time">{{ post.created_at|timesince }}前</span>
-                            </div>
-                            {% if post.description %}
-                                <p class="post-description">{{ post.description }}</p>
+                    {% if post.user and post.user.username %}
+                        <div class="post-card">
+                            {% if post.spotify_link %}
+                                <div class="spotify-player">
+                                    <iframe 
+                                        id="spotify-iframe-{{ post.spotify_link|slice:'31:' }}"
+                                        src="https://open.spotify.com/embed/track/{{ post.spotify_link|slice:'31:' }}" 
+                                        width="100%" 
+                                        height="152" 
+                                        frameborder="0" 
+                                        allowtransparency="true" 
+                                        allow="encrypted-media"
+                                        data-track-name="{{ post.track_name }}"
+                                        data-artist-name="{{ post.artist_name }}"
+                                        data-album-art="{{ post.album_art_url }}"
+                                        data-preview-url="{{ post.preview_url }}">
+                                    </iframe>
+                                </div>
                             {% endif %}
-                            <div class="post-meta">
-                                <button class="like-button {% if user in post.likes.all %}liked{% endif %}" data-post-id="{{ post.id }}">
-                                    <i class="bi bi-heart{% if user in post.likes.all %}-fill{% endif %}"></i>
-                                    <span class="like-count">{{ post.likes.count }}</span>
-                                </button>
-                                <a href="{% url 'core:post_detail' post.id %}" class="comment-button">
-                                    <i class="bi bi-chat"></i>
-                                    <span>{{ post.comments.count }}</span>
-                                </a>
-                                {% if post.mood %}
-                                    <span class="mood-tag">{{ post.get_mood_display }}</span>
+                            <div class="post-content">
+                                <div class="post-header">
+                                    <a href="{% url 'core:profile' post.user.username %}" class="post-user">
+                                        {% if post.user.profile.avatar %}
+                                            <img src="{{ post.user.profile.avatar.url }}" alt="{{ post.user.username }}">
+                                        {% else %}
+                                            <img src="{% static 'images/default-avatar.svg' %}" alt="{{ post.user.username }}">
+                                        {% endif %}
+                                        <span>{{ post.user.username }}</span>
+                                    </a>
+                                    <span class="post-time">{{ post.created_at|timesince }}前</span>
+                                </div>
+                                {% if post.description %}
+                                    <p class="post-description">{{ post.description }}</p>
                                 {% endif %}
                             </div>
                         </div>
-                    </div>
+                    {% endif %}
                 {% empty %}
                     <div class="no-posts">
                         <i class="bi bi-music-note"></i>
@@ -216,9 +153,11 @@
                     <div class="playlist-card">
                         <div class="playlist-cover">
                             {% if playlist.music.first.album_art %}
-                                <img src="{{ playlist.music.first.album_art }}" alt="{{ playlist.title }}">
+                            <img src="{{ playlist.music.first.album_art }}" alt="{{ playlist.title }}">
                             {% else %}
-                                <img src="{% static 'images/default-playlist.jpg' %}" alt="{{ playlist.title }}">
+                                <div class="default-cover">
+                                    <i class="bi bi-music-note-list"></i>
+                                </div>
                             {% endif %}
                         </div>
                         <div class="playlist-info">
@@ -358,116 +297,49 @@
 
 <style>
 .spotify-container {
-    background: linear-gradient(to bottom, #535353, #121212);
-    min-height: 100vh;
-    padding: 2rem;
-    color: #fff;
-}
-
-.home-layout {
-    display: grid;
-    grid-template-columns: 250px 1fr 300px;
-    gap: 2rem;
     max-width: 1400px;
     margin: 0 auto;
+    padding: 0 1rem;
 }
 
-/* 左サイドバー */
-.sidebar {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 8px;
-    padding: 1.5rem;
-    height: fit-content;
+.main-layout {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 2rem;
+}
+
+.main-content {
+    width: 100%;
+    min-width: 0;
+}
+
+.sidebar-right {
     position: sticky;
     top: 2rem;
+    height: calc(100vh - 4rem);
+    overflow-y: auto;
+    padding-right: 1rem;
+    width: 350px;
 }
 
-.user-profile-mini {
-    margin-bottom: 2rem;
+@media (max-width: 1200px) {
+    .main-layout {
+        grid-template-columns: 1fr 300px;
+    }
+    
+    .sidebar-right {
+        width: 300px;
+    }
 }
 
-.profile-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.profile-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.profile-info h3 {
-    font-size: 1.1rem;
-    margin: 0;
-}
-
-.nickname {
-    color: #b3b3b3;
-    font-size: 0.9rem;
-}
-
-.main-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.nav-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.8rem;
-    color: #b3b3b3;
-    text-decoration: none;
-    border-radius: 4px;
-    transition: all 0.3s;
-}
-
-.nav-item:hover, .nav-item.active {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-}
-
-.nav-item i {
-    font-size: 1.2rem;
-}
-
-.spotify-connect-prompt {
-    margin-top: 2rem;
-    padding: 1.5rem;
-    background: rgba(29, 185, 84, 0.1);
-    border-radius: 8px;
-    text-align: center;
-}
-
-.spotify-connect-prompt i {
-    font-size: 2rem;
-    color: #1DB954;
-    margin-bottom: 1rem;
-}
-
-.spotify-connect-button {
-    display: inline-block;
-    background: #1DB954;
-    color: #fff;
-    padding: 0.8rem 1.5rem;
-    border-radius: 500px;
-    text-decoration: none;
-    margin-top: 1rem;
-    transition: all 0.3s;
-}
-
-.spotify-connect-button:hover {
-    background: #1ed760;
-    transform: scale(1.02);
-}
-
-/* メインコンテンツ */
-.main-content {
-    flex: 1;
+@media (max-width: 992px) {
+    .main-layout {
+        grid-template-columns: 1fr;
+    }
+    
+    .sidebar-right {
+        display: none;
+    }
 }
 
 .content-header {
@@ -699,16 +571,6 @@
     margin-bottom: 1rem;
 }
 
-/* 右サイドバー */
-.sidebar-right {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 8px;
-    padding: 1.5rem;
-    height: fit-content;
-    position: sticky;
-    top: 2rem;
-}
-
 .trending-section, .recommended-users {
     margin-bottom: 2rem;
 }
@@ -801,27 +663,6 @@
 .follow-button:hover {
     background: #1DB954;
     color: #fff;
-}
-
-@media (max-width: 1200px) {
-    .home-layout {
-        grid-template-columns: 250px 1fr;
-    }
-    .sidebar-right {
-        display: none;
-    }
-}
-
-@media (max-width: 768px) {
-    .home-layout {
-        grid-template-columns: 1fr;
-    }
-    .sidebar {
-        display: none;
-    }
-    .spotify-container {
-        padding: 1rem;
-    }
 }
 
 .loading {
