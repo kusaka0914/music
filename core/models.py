@@ -287,17 +287,6 @@ class Comment(models.Model):
     def __str__(self):
         return f'{self.user.username}のコメント on {self.post.title}'
 
-class Playlist(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
-    description = models.TextField(blank=True)
-    posts = models.ManyToManyField(MusicPost, related_name='playlists', blank=True)
-    is_public = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f'{self.user.username}の{self.title}'
 
 class Notification(models.Model):
     LIKE = 'like'
@@ -406,6 +395,72 @@ class StoryView(models.Model):
     
     class Meta:
         unique_together = ('story', 'user')
+
+class Music(models.Model):
+    title = models.CharField(max_length=200, verbose_name='曲名')
+    artist = models.CharField(max_length=200, verbose_name='アーティスト')
+    album_art = models.URLField(verbose_name='アルバムアート', blank=True, null=True)
+    spotify_id = models.CharField(max_length=100, unique=True, verbose_name='Spotify ID')
+    preview_url = models.URLField(verbose_name='プレビューURL', blank=True, null=True)
+    duration_ms = models.IntegerField(verbose_name='再生時間(ms)', default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = '楽曲'
+        verbose_name_plural = '楽曲'
+
+    def __str__(self):
+        return f"{self.title} - {self.artist}"
+
+class Playlist(models.Model):
+    title = models.CharField(max_length=200, verbose_name='プレイリスト名')
+    description = models.TextField(verbose_name='説明', blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='playlists', verbose_name='作成者')
+    music = models.ManyToManyField(Music, through='PlaylistMusic', related_name='playlists', verbose_name='楽曲')
+    likes = models.ManyToManyField(User, related_name='liked_playlists', blank=True, verbose_name='いいね')
+    is_public = models.BooleanField(default=True, verbose_name='公開')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'プレイリスト'
+        verbose_name_plural = 'プレイリスト'
+
+    def __str__(self):
+        return self.title
+    
+    def get_engagement_score(self):
+        """プレイリストのエンゲージメントスコアを計算"""
+        comment_weight = 2  # コメントは「いいね」の2倍の重み
+        return self.likes.count() + (self.playlist_comments.count() * comment_weight)
+
+
+class PlaylistComment(models.Model):
+    playlist = models.ForeignKey(Playlist, on_delete=models.CASCADE, related_name='playlist_comments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user.username}のコメント on {self.playlist.title}'
+
+    class Meta:
+        ordering = ['-created_at']
+
+class PlaylistMusic(models.Model):
+    playlist = models.ForeignKey(Playlist, on_delete=models.CASCADE, verbose_name='プレイリスト')
+    music = models.ForeignKey(Music, on_delete=models.CASCADE, verbose_name='楽曲')
+    order = models.IntegerField(default=0, verbose_name='順番')
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'プレイリスト楽曲'
+        verbose_name_plural = 'プレイリスト楽曲'
+        ordering = ['order']
+        unique_together = ['playlist', 'music']
+
+    def __str__(self):
+        return f"{self.playlist.title} - {self.music.title}"
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from .models import Profile, MusicPost, Comment, MusicStory
+from .models import Profile, MusicPost, Comment, MusicStory, Playlist, PlaylistComment, PlaylistMusic, Music
 
 class ProfileInline(admin.StackedInline):
     model = Profile
@@ -96,3 +96,34 @@ class MusicStoryAdmin(admin.ModelAdmin):
 # 既存のUserAdminを上書き
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
+
+class PlaylistAdmin(admin.ModelAdmin):
+    list_display = ['title', 'user', 'created_at', 'get_engagement_score']
+    list_filter = ['created_at']
+    search_fields = ['title', 'user__username']
+    readonly_fields = ['created_at']
+
+    def get_engagement_score(self, obj):
+        return obj.get_engagement_score()
+    get_engagement_score.short_description = 'エンゲージメントスコア'
+
+admin.site.register(Playlist, PlaylistAdmin)
+
+@admin.register(PlaylistComment)
+class PlaylistCommentAdmin(admin.ModelAdmin):
+    list_display = ('playlist', 'user', 'content', 'created_at')
+    list_filter = ('created_at',)
+    search_fields = ('playlist__title', 'user__username', 'content')
+    readonly_fields = ('created_at',)
+
+@admin.register(PlaylistMusic)
+class PlaylistMusicAdmin(admin.ModelAdmin):
+    list_display = ('playlist', 'music', 'order')
+    list_filter = ('playlist', 'music')
+    search_fields = ('playlist__title', 'music__title')
+    readonly_fields = ('order',)
+
+@admin.register(Music)
+class MusicAdmin(admin.ModelAdmin):
+    list_display = ('title', 'artist', 'album_art')
+    search_fields = ('title', 'artist')

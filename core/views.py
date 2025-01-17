@@ -7,7 +7,10 @@ from django.db.models import Q, Count
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.conf import settings
-from .models import MusicPost, MusicStory, Comment, Profile, MusicTaste,Playlist,Notification
+from .models import (
+    MusicPost, MusicStory, Comment, Profile, MusicTaste,
+    Playlist, Notification, PlaylistComment, Music, PlaylistMusic
+)
 from .forms import MusicPostForm, MusicStoryForm, CommentForm, MusicTasteForm, ProfileEditForm, MusicStoryForm,UserLoginForm,UserRegisterForm,PlaylistForm
 from .spotify_utils import get_spotify_client
 import spotipy
@@ -84,6 +87,9 @@ def home(request):
         # 互換性スコアで降順ソート
         recommended_users.sort(key=lambda x: x['compatibility_score'], reverse=True)
     
+    # おすすめのプレイリストを取得
+    recommended_playlists = get_recommended_playlists()
+    
     # stories_by_userをリスト形式に変換
     stories_by_user_list = []
     for user_data in stories_by_user.values():
@@ -93,7 +99,8 @@ def home(request):
         'posts': posts,
         'stories_by_user': stories_by_user_list,
         'trending_posts': trending_posts,
-        'recommended_users': recommended_users[:3]  # 上位3人のみ表示
+        'recommended_users': recommended_users[:3],  # 上位3人のみ表示
+        'recommended_playlists': recommended_playlists  # おすすめのプレイリストを追加
     }
     
     return render(request, 'core/home.html', context)
@@ -420,29 +427,32 @@ def create_playlist(request):
             # 選択された曲をプレイリストに追加
             spotify = get_spotify_client()
             
-            for track_id in track_ids:
-                # 既存の投稿を探す
-                post = MusicPost.objects.filter(spotify_link=track_id).first()
-                if post:
-                    # 既存の投稿があればそれを使用
-                    playlist.posts.add(post)
-                else:
-                    # Spotifyから曲の情報を取得
-                    try:
+            for order, track_id in enumerate(track_ids):
+                try:
+                    # 既存の楽曲を探す
+                    music = Music.objects.filter(spotify_id=track_id).first()
+                    if not music:
+                        # Spotifyから曲の情報を取得して新しい楽曲を作成
                         track_info = spotify.track(track_id)
-                        # プレイリストの参照用に投稿を作成（ユーザーの投稿としては扱わない）
-                        post = MusicPost.objects.create(
-                            user=None,  # ユーザーは設定しない
+                        music = Music.objects.create(
                             title=track_info['name'],
                             artist=track_info['artists'][0]['name'],
-                            spotify_link=track_id,
-                            image=track_info['album']['images'][0]['url'] if track_info['album']['images'] else None,
-                            is_playlist_track=True  # プレイリスト用の曲であることを示すフラグ
+                            spotify_id=track_id,
+                            album_art=track_info['album']['images'][0]['url'] if track_info['album']['images'] else None,
+                            preview_url=track_info.get('preview_url'),
+                            duration_ms=track_info.get('duration_ms', 0)
                         )
-                        playlist.posts.add(post)
-                    except Exception as e:
-                        logger.error(f"Spotify track情報の取得に失敗: {str(e)}")
-                        continue
+
+                    # プレイリストと楽曲を関連付け
+                    PlaylistMusic.objects.create(
+                        playlist=playlist,
+                        music=music,
+                        order=order
+                    )
+
+                except Exception as e:
+                    logger.error(f"楽曲の追加中にエラー: {str(e)}")
+                    continue
 
             messages.success(request, 'プレイリストを作成しました。')
             return redirect('core:playlist_detail', pk=playlist.pk)
@@ -1198,6 +1208,19 @@ def spotify_search(request):
             track_id = track['id']
             if track_id not in seen_ids:
                 seen_ids.add(track_id)
+                # 既存の楽曲を検索
+                music = Music.objects.filter(spotify_id=track_id).first()
+                if not music:
+                    # 新しい楽曲をデータベースに保存
+                    music = Music.objects.create(
+                        title=track['name'],
+                        artist=track['artists'][0]['name'],
+                        spotify_id=track_id,
+                        album_art=track['album']['images'][0]['url'] if track['album']['images'] else None,
+                        preview_url=track['preview_url'],
+                        duration_ms=track['duration_ms']
+                    )
+                
                 formatted_tracks.append({
                     'id': track_id,
                     'title': track['name'],
@@ -1261,3 +1284,99 @@ def delete_story(request, pk):
         return redirect('core:home')
     
     return render(request, 'core/story_confirm_delete.html', {'story': story})
+
+@login_required
+def like_playlist(request, playlist_id):
+    """プレイリストのいいね処理"""
+    try:
+        playlist = get_object_or_404(Playlist, id=playlist_id)
+        
+        if request.user in playlist.likes.all():
+            playlist.likes.remove(request.user)
+            liked = False
+        else:
+            playlist.likes.add(request.user)
+            liked = True
+            # 自分の投稿以外の場合は通知を作成
+            if request.user != playlist.user:
+                Notification.objects.create(
+                    recipient=playlist.user,
+                    sender=request.user,
+                    notification_type='like',
+                    playlist=playlist
+                )
+        
+        return JsonResponse({
+            'status': 'success',
+            'liked': liked,
+            'like_count': playlist.likes.count()
+        })
+    except Exception as e:
+        logger.error(f"プレイリストのいいね処理中にエラーが発生: {str(e)}")
+        return JsonResponse({
+            'status': 'error',
+            'message': 'いいねの処理中にエラーが発生しました'
+        }, status=500)
+
+@login_required
+def add_playlist_comment(request, playlist_id):
+    """プレイリストへのコメント追加"""
+    playlist = get_object_or_404(Playlist, id=playlist_id)
+    
+    if request.method == 'POST':
+        try:
+            content = request.POST.get('content')
+            if not content:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'コメント内容を入力してください'
+                }, status=400)
+            
+            comment = PlaylistComment.objects.create(
+                playlist=playlist,
+                user=request.user,
+                content=content
+            )
+            
+            # 自分の投稿以外の場合は通知を作成
+            if request.user != playlist.user:
+                Notification.objects.create(
+                    recipient=playlist.user,
+                    sender=request.user,
+                    notification_type='comment',
+                    playlist=playlist,
+                    comment=comment
+                )
+            
+            # コメントのHTMLをレンダリング
+            html = render_to_string('core/includes/playlist_comment.html', {
+                'comment': comment
+            }, request=request)
+            
+            return JsonResponse({
+                'status': 'success',
+                'html': html,
+                'comment_count': playlist.playlist_comments.count()
+            })
+            
+        except Exception as e:
+            logger.error(f"プレイリストへのコメント追加中にエラーが発生: {str(e)}")
+            return JsonResponse({
+                'status': 'error',
+                'message': 'コメントの追加中にエラーが発生しました'
+            }, status=500)
+    
+    return JsonResponse({'status': 'error', 'message': '無効なリクエストです'}, status=400)
+
+def get_recommended_playlists():
+    """おすすめのプレイリストを取得"""
+    # 過去1週間の人気プレイリストを取得
+    week_ago = timezone.now() - timezone.timedelta(days=7)
+    popular_playlists = Playlist.objects.filter(
+        is_public=True,
+        created_at__gte=week_ago
+    ).annotate(
+        engagement_score=Count('likes') + Count('playlist_comments') * 2
+    ).order_by('-engagement_score')[:5]
+    
+    return popular_playlists

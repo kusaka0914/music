@@ -1,0 +1,27 @@
+{% load static %}
+
+<div class="comment-item" data-comment-id="{{ comment.id }}">
+    <div class="comment-header">
+        <div class="comment-user">
+            <img src="{{ comment.user.profile.avatar.url|default:'/static/images/default-avatar.svg' }}" 
+                 alt="{{ comment.user.username }}" 
+                 class="comment-avatar">
+            <div class="comment-user-info">
+                <a href="{% url 'core:profile' comment.user.username %}" class="comment-username">
+                    {{ comment.user.profile.nickname|default:comment.user.username }}
+                </a>
+                <span class="comment-date">{{ comment.created_at|timesince }}前</span>
+            </div>
+        </div>
+        {% if user == comment.user %}
+        <div class="comment-actions">
+            <button class="delete-comment-btn" data-comment-id="{{ comment.id }}">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+        {% endif %}
+    </div>
+    <div class="comment-content">
+        {{ comment.content }}
+    </div>
+</div> 

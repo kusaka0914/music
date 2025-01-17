@@ -204,6 +204,44 @@
                 </div>
             </div>
             {% endif %}
+
+            <!-- おすすめのプレイリスト -->
+            <div class="recommended-playlists-section">
+                <h3 class="section-title">
+                    <i class="bi bi-music-note-list"></i>
+                    おすすめのプレイリスト
+                </h3>
+                <div class="recommended-playlists">
+                    {% for playlist in recommended_playlists %}
+                    <div class="playlist-card">
+                        <div class="playlist-cover">
+                            {% if playlist.music.first.album_art %}
+                                <img src="{{ playlist.music.first.album_art }}" alt="{{ playlist.title }}">
+                            {% else %}
+                                <img src="{% static 'images/default-playlist.jpg' %}" alt="{{ playlist.title }}">
+                            {% endif %}
+                        </div>
+                        <div class="playlist-info">
+                            <h4 class="playlist-title">{{ playlist.title }}</h4>
+                            <p class="playlist-creator">作成者: {{ playlist.user.profile.nickname|default:playlist.user.username }}</p>
+                            <div class="playlist-stats">
+                                <span class="playlist-tracks">
+                                    <i class="bi bi-music-note"></i>
+                                    {{ playlist.music.count }}曲
+                                </span>
+                                <span class="playlist-likes">
+                                    <i class="bi bi-heart"></i>
+                                    {{ playlist.likes.count }}
+                                </span>
+                            </div>
+                        </div>
+                        <a href="{% url 'core:playlist_detail' playlist.id %}" class="playlist-link"></a>
+                    </div>
+                    {% empty %}
+                    <p class="no-playlists">プレイリストがまだありません</p>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -1334,17 +1372,105 @@
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+.recommended-playlists-section {
+    margin-top: 2rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.recommended-playlists-section .section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.recommended-playlists {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.playlist-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.playlist-card:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.playlist-cover {
+    width: 100%;
+    height: 120px;
+    overflow: hidden;
+}
+
+.playlist-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.playlist-info {
+    padding: 1rem;
+}
+
+.playlist-title {
+    margin: 0 0 0.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.playlist-creator {
+    color: #b3b3b3;
+    font-size: 0.9rem;
+    margin: 0 0 0.5rem;
+}
+
+.playlist-stats {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: #b3b3b3;
+}
+
+.playlist-tracks, .playlist-likes {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.playlist-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.no-playlists {
+    text-align: center;
+    padding: 2rem;
+    color: #b3b3b3;
+}
 </style>
 
 <script>
-// ストーリーデータをJavaScriptオブジェクトとして定義
-const storiesData = {
-    {% for user_data in stories_by_user %}
-        "{{ forloop.counter }}": {{ user_data.stories|safe }},
-    {% endfor %}
-};
-
 document.addEventListener('DOMContentLoaded', function() {
+    const storiesData = {};
+    {% for user_data in stories_by_user %}
+    storiesData["{{ forloop.counter }}"] = {{ user_data.stories|safe }};
+    {% endfor %}
+    
     // いいねボタンの処理
     const setupLikeButtons = () => {
         document.querySelectorAll('.like-button').forEach(button => {
@@ -1371,380 +1497,11 @@ document.addEventListener('DOMContentLoaded', function() {
                             this.querySelector('i').classList.add('bi-heart');
                         }
                     }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
                 });
             });
         });
     };
-
-    // フィルターボタンの処理
-    document.querySelectorAll('.filter-button').forEach(button => {
-        button.addEventListener('click', function() {
-            const filterType = this.textContent.trim() === 'すべて' ? 'all' : 
-                             this.textContent.trim() === 'フォロー中' ? 'following' : 'popular';
-            
-            document.querySelectorAll('.filter-button').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            this.classList.add('active');
-
-            // ローディング表示
-            const postsGrid = document.querySelector('.posts-grid');
-            postsGrid.innerHTML = '<div class="loading"><i class="bi bi-arrow-repeat spinning"></i></div>';
-
-            // フィルター適用
-            fetch(`/filter-posts/?filter=${filterType}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        postsGrid.innerHTML = data.html;
-                        // いいねボタンのイベントリスナーを再設定
-                        setupLikeButtons();
-                    } else {
-                        postsGrid.innerHTML = '<div class="error">投稿の読み込みに失敗しました</div>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    postsGrid.innerHTML = '<div class="error">投稿の読み込みに失敗しました</div>';
-                });
-        });
-    });
-
-    // 初期設定
+    
     setupLikeButtons();
 });
-
-// ストーリー関連のJavaScript
-document.addEventListener('DOMContentLoaded', function() {
-    const storyModal = document.querySelector('.story-modal');
-    const closeModal = storyModal.querySelector('.close-modal');
-    const storyItems = document.querySelectorAll('.story-item:not(.add-story)');
-    const prevButton = storyModal.querySelector('.story-nav.prev');
-    const nextButton = storyModal.querySelector('.story-nav.next');
-    let currentStoryId = null;
-    
-    // ストーリーアイテムクリック時の処理
-    storyItems.forEach(item => {
-        item.addEventListener('click', function() {
-            const firstStoryId = this.dataset.firstStoryId;
-            if (firstStoryId) {
-                showStory(firstStoryId);
-            }
-        });
-    });
-    
-    // モーダルを閉じる
-    closeModal.addEventListener('click', function() {
-        storyModal.style.display = 'none';
-        stopProgress();
-    });
-    
-    // 前のストーリーへ
-    prevButton.addEventListener('click', function() {
-        const prevId = this.dataset.prevId;
-        if (prevId) {
-            showStory(prevId);
-        }
-    });
-    
-    // 次のストーリーへ
-    nextButton.addEventListener('click', function() {
-        const nextId = this.dataset.nextId;
-        if (nextId) {
-            showStory(nextId);
-        }
-    });
-    
-    // ストーリーを表示
-    function showStory(storyId) {
-        fetch(`/story/${storyId}/details/`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    const story = data.story;
-                    currentStoryId = story.id;
-                    
-                    // ユーザー情報を更新
-                    storyModal.querySelector('.story-user-avatar').src = story.user.avatar_url;
-                    storyModal.querySelector('.story-user-name').textContent = story.user.username;
-                    
-                    // 経過時間を設定
-                    const timeAgo = getTimeAgo(new Date(story.created_at));
-                    storyModal.querySelector('.story-time').textContent = timeAgo;
-                    
-                    // 曲情報を更新
-                    storyModal.querySelector('.album-art img').src = story.album_image_url;
-                    storyModal.querySelector('.music-title').textContent = story.track_name;
-                    storyModal.querySelector('.music-artist').textContent = story.artist_name;
-                    
-                    // 気分とコメントを更新
-                    storyModal.querySelector('.mood-emoji').textContent = story.mood_emoji;
-                    storyModal.querySelector('.mood-text').textContent = story.mood;
-                    storyModal.querySelector('.story-comment').textContent = story.comment;
-                    
-                    // 閲覧数を更新
-                    storyModal.querySelector('.viewers-count').textContent = story.viewers_count;
-                    
-                    // ナビゲーションボタンの表示/非表示
-                    prevButton.style.display = story.prev_story_id ? 'block' : 'none';
-                    nextButton.style.display = story.next_story_id ? 'block' : 'none';
-                    prevButton.dataset.prevId = story.prev_story_id;
-                    nextButton.dataset.nextId = story.next_story_id;
-                    
-                    // モーダルを表示
-                    storyModal.style.display = 'flex';
-                    startProgress();
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('ストーリーの読み込みに失敗しました');
-            });
-    }
-    
-    // プログレスバーの処理
-    let progressInterval;
-    const STORY_DURATION = 5000; // 5秒
-    
-    function startProgress() {
-        const progressBar = storyModal.querySelector('.progress-bar');
-        let progress = 0;
-        
-        stopProgress();
-        progressBar.style.width = '0%';
-        
-        progressInterval = setInterval(() => {
-            progress += (100 * 100 / STORY_DURATION); // 100ms毎の進捗
-            progressBar.style.width = Math.min(progress, 100) + '%';
-            
-            if (progress >= 100) {
-                stopProgress();
-                // 次のストーリーがあれば自動で表示
-                const nextId = nextButton.dataset.nextId;
-                if (nextId) {
-                    showStory(nextId);
-                } else {
-                    storyModal.style.display = 'none';
-                }
-            }
-        }, 100);
-    }
-    
-    function stopProgress() {
-        if (progressInterval) {
-            clearInterval(progressInterval);
-            progressInterval = null;
-        }
-    }
-    
-    // 経過時間を計算
-    function getTimeAgo(date) {
-        const seconds = Math.floor((new Date() - date) / 1000);
-        
-        if (seconds < 60) {
-            return '今';
-        } else if (seconds < 3600) {
-            const minutes = Math.floor(seconds / 60);
-            return `${minutes}分前`;
-        } else if (seconds < 86400) {
-            const hours = Math.floor(seconds / 3600);
-            return `${hours}時間前`;
-        } else {
-            const days = Math.floor(seconds / 86400);
-            return `${days}日前`;
-        }
-    }
-});
-
-// ストーリー作成モーダルの処理
-document.addEventListener('DOMContentLoaded', function() {
-    const createStoryModal = document.querySelector('.create-story-modal');
-    const addStoryButton = document.querySelector('.add-story');
-    const closeModalButtons = document.querySelectorAll('.close-modal');
-    const songSearchInput = document.getElementById('song-search');
-    const searchResults = document.querySelector('.search-results');
-    const selectedTrack = document.querySelector('.selected-track');
-    const moodOptions = document.querySelectorAll('.mood-option');
-    const commentTextarea = document.querySelector('.comment-section textarea');
-    const characterCount = document.querySelector('.character-count');
-    const createButton = document.querySelector('.create-button');
-    
-    let selectedMood = null;
-    let selectedTrackData = null;
-    let audioPreview = null;
-    
-    // ストーリー作成ボタンクリック時
-    addStoryButton.addEventListener('click', function() {
-        createStoryModal.style.display = 'flex';
-        console.log('Opening create story modal');  // デバッグログ
-    });
-    
-    // モーダルを閉じる
-    closeModalButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            createStoryModal.style.display = 'none';
-            resetModal();
-        });
-    });
-    
-    // 曲検索
-    let searchTimeout;
-    songSearchInput.addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        const query = this.value.trim();
-        
-        if (query.length < 2) {
-            searchResults.style.display = 'none';
-            return;
-        }
-        
-        searchTimeout = setTimeout(() => {
-            console.log('Searching for:', query);  // デバッグログ
-            fetch(`/spotify/search-track-for-story/?q=${encodeURIComponent(query)}`)
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Search results:', data);  // デバッグログ
-                    if (data.tracks && data.tracks.length > 0) {
-                        searchResults.innerHTML = data.tracks.map(track => `
-                            <div class="search-result-item" data-track-id="${track.id}" 
-                                data-preview-url="${track.preview_url || ''}"
-                                data-spotify-url="${track.spotify_url}"
-                                data-image-url="${track.imageUrl}"
-                                data-title="${track.title}"
-                                data-artist="${track.artist}">
-                                <img src="${track.imageUrl}" alt="${track.title}">
-                                <div class="result-details">
-                                    <h4>${track.title}</h4>
-                                    <p>${track.artist}</p>
-                                </div>
-                            </div>
-                        `).join('');
-                        searchResults.style.display = 'block';
-                        
-                        // 検索結果クリック時の処理
-                        document.querySelectorAll('.search-result-item').forEach(item => {
-                            item.addEventListener('click', function() {
-                                console.log('Selected track:', this.dataset);  // デバッグログ
-                                selectedTrackData = {
-                                    id: this.dataset.trackId,
-                                    previewUrl: this.dataset.previewUrl,
-                                    spotifyUrl: this.dataset.spotifyUrl,
-                                    imageUrl: this.dataset.imageUrl,
-                                    title: this.dataset.title,
-                                    artist: this.dataset.artist
-                                };
-                                
-                                selectedTrack.querySelector('.track-image').src = selectedTrackData.imageUrl;
-                                selectedTrack.querySelector('.track-title').textContent = selectedTrackData.title;
-                                selectedTrack.querySelector('.track-artist').textContent = selectedTrackData.artist;
-                                
-                                selectedTrack.style.display = 'block';
-                                searchResults.style.display = 'none';
-                                songSearchInput.value = '';
-                                
-                                updateCreateButton();
-                            });
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Search error:', error);  // エラーログ
-                });
-        }, 500);
-    });
-    
-    // 気分選択の処理
-    moodOptions.forEach(option => {
-        option.addEventListener('click', function() {
-            console.log('Selected mood:', this.dataset);  // デバッグログ
-            moodOptions.forEach(opt => opt.classList.remove('selected'));
-            this.classList.add('selected');
-            selectedMood = {
-                mood: this.dataset.mood,
-                emoji: this.dataset.emoji
-            };
-            updateCreateButton();
-        });
-    });
-    
-    // コメント入力の処理
-    commentTextarea.addEventListener('input', function() {
-        const length = this.value.length;
-        characterCount.textContent = `${length}/200`;
-        updateCreateButton();
-    });
-    
-    // 作成ボタンの有効/無効を更新
-    function updateCreateButton() {
-        const isValid = selectedTrackData && selectedMood;
-        console.log('Update create button:', { isValid, selectedTrackData, selectedMood });  // デバッグログ
-        createButton.disabled = !isValid;
-    }
-    
-    // ストーリー作成
-    createButton.addEventListener('click', function() {
-        console.log('Create button clicked');  // デバッグログ
-        if (!selectedTrackData || !selectedMood) {
-            console.log('Missing required data');  // デバッグログ
-            return;
-        }
-        
-        const data = {
-            spotify_track_id: selectedTrackData.id,
-            mood: selectedMood.mood,
-            mood_emoji: selectedMood.emoji,
-            comment: commentTextarea.value.trim()
-        };
-        
-        console.log('Sending data:', data);  // デバッグログ
-        
-        fetch('/story/create/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => {
-            console.log('Response:', response);  // デバッグログ
-            return response.json();
-        })
-        .then(data => {
-            console.log('Success:', data);  // デバッグログ
-            if (data.status === 'success') {
-                createStoryModal.style.display = 'none';
-                resetModal();
-                window.location.reload();
-            } else {
-                alert('ストーリーの作成に失敗しました');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('ストーリーの作成に失敗しました');
-        });
-    });
-    
-    // モーダルをリセット
-    function resetModal() {
-        songSearchInput.value = '';
-        searchResults.style.display = 'none';
-        selectedTrack.style.display = 'none';
-        moodOptions.forEach(opt => opt.classList.remove('selected'));
-        commentTextarea.value = '';
-        characterCount.textContent = '0/200';
-        selectedMood = null;
-        selectedTrackData = null;
-        if (audioPreview) {
-            audioPreview.pause();
-            audioPreview = null;
-        }
-        updateCreateButton();
-    }
-});
-</script>
-{% endblock %} 
+</script>{% endblock %} 
