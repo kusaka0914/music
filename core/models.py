@@ -289,28 +289,27 @@ class Comment(models.Model):
 
 
 class Notification(models.Model):
-    LIKE = 'like'
-    COMMENT = 'comment'
-    FOLLOW = 'follow'
-    NOTIFICATION_TYPES = [
-        (LIKE, 'いいね'),
-        (COMMENT, 'コメント'),
-        (FOLLOW, 'フォロー'),
-    ]
+    NOTIFICATION_TYPES = (
+        ('follow', 'フォロー'),
+        ('like_post', '投稿へのいいね'),
+        ('comment_post', '投稿へのコメント'),
+        ('like_playlist', 'プレイリストへのいいね'),
+    )
 
-    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications_received')
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications_sent')
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_notifications')
     notification_type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES)
-    post = models.ForeignKey(MusicPost, on_delete=models.CASCADE, null=True, blank=True)
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, null=True, blank=True)
+    post = models.ForeignKey('MusicPost', on_delete=models.CASCADE, null=True, blank=True)
+    playlist = models.ForeignKey('Playlist', on_delete=models.CASCADE, null=True, blank=True)
+    comment = models.ForeignKey('Comment', on_delete=models.CASCADE, null=True, blank=True)
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f'{self.sender.username}から{self.recipient.username}への{self.get_notification_type_display()}'
-
     class Meta:
         ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.sender.username}から{self.get_notification_type_display()}"
 
 class MusicTaste(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='music_taste')
@@ -456,6 +455,59 @@ class PlaylistMusic(models.Model):
 
     def __str__(self):
         return f"{self.playlist.title} - {self.music.title}"
+
+class Event(models.Model):
+    title = models.CharField(max_length=200)
+    date = models.DateTimeField()
+    venue = models.CharField(max_length=200)
+    image = models.ImageField(upload_to='event_images/', null=True, blank=True)
+    description = models.TextField()
+    artists = models.JSONField()  # アーティスト名のリストを保存
+    ticket_url = models.URLField(max_length=500)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        ordering = ['date']
+
+    @classmethod
+    def get_upcoming_events(cls, artist_names=None):
+        """
+        開催予定のイベントを取得
+        artist_names: 特定のアーティストのイベントのみを取得する場合に指定
+        """
+        events = cls.objects.filter(date__gte=timezone.now())
+        if artist_names:
+            # JSONFieldの中のアーティスト名でフィルタリング
+            events = events.filter(artists__contains=artist_names)
+        return events.order_by('date')
+
+class Message(models.Model):
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.sender.username} から {self.recipient.username} へのメッセージ"
+
+class Conversation(models.Model):
+    participants = models.ManyToManyField(User, related_name='conversations')
+    last_message = models.ForeignKey(Message, on_delete=models.SET_NULL, null=True, blank=True, related_name='last_message_conversation')
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-updated_at']
+
+    def __str__(self):
+        return f"会話 {self.id}"
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

@@ -1,50 +1,83 @@
+{% load static %}
+
 {% for post in posts %}
-    <div class="post-card">
-        {% if post.spotify_link %}
-            <div class="spotify-player">
-                <iframe 
-                    src="https://open.spotify.com/embed/track/{{ post.spotify_link|slice:'31:' }}" 
-                    width="100%" 
-                    height="152" 
-                    frameborder="0" 
-                    allowtransparency="true" 
-                    allow="encrypted-media">
-                </iframe>
-            </div>
-        {% endif %}
-        <div class="post-content">
-            <div class="post-header">
-                <a href="{% url 'core:profile' post.user.username %}" class="post-user">
-                    {% if post.user.profile.avatar %}
-                        <img src="{{ post.user.profile.avatar.url }}" alt="{{ post.user.username }}">
-                    {% else %}
-                        <img src="/static/images/default-avatar.svg" alt="{{ post.user.username }}">
-                    {% endif %}
-                    <span>{{ post.user.username }}</span>
-                </a>
-                <span class="post-time">{{ post.created_at|timesince }}前</span>
-            </div>
-            {% if post.description %}
-                <p class="post-description">{{ post.description }}</p>
+    {% if post.user and post.user.username %}
+        <div class="post-card">
+            {% if post.spotify_link %}
+                <div class="spotify-player">
+                    <iframe 
+                        id="spotify-iframe-{{ post.spotify_link|slice:'31:' }}"
+                        src="https://open.spotify.com/embed/track/{{ post.spotify_link|slice:'31:' }}?utm_source=generator" 
+                        width="100%" 
+                        height="152" 
+                        frameborder="0" 
+                        allowtransparency="true" 
+                        allow="encrypted-media">
+                    </iframe>
+                </div>
             {% endif %}
-            <div class="post-meta">
-                <button class="like-button {% if user in post.likes.all %}liked{% endif %}" data-post-id="{{ post.id }}">
-                    <i class="bi bi-heart{% if user in post.likes.all %}-fill{% endif %}"></i>
-                    <span class="like-count">{{ post.likes.count }}</span>
-                </button>
-                <a href="{% url 'core:post_detail' post.id %}" class="comment-button">
-                    <i class="bi bi-chat"></i>
-                    <span>{{ post.comments.count }}</span>
-                </a>
-                {% if post.mood %}
-                    <span class="mood-tag">{{ post.get_mood_display }}</span>
+            <div class="post-content">
+                <div class="post-header">
+                    <a href="{% url 'core:profile' post.user.username %}" class="post-user">
+                        {% if post.user.profile.avatar %}
+                            <img src="{{ post.user.profile.avatar.url }}" alt="{{ post.user.username }}">
+                        {% else %}
+                            <img src="{% static 'images/default-avatar.svg' %}" alt="{{ post.user.username }}">
+                        {% endif %}
+                        <span>{{ post.user.username }}</span>
+                    </a>
+                    <span class="post-time">{{ post.created_at|timesince }}前</span>
+                </div>
+                {% if post.description %}
+                    <p class="post-description">{{ post.description }}</p>
                 {% endif %}
+                <div class="post-actions">
+                    <button class="action-button like-button {% if user in post.likes.all %}liked{% endif %}" 
+                            data-post-id="{{ post.id }}">
+                        <i class="bi {% if user in post.likes.all %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
+                        <span class="like-count">{{ post.likes.count }}</span>
+                    </button>
+                    <button class="action-button comment-button" 
+                            data-post-id="{{ post.id }}"
+                            onclick="toggleComments('{{ post.id }}')">
+                        <i class="bi bi-chat"></i>
+                        <span class="comment-count">{{ post.comments.count }}</span>
+                        <span class="comment-text">コメントを表示</span>
+                    </button>
+                </div>
+                <div id="comments-{{ post.id }}" class="comments-section" style="display: none;">
+                    <div class="comments-list">
+                        {% for comment in post.comments.all %}
+                        <div class="comment">
+                            <div class="comment-user">
+                                <img src="{{ comment.user.profile.avatar.url|default:'/static/images/default-avatar.svg' }}" 
+                                     alt="{{ comment.user.username }}">
+                                <div class="comment-content">
+                                    <div class="comment-header">
+                                        <span class="comment-username">{{ comment.user.username }}</span>
+                                        <span class="comment-time">{{ comment.created_at|timesince }}前</span>
+                                    </div>
+                                    <p class="comment-text">{{ comment.content }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    {% if user.is_authenticated %}
+                    <form class="comment-form" data-post-id="{{ post.id }}" onsubmit="submitComment(event, '{{ post.id }}')">
+                        <input type="text" name="comment" placeholder="コメントを追加...">
+                        <button type="submit">
+                            <i class="bi bi-send"></i>
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
             </div>
         </div>
-    </div>
+    {% endif %}
 {% empty %}
     <div class="no-posts">
-        <i class="bi bi-music-note"></i>
         <p>投稿がありません</p>
     </div>
 {% endfor %} 

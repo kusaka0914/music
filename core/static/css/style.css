@@ -13,7 +13,7 @@
 body {
     background: var(--spotify-black);
     color: var(--spotify-white);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: "Noto Sans JP", sans-serif;
 }
 
 .navbar {

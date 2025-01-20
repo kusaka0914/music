@@ -1,0 +1,263 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="messages-container">
+    <div class="messages-sidebar">
+        <div class="messages-header">
+            <h2>メッセージ</h2>
+        </div>
+        <div class="conversations-list">
+            {% for conv_data in all_conversations %}
+                <a href="{% url 'core:conversation_detail' conv_data.conversation.id %}" 
+                   class="conversation-item {% if conv_data.is_active %}active{% endif %}">
+                    <div class="conversation-avatar">
+                        {% if conv_data.other_user.profile.avatar %}
+                            <img src="{{ conv_data.other_user.profile.avatar.url }}" alt="{{ conv_data.other_user.username }}">
+                        {% else %}
+                            <img src="{% static 'images/default-avatar.svg' %}" alt="{{ conv_data.other_user.username }}">
+                        {% endif %}
+                    </div>
+                    <div class="conversation-content">
+                        <div class="conversation-header">
+                            <span class="username">{{ conv_data.other_user.username }}</span>
+                            <span class="time">
+                                {% if conv_data.last_message %}
+                                    {{ conv_data.last_message.created_at|timesince }}前
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="last-message">
+                            {% if conv_data.last_message %}
+                                {{ conv_data.last_message.content|truncatechars:50 }}
+                            {% else %}
+                                会話を始めましょう
+                            {% endif %}
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="conversation-detail">
+        <div class="conversation-header">
+            <div class="user-info">
+                {% if other_user.profile.avatar %}
+                    <img src="{{ other_user.profile.avatar.url }}" alt="{{ other_user.username }}" class="avatar">
+                {% else %}
+                    <img src="{% static 'images/default-avatar.svg' %}" alt="{{ other_user.username }}" class="avatar">
+                {% endif %}
+                <h3>{{ other_user.username }}</h3>
+            </div>
+        </div>
+        <div class="messages-list" id="messagesList">
+            {% for message in messages %}
+                <div class="message {% if message.sender == user %}sent{% else %}received{% endif %}">
+                    <div class="message-content">
+                        {{ message.content }}
+                        <span class="message-time">{{ message.created_at|time:"H:i" }}</span>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="message-input">
+            <form id="messageForm" class="message-form">
+                {% csrf_token %}
+                <input type="text" id="messageContent" placeholder="メッセージを入力..." required>
+                <button type="submit">
+                    <i class="bi bi-send"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.conversation-detail {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+}
+
+.conversation-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #dee2e6;
+    background-color: #fff;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-info .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-info h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.messages-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.message {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.message.sent {
+    justify-content: flex-end;
+}
+
+.message-content {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 15px;
+    position: relative;
+}
+
+.message.sent .message-content {
+    background-color: #0d6efd;
+    color: white;
+    border-bottom-right-radius: 5px;
+}
+
+.message.received .message-content {
+    background-color: #f0f2f5;
+    color: #212529;
+    border-bottom-left-radius: 5px;
+}
+
+.message-time {
+    font-size: 0.75rem;
+    color: #6c757d;
+    margin-top: 5px;
+    display: block;
+}
+
+.message.sent .message-time {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.message-input {
+    padding: 20px;
+    border-top: 1px solid #dee2e6;
+    background-color: #fff;
+}
+
+.message-form {
+    display: flex;
+    gap: 10px;
+}
+
+.message-form input {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 20px;
+    outline: none;
+}
+
+.message-form input:focus {
+    border-color: #0d6efd;
+}
+
+.message-form button {
+    background-color: #0d6efd;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.message-form button:hover {
+    background-color: #0b5ed7;
+}
+
+.conversation-item.active {
+    background-color: #e7f1ff;
+}
+
+@media (max-width: 768px) {
+    .messages-sidebar {
+        display: none;
+    }
+
+    .conversation-detail {
+        width: 100%;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const messagesList = document.getElementById('messagesList');
+    const messageForm = document.getElementById('messageForm');
+    const messageInput = document.getElementById('messageContent');
+    
+    // メッセージリストを最下部にスクロール
+    messagesList.scrollTop = messagesList.scrollHeight;
+    
+    messageForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const content = messageInput.value.trim();
+        if (!content) return;
+        
+        fetch('{% url "core:send_message" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                conversation_id: {{ conversation.id }},
+                content: content
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // メッセージを追加
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message sent';
+                messageDiv.innerHTML = `
+                    <div class="message-content">
+                        ${data.message.content}
+                        <span class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                    </div>
+                `;
+                messagesList.appendChild(messageDiv);
+                
+                // 入力フィールドをクリア
+                messageInput.value = '';
+                
+                // 最下部にスクロール
+                messagesList.scrollTop = messagesList.scrollHeight;
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+</script>
+{% endblock %} 

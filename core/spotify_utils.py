@@ -104,7 +104,8 @@ def get_recently_played_tracks(spotify_client, limit=10):
                 'artist': track['artists'][0]['name'],
                 'image': track['album']['images'][0]['url'] if track['album']['images'] else None,
                 'played_at': item['played_at'],
-                'spotify_url': track['external_urls']['spotify']
+                'spotify_url': track['external_urls']['spotify'],
+                'spotify_id': track['id']
             })
         logger.info(f"最近再生した曲を{len(tracks)}件取得しました")
         return tracks
@@ -122,7 +123,8 @@ def get_top_tracks(spotify_client, limit=10, time_range='short_term'):
                 'name': track['name'],
                 'artist': track['artists'][0]['name'],
                 'image': track['album']['images'][0]['url'] if track['album']['images'] else None,
-                'spotify_url': track['external_urls']['spotify']
+                'spotify_url': track['external_urls']['spotify'],
+                'spotify_id': track['id']
             })
         return tracks
     except Exception as e:

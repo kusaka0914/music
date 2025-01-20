@@ -1,66 +1,170 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block content %}
 <div class="container">
-    <div class="row">
-        <div class="col-md-8 mx-auto">
-            <h2 class="mb-4">通知</h2>
-            {% if notifications %}
+    <div class="notifications-container">
+        <h2 class="notifications-title">通知</h2>
+        
+        {% if notifications %}
+            <div class="notifications-list">
                 {% for notification in notifications %}
-                    <div class="card mb-3 notification" data-notification-id="{{ notification.pk }}">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <a href="{% url 'profile' notification.sender.username %}" class="text-decoration-none">
-                                        <strong>{{ notification.sender.username }}</strong>
-                                    </a>
-                                    {% if notification.notification_type == 'like' %}
-                                        があなたの投稿「<a href="{% url 'post_detail' notification.post.pk %}">{{ notification.post.title }}</a>」にいいねしました
-                                    {% elif notification.notification_type == 'comment' %}
-                                        があなたの投稿「<a href="{% url 'post_detail' notification.post.pk %}">{{ notification.post.title }}</a>」にコメントしました
-                                    {% elif notification.notification_type == 'follow' %}
-                                        があなたをフォローしました
-                                    {% endif %}
-                                </div>
-                                <small class="text-muted">{{ notification.created_at|date:"Y/m/d H:i" }}</small>
-                            </div>
-                            <button class="btn btn-sm btn-outline-secondary mt-2 mark-as-read">
-                                <i class="bi bi-check2"></i> 既読にする
-                            </button>
+                    <a href="{% url 'core:notification_redirect' notification.id %}" class="notification-item {% if not notification.is_read %}unread{% endif %}">
+                        <div class="notification-avatar">
+                            {% if notification.sender.profile.avatar %}
+                                <img src="{{ notification.sender.profile.avatar.url }}" alt="{{ notification.sender.username }}">
+                            {% else %}
+                                <img src="{% static 'images/default-avatar.svg' %}" alt="{{ notification.sender.username }}">
+                            {% endif %}
                         </div>
-                    </div>
+                        <div class="notification-content">
+                            <div class="notification-text">
+                                <strong>{{ notification.sender.username }}</strong>
+                                {% if notification.notification_type == 'follow' %}
+                                    があなたをフォローしました
+                                    <button class="follow-button" onclick="followUser('{{ notification.sender.username }}', this)">
+                                        {% if notification.sender in user.following.all %}
+                                            フォロー中
+                                        {% else %}
+                                            フォローする
+                                        {% endif %}
+                                    </button>
+                                {% elif notification.notification_type == 'like_post' %}
+                                    があなたの投稿にいいねしました
+                                {% elif notification.notification_type == 'comment_post' %}
+                                    があなたの投稿にコメントしました：
+                                    <span class="notification-comment">{{ notification.comment.content }}</span>
+                                {% elif notification.notification_type == 'like_playlist' %}
+                                    があなたのプレイリストにいいねしました
+                                {% endif %}
+                            </div>
+                            <span class="notification-time">{{ notification.created_at|timesince }}前</span>
+                        </div>
+                    </a>
                 {% endfor %}
-            {% else %}
-                <div class="alert alert-info">
-                    新しい通知はありません。
-                </div>
-            {% endif %}
-        </div>
+            </div>
+        {% else %}
+            <div class="no-notifications">
+                <i class="bi bi-bell"></i>
+                <p>通知はありません</p>
+            </div>
+        {% endif %}
     </div>
 </div>
 
-<script>
-document.querySelectorAll('.mark-as-read').forEach(button => {
-    button.addEventListener('click', function() {
-        const notification = this.closest('.notification');
-        const notificationId = notification.dataset.notificationId;
-        
-        fetch(`/notifications/${notificationId}/read/`, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                notification.remove();
-                if (document.querySelectorAll('.notification').length === 0) {
-                    location.reload();
-                }
-            }
-        });
-    });
-});
-</script>
+<style>
+.notifications-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.notifications-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 16px;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #dee2e6;
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.2s;
+}
+
+.notification-item:hover {
+    background-color: #f8f9fa;
+}
+
+.notification-item.unread {
+    background-color: #e7f1ff;
+    border-color: #0d6efd;
+}
+
+.notification-avatar {
+    margin-right: 16px;
+}
+
+.notification-avatar img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-text {
+    margin-bottom: 4px;
+    line-height: 1.4;
+}
+
+.notification-text strong {
+    color: #212529;
+}
+
+.notification-comment {
+    display: block;
+    margin-top: 4px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+.notification-time {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.follow-button {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 4px 12px;
+    background: #0d6efd;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.follow-button:hover {
+    background: #0b5ed7;
+}
+
+.follow-button.following {
+    background: #6c757d;
+}
+
+.no-notifications {
+    text-align: center;
+    padding: 40px;
+    color: #6c757d;
+}
+
+.no-notifications i {
+    font-size: 3rem;
+    margin-bottom: 16px;
+}
+
+.no-notifications p {
+    font-size: 1.1rem;
+    margin: 0;
+}
+</style>
 {% endblock %} 

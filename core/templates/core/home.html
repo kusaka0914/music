@@ -12,7 +12,7 @@
                 <div class="stories-container">
                     {% if user.is_authenticated %}
                     <!-- ストーリー追加ボタン -->
-                    <div class="story-item add-story">
+                    <div class="story-item add-story" id="addStoryButton">
                         <div class="story-add-button">
                             <i class="bi bi-plus-lg"></i>
                         </div>
@@ -23,16 +23,16 @@
                     <!-- ストーリーアイテム -->
                     {% for user_data in stories_by_user %}
                         {% if user_data.user.username %}
-                            <div class="story-item" data-first-story-id="{{ user_data.stories.0.id }}">
-                                <div class="story-avatar {% if user_data.has_unviewed %}not-viewed{% endif %}">
-                                    {% if user_data.user.avatar_url %}
-                                        <img src="{{ user_data.user.avatar_url }}" alt="{{ user_data.user.username }}">
-                                    {% else %}
-                                        <img src="{% static 'images/default-avatar.svg' %}" alt="{{ user_data.user.username }}">
-                                    {% endif %}
-                                </div>
-                                <span class="story-username">{{ user_data.user.username }}</span>
+                        <div class="story-item" data-first-story-id="{{ user_data.stories.0.id }}">
+                            <div class="story-avatar {% if user_data.has_unviewed %}not-viewed{% endif %}">
+                                {% if user_data.user.avatar_url %}
+                                    <img src="{{ user_data.user.avatar_url }}" alt="{{ user_data.user.username }}">
+                                {% else %}
+                                    <img src="{% static 'images/default-avatar.svg' %}" alt="{{ user_data.user.username }}">
+                                {% endif %}
                             </div>
+                            <span class="story-username">{{ user_data.user.username }}</span>
+                        </div>
                         {% endif %}
                     {% endfor %}
                 </div>
@@ -40,9 +40,8 @@
 
             <div class="content-header">
                 <div class="feed-filters">
-                    <button class="filter-button active">すべて</button>
-                    <button class="filter-button">フォロー中</button>
-                    <button class="filter-button">人気</button>
+                    <button class="filter-button active" data-filter="all">すべて</button>
+                    <button class="filter-button" data-filter="following">フォロー中</button>
                 </div>
                 <a href="{% url 'core:create_post' %}" class="create-post-button">
                     <i class="bi bi-plus-lg"></i>
@@ -50,66 +49,46 @@
                 </a>
             </div>
 
-            <div class="posts-grid">
-                {% for post in posts %}
-                    {% if post.user and post.user.username %}
-                        <div class="post-card">
-                            {% if post.spotify_link %}
-                                <div class="spotify-player">
-                                    <iframe 
-                                        id="spotify-iframe-{{ post.spotify_link|slice:'31:' }}"
-                                        src="https://open.spotify.com/embed/track/{{ post.spotify_link|slice:'31:' }}" 
-                                        width="100%" 
-                                        height="152" 
-                                        frameborder="0" 
-                                        allowtransparency="true" 
-                                        allow="encrypted-media"
-                                        data-track-name="{{ post.track_name }}"
-                                        data-artist-name="{{ post.artist_name }}"
-                                        data-album-art="{{ post.album_art_url }}"
-                                        data-preview-url="{{ post.preview_url }}">
-                                    </iframe>
-                                </div>
-                            {% endif %}
-                            <div class="post-content">
-                                <div class="post-header">
-                                    <a href="{% url 'core:profile' post.user.username %}" class="post-user">
-                                        {% if post.user.profile.avatar %}
-                                            <img src="{{ post.user.profile.avatar.url }}" alt="{{ post.user.username }}">
-                                        {% else %}
-                                            <img src="{% static 'images/default-avatar.svg' %}" alt="{{ post.user.username }}">
-                                        {% endif %}
-                                        <span>{{ post.user.username }}</span>
-                                    </a>
-                                    <span class="post-time">{{ post.created_at|timesince }}前</span>
-                                </div>
-                                {% if post.description %}
-                                    <p class="post-description">{{ post.description }}</p>
-                                {% endif %}
+            <div class="posts-section">
+                <div class="section-header">
+                    <h2>投稿一覧</h2>
+                    <div class="sort-options">
+                        <select id="postSort" class="sort-select">
+                            <option value="recommended">おすすめ順</option>
+                            <option value="newest">新着順</option>
+                            <option value="popular">人気順</option>
+                        </select>
                             </div>
-                        </div>
-                    {% endif %}
-                {% empty %}
-                    <div class="no-posts">
-                        <i class="bi bi-music-note"></i>
-                        <p>投稿がありません</p>
-                    </div>
-                {% endfor %}
+                            </div>
+                <div class="posts-container">
+                    {% include 'core/includes/post_list.html' %}
+                </div>
             </div>
         </main>
 
         <!-- 右サイドバー -->
         <div class="sidebar-right">
             <div class="trending-section">
-                <h3>トレンド</h3>
+                <h3>トレンド投稿</h3>
                 <div class="trending-posts">
-                    {% for post in trending_posts|slice:":5" %}
+                    {% for post in trending_posts %}
                         <div class="trending-item">
                             <span class="trending-number">#{{ forloop.counter }}</span>
-                            <div class="trending-content">
-                                <h4>{{ post.title }}</h4>
-                                <p>{{ post.artist }}</p>
+                            <a href="?featured={{ post.id }}" class="trending-content">
+                                <div class="trending-info">
+                                    <h4>{{ post.user.username }}</h4>
+                                    <p class="trending-description">{{ post.description }}</p>
+                                    <div class="trending-stats">
+                                        <span><i class="bi bi-heart-fill"></i> {{ post.likes.count }}</span>
+                                        <span><i class="bi bi-chat-fill"></i> {{ post.comments.count }}</span>
                             </div>
+                                </div>
+                                {% if post.image %}
+                                    <div class="trending-image">
+                                        <img src="{{ post.image }}" alt="{{ post.user.username }}">
+                                    </div>
+                                {% endif %}
+                            </a>
                         </div>
                     {% endfor %}
                 </div>
@@ -121,6 +100,7 @@
                 <h3>おすすめユーザー</h3>
                 <div class="recommended-users">
                     {% for recommendation in recommended_users %}
+                        {% if recommendation.user.username %}
                         <div class="recommended-user">
                             <div class="user-info">
                                 {% if recommendation.user.profile.avatar %}
@@ -131,12 +111,15 @@
                                 <div class="user-details">
                                     <a href="{% url 'core:profile' recommendation.user.username %}">{{ recommendation.user.username }}</a>
                                     <span class="compatibility">音楽の相性: {{ recommendation.compatibility_score }}%</span>
+                                        <button 
+                                            onclick="followUser('{{ recommendation.user.username }}', this)" 
+                                            class="follow-button {% if recommendation.user in request.user.profile.following.all %}following{% endif %}">
+                                            {% if recommendation.user in request.user.profile.following.all %}フォロー中{% else %}フォローする{% endif %}
+                                        </button>
                                 </div>
                             </div>
-                            <button class="follow-button" data-username="{{ recommendation.user.username }}">
-                                フォローする
-                            </button>
                         </div>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>
@@ -153,7 +136,7 @@
                     <div class="playlist-card">
                         <div class="playlist-cover">
                             {% if playlist.music.first.album_art %}
-                            <img src="{{ playlist.music.first.album_art }}" alt="{{ playlist.title }}">
+                                <img src="{{ playlist.music.first.album_art }}" alt="{{ playlist.title }}">
                             {% else %}
                                 <div class="default-cover">
                                     <i class="bi bi-music-note-list"></i>
@@ -304,7 +287,7 @@
 
 .main-layout {
     display: grid;
-    grid-template-columns: 1fr 350px;
+    grid-template-columns: 1fr 400px;
     gap: 2rem;
 }
 
@@ -317,18 +300,19 @@
     position: sticky;
     top: 2rem;
     height: calc(100vh - 4rem);
+    margin-top: 40px;
     overflow-y: auto;
     padding-right: 1rem;
-    width: 350px;
+    width: 400px;
 }
 
 @media (max-width: 1200px) {
     .main-layout {
-        grid-template-columns: 1fr 300px;
+        grid-template-columns: 1fr 350px;
     }
     
     .sidebar-right {
-        width: 300px;
+        width: 350px;
     }
 }
 
@@ -651,18 +635,28 @@
 }
 
 .follow-button {
-    background: transparent;
+    padding: 6px 12px;
+    border-radius: 20px;
     border: 1px solid #1DB954;
+    background-color: transparent;
     color: #1DB954;
-    padding: 0.5rem 1rem;
-    border-radius: 500px;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
 }
 
 .follow-button:hover {
-    background: #1DB954;
-    color: #fff;
+    background-color: rgba(29, 185, 84, 0.1);
+}
+
+.follow-button.following {
+    background-color: #1DB954;
+    color: white;
+}
+
+.follow-button.following:hover {
+    background-color: #ff4444;
+    border-color: #ff4444;
+    content: 'フォロー解除';
 }
 
 .loading {
@@ -1303,6 +1297,265 @@
     padding: 2rem;
     color: #b3b3b3;
 }
+
+.post-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.like-button, .comment-button {
+    background: transparent;
+    border: none;
+    color: #b3b3b3;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    padding: 0.5rem 1rem;
+    border-radius: 500px;
+}
+
+.like-button:hover, .comment-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.like-button.liked {
+    color: #1DB954;
+}
+
+.like-button.liked i {
+    color: #1DB954;
+}
+
+.comments-section {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.comment {
+    display: flex;
+    gap: 0.8rem;
+    align-items: flex-start;
+}
+
+.comment-user img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
+
+.comment-content {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.8rem;
+    border-radius: 12px;
+    flex: 1;
+}
+
+.comment-username {
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+    display: block;
+}
+
+.comment-content p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.comment-form {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.comment-form input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    padding: 0.8rem;
+    border-radius: 500px;
+    color: #fff;
+}
+
+.comment-form button {
+    background: #1DB954;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.comment-form button:hover {
+    background: #1ed760;
+    transform: scale(1.05);
+}
+
+.comment-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    color: #b3b3b3;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.comment-button:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.comment-text {
+    font-size: 0.9rem;
+}
+
+.trending-section {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.trending-section h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: #fff;
+}
+
+.trending-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    margin-bottom: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.trending-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.trending-number {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #1DB954;
+    margin-right: 1rem;
+    min-width: 30px;
+}
+
+.trending-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    text-decoration: none;
+    color: inherit;
+}
+
+.trending-info {
+    flex: 1;
+}
+
+.trending-info h4 {
+    font-size: 1rem;
+    margin: 0 0 0.3rem;
+    color: #fff;
+    font-weight: 600;
+}
+
+.trending-info p {
+    font-size: 0.9rem;
+    color: #b3b3b3;
+    margin: 0 0 0.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4;
+}
+
+.trending-stats {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: #b3b3b3;
+}
+
+.trending-stats span {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.trending-stats i {
+    font-size: 0.9rem;
+}
+
+.trending-image {
+    width: 50px;
+    height: 50px;
+    margin-left: 1rem;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.trending-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.trending-item:hover .trending-description {
+    -webkit-line-clamp: 2;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.sort-select {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.sort-select:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.sort-select:focus {
+    outline: none;
+    border-color: #1DB954;
+}
 </style>
 
 <script>
@@ -1345,4 +1598,177 @@ document.addEventListener('DOMContentLoaded', function() {
     
     setupLikeButtons();
 });
-</script>{% endblock %} 
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('.filter-button');
+    const sortSelect = document.getElementById('postSort');
+    const postsContainer = document.querySelector('.posts-container');
+    let currentFilter = 'all';
+
+    // フィルターボタンのクリックイベント
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            currentFilter = this.dataset.filter;
+            fetchPosts();
+        });
+    });
+
+    // ソート選択の変更イベント
+    sortSelect.addEventListener('change', function() {
+        fetchPosts();
+    });
+
+    // 投稿を取得する関数
+    function fetchPosts() {
+        const sort = sortSelect.value;
+        fetch(`/filter_posts/?filter=${currentFilter}&sort=${sort}`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.text())
+        .then(html => {
+            postsContainer.innerHTML = html;
+            // いいねボタンのイベントリスナーを再設定
+            setupLikeButtons();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+});
+</script>
+
+<script>
+function followUser(username, button) {
+    fetch(`/follow/${username}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            // ボタンのテキストとスタイルを更新
+            button.textContent = data.is_following ? 'フォロー中' : 'フォローする';
+            button.classList.toggle('following', data.is_following);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // コメントの表示/非表示を切り替える関数
+    window.toggleComments = function(postId) {
+        const commentsSection = document.getElementById(`comments-${postId}`);
+        const button = document.querySelector(`[data-post-id="${postId}"].comment-button`);
+        const isHidden = commentsSection.style.display === 'none';
+        
+        commentsSection.style.display = isHidden ? 'block' : 'none';
+        button.querySelector('.comment-text').textContent = isHidden ? 'コメントを非表示' : 'コメントを表示';
+    };
+
+    // コメントを送信する関数
+    window.submitComment = function(event, postId) {
+        event.preventDefault();
+        const form = event.target;
+        const input = form.querySelector('input[name="comment"]');
+        const content = input.value.trim();
+        
+        if (!content) return;
+
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        fetch(`/post/${postId}/comment/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ content: content })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // コメントリストを更新
+                const commentsList = document.querySelector(`#comments-${postId} .comments-list`);
+                const newComment = document.createElement('div');
+                newComment.className = 'comment';
+                newComment.innerHTML = `
+                    <div class="comment-user">
+                        <img src="${data.comment.avatar_url || '/static/images/default-avatar.svg'}" alt="${data.comment.username}">
+                        <div class="comment-content">
+                            <div class="comment-header">
+                                <span class="comment-username">${data.comment.username}</span>
+                                <span class="comment-time">たった今</span>
+                            </div>
+                            <p class="comment-text">${data.comment.content}</p>
+                        </div>
+                    </div>
+                `;
+                commentsList.appendChild(newComment);
+                
+                // コメント数を更新
+                const commentCount = document.querySelector(`[data-post-id="${postId}"].comment-button .comment-count`);
+                const currentCount = parseInt(commentCount.textContent);
+                commentCount.textContent = currentCount + 1;
+                
+                // 入力フィールドをクリア
+                input.value = '';
+                
+                // コメントセクションを表示
+                const commentsSection = document.getElementById(`comments-${postId}`);
+                commentsSection.style.display = 'block';
+            } else {
+                alert('コメントの投稿に失敗しました。');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('エラーが発生しました。');
+        });
+    };
+
+    // コメントフォームのEnterキー処理
+    document.querySelectorAll('.comment-form input[name="comment"]').forEach(input => {
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const form = this.closest('form');
+                const postId = form.dataset.postId;
+                submitComment(new Event('submit'), postId);
+            }
+        });
+    });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const addStoryButton = document.getElementById('addStoryButton');
+    if (addStoryButton) {
+        addStoryButton.addEventListener('click', function() {
+            fetch('{% url "core:create_story_modal" %}')
+                .then(response => response.text())
+                .then(html => {
+                    document.body.insertAdjacentHTML('beforeend', html);
+                    const modal = document.querySelector('.modal');
+                    if (modal) {
+                        modal.style.display = 'block';
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    }
+});
+</script>
+{% endblock %} 

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from .models import Profile, MusicPost, Comment, MusicStory, Playlist, PlaylistComment, PlaylistMusic, Music
+from .models import Profile, MusicPost, Comment, MusicStory, Playlist, PlaylistComment, PlaylistMusic, Music, Event, MusicTaste
 
 class ProfileInline(admin.StackedInline):
     model = Profile
@@ -127,3 +127,16 @@ class PlaylistMusicAdmin(admin.ModelAdmin):
 class MusicAdmin(admin.ModelAdmin):
     list_display = ('title', 'artist', 'album_art')
     search_fields = ('title', 'artist')
+
+@admin.register(Event)
+class EventAdmin(admin.ModelAdmin):
+    list_display = ('title', 'date', 'venue')
+    search_fields = ('title', 'artists')
+    list_filter = ('date', 'venue')
+    ordering = ('date',)
+
+@admin.register(MusicTaste)
+class MusicTasteAdmin(admin.ModelAdmin):
+    list_display = ('user', 'genres', 'moods', 'favorite_artists')
+    search_fields = ('user__username',)
+    list_filter = ('genres', 'moods', 'favorite_artists')
