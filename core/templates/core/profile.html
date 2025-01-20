@@ -69,45 +69,65 @@
     </div>
 
     <div class="profile-content">
-        {% if user != profile_user and user.is_authenticated %}
-            <div class="compatibility-section">
-                <div class="section-header">
-                    <h2>音楽の相性</h2>
-                </div>
-                <div class="compatibility-content">
-                    <div class="compatibility-score">
-                        <div class="progress-container">
-                            <div class="progress-bar" style="width: {{ compatibility_score|default:0 }}%">
-                                <span class="score-text">{{ compatibility_score|default:0 }}%</span>
-                            </div>
-                        </div>
-                    </div>
-                    {% if common_genres or common_artists %}
-                        <div class="common-tastes">
-                            {% if common_genres %}
-                                <div class="common-item">
-                                    <h3>共通のジャンル</h3>
-                                    <div class="tag-container">
-                                        {% for genre in common_genres %}
-                                            <span class="tag">{{ genre }}</span>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            {% endif %}
-                            {% if common_artists %}
-                                <div class="common-item">
-                                    <h3>共通のアーティスト</h3>
-                                    <div class="tag-container">
-                                        {% for artist in common_artists %}
-                                            <span class="tag">{{ artist.name }}</span>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            {% endif %}
-                        </div>
-                    {% endif %}
+        <!-- 音楽の相性セクション -->
+        {% if compatibility_data %}
+        <div class="music-compatibility bg-dark text-white p-4 rounded-lg mb-4">
+            <h3 class="text-xl font-bold mb-3">
+                <i class="bi bi-music-note"></i> 音楽の相性: {{ compatibility_data.score }}%
+            </h3>
+            
+            <!-- 共通の曲 -->
+            {% if compatibility_data.common_tracks %}
+            <div class="mb-3">
+                <h4 class="text-lg font-semibold mb-2">
+                    <i class="bi bi-disc"></i> 共通の好きな曲
+                </h4>
+                <ul class="list-disc list-inside">
+                    {% for track in compatibility_data.common_tracks %}
+                    <li class="mb-1">
+                        {{ track.name }} - {{ track.artist }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            
+            <!-- 共通のアーティスト -->
+            {% if compatibility_data.common_artists %}
+            <div class="mb-3">
+                <h4 class="text-lg font-semibold mb-2">
+                    <i class="bi bi-person-video2"></i> 共通のアーティスト
+                </h4>
+                <ul class="list-disc list-inside">
+                    {% for artist in compatibility_data.common_artists %}
+                    <li class="mb-1">{{ artist }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            
+            <!-- 共通の音楽の気分 -->
+            {% if compatibility_data.common_moods %}
+            <div>
+                <h4 class="text-lg font-semibold mb-2">
+                    <i class="bi bi-emoji-smile"></i> 共通の音楽の気分
+                </h4>
+                <div class="flex flex-wrap gap-2">
+                    {% for mood in compatibility_data.common_moods %}
+                    <span class="px-3 py-1 bg-primary rounded-full text-sm">
+                        {% if mood == 'happy' %}🎵 ハッピー
+                        {% elif mood == 'chill' %}😌 リラックス
+                        {% elif mood == 'energetic' %}💪 エネルギッシュ
+                        {% elif mood == 'sad' %}😢 メランコリー
+                        {% elif mood == 'love' %}❤️ ラブ
+                        {% else %}{{ mood }}
+                        {% endif %}
+                    </span>
+                    {% endfor %}
                 </div>
             </div>
+            {% endif %}
+        </div>
         {% endif %}
 
         <div class="music-taste-section">

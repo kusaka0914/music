@@ -4068,3 +4068,49 @@ INFO 2025-01-21 02:02:59,239 spotify_utils 97530 6204076032 アクセストー�
 INFO 2025-01-21 02:02:59,240 spotify_utils 97530 6204076032 Spotifyクライアント取得成功
 INFO 2025-01-21 02:02:59,240 views 97530 6204076032 Spotifyクライアント取得成功
 INFO 2025-01-21 02:02:59,849 views 97530 6204076032 Spotifyデータ取得完了: recently_played=10件, top_tracks=7件
+INFO 2025-01-21 02:11:15,795 spotify_utils 99317 6201503744 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-21 02:11:15,979 spotify_utils 99317 6201503744 アクセストークンの更新に成功しました
+INFO 2025-01-21 02:11:15,979 spotify_utils 99317 6201503744 Spotifyクライアント取得成功
+INFO 2025-01-21 02:11:31,779 views 99317 6201503744 人気アーティストの取得を開始
+INFO 2025-01-21 02:11:32,117 views 99317 6201503744 アーティスト取得: Mrs. GREEN APPLE
+INFO 2025-01-21 02:11:32,118 views 99317 6201503744 アーティスト取得: OFFICIAL HIGE DANDISM
+INFO 2025-01-21 02:11:32,118 views 99317 6201503744 アーティスト取得: YOASOBI
+INFO 2025-01-21 02:11:32,118 views 99317 6201503744 アーティスト取得: Vaundy
+INFO 2025-01-21 02:11:32,118 views 99317 6201503744 アーティスト取得: RADWIMPS
+INFO 2025-01-21 02:11:32,118 views 99317 6201503744 アーティスト取得: back number
+INFO 2025-01-21 02:11:32,118 views 99317 6201503744 アーティスト取得: ヨルシカ
+INFO 2025-01-21 02:11:32,118 views 99317 6201503744 アーティスト取得: Fujii Kaze
+INFO 2025-01-21 02:11:32,118 views 99317 6201503744 アーティスト取得: Aimyon
+INFO 2025-01-21 02:11:32,118 views 99317 6201503744 アーティスト取得: Kenshi Yonezu
+INFO 2025-01-21 02:11:32,118 views 99317 6201503744 人気アーティスト取得完了: 10件
+INFO 2025-01-21 02:11:38,454 spotify_utils 99317 6252556288 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-21 02:11:38,616 spotify_utils 99317 6252556288 アクセストークンの更新に成功しました
+INFO 2025-01-21 02:11:38,616 spotify_utils 99317 6252556288 Spotifyクライアント取得成功
+INFO 2025-01-21 02:13:12,862 spotify_utils 99604 6133133312 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-21 02:13:13,047 spotify_utils 99604 6133133312 アクセストークンの更新に成功しました
+INFO 2025-01-21 02:13:13,047 spotify_utils 99604 6133133312 Spotifyクライアント取得成功
+ERROR 2025-01-21 02:13:13,412 views 99604 6133133312 音楽の相性スコア計算エラー: 'MusicTaste' object has no attribute 'top_artists'
+ERROR 2025-01-21 02:13:13,414 views 99604 6133133312 共通アーティスト取得エラー: 'MusicTaste' object has no attribute 'top_artists'
+INFO 2025-01-21 02:13:18,008 spotify_utils 99604 6133133312 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-21 02:13:18,170 spotify_utils 99604 6133133312 アクセストークンの更新に成功しました
+INFO 2025-01-21 02:13:18,170 spotify_utils 99604 6133133312 Spotifyクライアント取得成功
+ERROR 2025-01-21 02:13:18,589 views 99604 6133133312 音楽の相性スコア計算エラー: 'MusicTaste' object has no attribute 'top_artists'
+ERROR 2025-01-21 02:13:18,592 views 99604 6133133312 共通アーティスト取得エラー: 'MusicTaste' object has no attribute 'top_artists'
+INFO 2025-01-21 02:17:43,232 spotify_utils 99972 6154170368 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-21 02:17:43,424 spotify_utils 99972 6154170368 アクセストークンの更新に成功しました
+INFO 2025-01-21 02:17:43,425 spotify_utils 99972 6154170368 Spotifyクライアント取得成功
+INFO 2025-01-21 02:17:43,799 spotify_utils 99972 6154170368 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-21 02:17:43,952 spotify_utils 99972 6154170368 アクセストークンの更新に成功しました
+INFO 2025-01-21 02:17:43,952 spotify_utils 99972 6154170368 Spotifyクライアント取得成功
+INFO 2025-01-21 02:17:43,952 spotify_utils 99972 6154170368 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-21 02:17:44,116 spotify_utils 99972 6154170368 アクセストークンの更新に成功しました
+INFO 2025-01-21 02:17:44,116 spotify_utils 99972 6154170368 Spotifyクライアント取得成功
+INFO 2025-01-21 02:17:54,172 spotify_utils 99972 6137344000 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-21 02:17:54,328 spotify_utils 99972 6137344000 アクセストークンの更新に成功しました
+INFO 2025-01-21 02:17:54,328 spotify_utils 99972 6137344000 Spotifyクライアント取得成功
+INFO 2025-01-21 02:17:54,748 spotify_utils 99972 6137344000 Spotifyクライアント取得開始: user=a, refresh_token=AQDbudaYd4...
+INFO 2025-01-21 02:17:54,916 spotify_utils 99972 6137344000 アクセストークンの更新に成功しました
+INFO 2025-01-21 02:17:54,917 spotify_utils 99972 6137344000 Spotifyクライアント取得成功
+INFO 2025-01-21 02:17:54,917 spotify_utils 99972 6137344000 Spotifyクライアント取得開始: user=engineering_takumi, refresh_token=AQDQwgYm75...
+INFO 2025-01-21 02:17:55,076 spotify_utils 99972 6137344000 アクセストークンの更新に成功しました
+INFO 2025-01-21 02:17:55,077 spotify_utils 99972 6137344000 Spotifyクライアント取得成功

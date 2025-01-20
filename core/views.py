@@ -147,47 +147,89 @@ def home(request):
 def register_view(request):
     return render(request, 'core/register.html')
 
-def calculate_music_compatibility(user_profile1, user_profile2):
-    """
-    2つのユーザープロフィール間の音楽の相性を計算する
-    """
-    score = 0
-    
-    # 好きなジャンルの比較
-    if user_profile1.favorite_genres and user_profile2.favorite_genres:
-        user1_genres = set(user_profile1.favorite_genres)
-        user2_genres = set(user_profile2.favorite_genres)
-        common_genres = user1_genres.intersection(user2_genres)
-        score += len(common_genres) * 20  # 共通ジャンルごとに20ポイント
-
-    # 好きなアーティストの比較
-    if user_profile1.favorite_artists and user_profile2.favorite_artists:
-        user1_artists = set(user_profile1.favorite_artists)
-        user2_artists = set(user_profile2.favorite_artists)
-        common_artists = user1_artists.intersection(user2_artists)
-        score += len(common_artists) * 30  # 共通アーティストごとに30ポイント
-
-    # Spotifyの再生履歴の比較（もし利用可能な場合）
-    if user_profile1.spotify_connected and user_profile2.spotify_connected:
-        try:
-            # Spotifyクライアントの取得
-            client1 = get_spotify_client(user_profile1.user)
-            client2 = get_spotify_client(user_profile2.user)
-            
-            if client1 and client2:
-                # 最近再生した曲のアーティストを比較
-                recent1 = {track['track']['artists'][0]['name'] for track in client1.current_user_recently_played(limit=20)['items']}
-                recent2 = {track['track']['artists'][0]['name'] for track in client2.current_user_recently_played(limit=20)['items']}
-                common_recent = recent1.intersection(recent2)
-                score += len(common_recent) * 10  # 共通の最近聴いたアーティストごとに10ポイント
+def calculate_music_compatibility(user1, user2):
+    """ユーザー間の音楽の相性スコアを計算"""
+    try:
+        score = 0
+        common_artists = []
+        common_tracks = []
         
-        except Exception as e:
-            logger.error(f"Spotify再生履歴の比較中にエラー: {str(e)}")
+        # Spotifyのデータを取得
+        if user1.profile.spotify_connected and user2.profile.spotify_connected:
+            spotify_client1 = get_spotify_client(user1)
+            spotify_client2 = get_spotify_client(user2)
+            
+            if spotify_client1 and spotify_client2:
+                # トップトラックを比較
+                tracks1 = get_top_tracks(spotify_client1)
+                tracks2 = get_top_tracks(spotify_client2)
+                
+                track_ids1 = {track['spotify_id'] for track in tracks1}
+                track_ids2 = {track['spotify_id'] for track in tracks2}
+                common_track_ids = track_ids1 & track_ids2
+                
+                # 共通のトラックを保存
+                common_tracks = [track for track in tracks1 if track['spotify_id'] in common_track_ids]
+                score += len(common_tracks) * 15  # 共通の曲ごとに15ポイント
+                
+                # 最近再生した曲を比較
+                recent1 = get_recently_played_tracks(spotify_client1)
+                recent2 = get_recently_played_tracks(spotify_client2)
+                
+                recent_artists1 = {track['artist'] for track in recent1}
+                recent_artists2 = {track['artist'] for track in recent2}
+                common_recent_artists = recent_artists1 & recent_artists2
+                
+                # 共通のアーティストを保存
+                common_artists = list(common_recent_artists)
+                score += len(common_recent_artists) * 10  # 共通のアーティストごとに10ポイント
+        
+        # 投稿の傾向を比較
+        posts1 = MusicPost.objects.filter(user=user1)
+        posts2 = MusicPost.objects.filter(user=user2)
+        
+        moods1 = {post.mood for post in posts1 if post.mood}
+        moods2 = {post.mood for post in posts2 if post.mood}
+        common_moods = moods1 & moods2
+        score += len(common_moods) * 5  # 共通の気分ごとに5ポイント
+        
+        # スコアを0-100の範囲に正規化
+        normalized_score = min(100, score)
+        
+        return {
+            'score': normalized_score,
+            'common_artists': common_artists[:5],  # 上位5アーティストまで
+            'common_tracks': common_tracks[:3],    # 上位3曲まで
+            'common_moods': list(common_moods)     # 共通の気分
+        }
+    except Exception as e:
+        logger.error(f"音楽の相性スコア計算エラー: {str(e)}")
+        return {
+            'score': 0,
+            'common_artists': [],
+            'common_tracks': [],
+            'common_moods': []
+        }
 
-    # スコアを0-100の範囲に正規化
-    normalized_score = min(100, score)
-    
-    return normalized_score
+def get_common_genres(user1, user2):
+    """二人のユーザー間の共通のジャンルを取得"""
+    try:
+        taste1, _ = MusicTaste.objects.get_or_create(user=user1)
+        taste2, _ = MusicTaste.objects.get_or_create(user=user2)
+        return list(set(taste1.top_genres.keys()) & set(taste2.top_genres.keys()))
+    except Exception as e:
+        logger.error(f"共通ジャンル取得エラー: {str(e)}")
+        return []
+
+def get_common_artists(user1, user2):
+    """二人のユーザー間の共通のアーティストを取得"""
+    try:
+        taste1, _ = MusicTaste.objects.get_or_create(user=user1)
+        taste2, _ = MusicTaste.objects.get_or_create(user=user2)
+        return list(set(taste1.top_artists.keys()) & set(taste2.top_artists.keys()))
+    except Exception as e:
+        logger.error(f"共通アーティスト取得エラー: {str(e)}")
+        return []
 
 def login_view(request):
     if request.method == 'POST':
@@ -374,24 +416,40 @@ def profile(request, username):
         following_users = User.objects.filter(profile__in=profile_user.profile.following.all())
         follower_users = User.objects.filter(profile__following=profile_user.profile)
         
+        # プレイリストを取得
+        playlists = Playlist.objects.filter(
+            user=profile_user,
+            is_public=True
+        ).annotate(
+            engagement=Count('likes') + Count('playlist_comments')
+        ).order_by('-created_at')
+        
+        # Spotifyのデータを取得
+        recently_played = []
+        top_tracks = []
+        if profile_user.profile.spotify_connected:
+            try:
+                spotify_client = get_spotify_client(profile_user)
+                if spotify_client:
+                    recently_played = get_recently_played_tracks(spotify_client)
+                    top_tracks = get_top_tracks(spotify_client)
+            except Exception as e:
+                logger.error(f"Spotifyデータの取得に失敗: {str(e)}")
+        
         # 音楽の相性スコアを計算（既存のユーザーの場合）
+        compatibility_data = None
         if request.user.is_authenticated and request.user != profile_user:
-            compatibility_score = calculate_music_compatibility(request.user, profile_user)
-            common_genres = get_common_genres(request.user, profile_user)
-            common_artists = get_common_artists(request.user, profile_user)
-        else:
-            compatibility_score = None
-            common_genres = []
-            common_artists = []
+            compatibility_data = calculate_music_compatibility(request.user, profile_user)
         
         context = {
             'profile_user': profile_user,
             'posts': posts,
             'following_users': following_users,
             'follower_users': follower_users,
-            'compatibility_score': compatibility_score,
-            'common_genres': common_genres,
-            'common_artists': common_artists,
+            'playlists': playlists,
+            'recently_played': recently_played,
+            'top_tracks': top_tracks,
+            'compatibility_data': compatibility_data,
         }
         return render(request, 'core/profile.html', context)
     except User.DoesNotExist:
