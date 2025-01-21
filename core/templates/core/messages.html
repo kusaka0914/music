@@ -21,11 +21,6 @@
                     <div class="conversation-content">
                         <div class="conversation-header">
                             <span class="username">{{ data.other_user.username }}</span>
-                            <span class="time">
-                                {% if data.last_message %}
-                                    {{ data.last_message.created_at|timesince }}前
-                                {% endif %}
-                            </span>
                         </div>
                         <div class="last-message">
                             {% if data.last_message %}
@@ -56,11 +51,14 @@
 </div>
 
 <style>
+    body {
+        overflow: hidden;
+    }
 .messages-container {
     display: flex;
     height: calc(100vh - 64px);
-    margin-top: 64px;
     background-color: #000;
+    margin-top: 30px;
 }
 
 .messages-sidebar {
@@ -79,7 +77,7 @@
 
 .messages-header h2 {
     margin: 0;
-    font-size: 1.5rem;
+    font-size: 16px;
     font-weight: 600;
     color: #fff;
 }

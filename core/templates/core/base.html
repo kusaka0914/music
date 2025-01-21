@@ -74,7 +74,7 @@
                                 <img src="{% static 'images/default-avatar.svg' %}" alt="{{ user.username }}" class="avatar-img">
                             {% endif %}
                         </a>
-                        <div class="dropdown-menu dropdown-menu-end">
+                        <div class="dropdown-menu dropdown-menu-end dropdown-menu">
                             <a href="{% url 'core:profile' user.username %}" class="dropdown-item">
                                 <i class="bi bi-person"></i>
                                 <span>プロフィール</span>
@@ -111,6 +111,12 @@
     </header>
 
     <style>
+    .dropdown-menu {
+        background: #282828;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        border-radius: 8px;
+    }
+
     .spotify-header {
         background: rgba(0, 0, 0, 0.8);
         backdrop-filter: blur(10px);
@@ -123,8 +129,7 @@
     }
 
     .header-container {
-        max-width: 1400px;
-        margin: 0 auto;
+        margin: 0 64px;
         padding: 0 1rem;
         display: flex;
         align-items: center;
@@ -463,5 +468,6 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
 </body>
 </html> 

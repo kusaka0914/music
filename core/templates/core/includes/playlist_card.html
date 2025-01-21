@@ -1,0 +1,63 @@
+<div class="bg-white/5 rounded-lg overflow-hidden group">
+    <!-- プレイリストのカバー画像 -->
+    <div class="relative pb-[100%]">
+        <div class="absolute inset-0">
+            {% if playlist.cover_image %}
+                <img src="{{ playlist.cover_image }}" alt="{{ playlist.title }}" class="w-full h-full object-cover">
+            {% else %}
+                <div class="w-full h-full bg-white/5 flex items-center justify-center">
+                    <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+                    </svg>
+                </div>
+            {% endif %}
+        </div>
+        <!-- 再生ボタン -->
+        <button class="absolute right-4 bottom-4 w-12 h-12 bg-green-500 rounded-full flex items-center justify-center shadow-lg transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-200 hover:scale-105 hover:bg-green-400">
+            <svg class="w-6 h-6 text-black" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M6.3 2.841A1.5 1.5 0 004 4.11v11.78a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>
+            </svg>
+        </button>
+        <!-- 曲数バッジ -->
+        <div class="absolute top-2 left-2 bg-black/50 text-white px-2 py-1 rounded-full text-xs">
+            {{ playlist.track_count }}曲
+        </div>
+    </div>
+
+    <!-- プレイリスト情報 -->
+    <div class="p-4">
+        <a href="{% url 'core:playlist_detail' playlist.id %}" class="block">
+            <h3 class="text-base font-bold text-white hover:underline truncate">{{ playlist.title }}</h3>
+        </a>
+        {% if playlist.description %}
+            <p class="text-sm text-gray-400 mt-1 line-clamp-2">{{ playlist.description }}</p>
+        {% endif %}
+        
+        <!-- 作成者情報 -->
+        <div class="mt-3 flex items-center space-x-2">
+            <img src="{{ playlist.user.profile.avatar.url|default:'/static/images/default-avatar.svg' }}" 
+                 alt="{{ playlist.user.username }}" 
+                 class="w-6 h-6 rounded-full object-cover flex-shrink-0">
+            <a href="{% url 'core:profile' playlist.user.username %}" class="text-sm text-gray-400 hover:text-white hover:underline truncate">
+                {{ playlist.user.username }}
+            </a>
+        </div>
+
+        <!-- いいね数とコメント数 -->
+        <div class="mt-3 flex items-center space-x-4 text-xs text-gray-400">
+            <div class="flex items-center space-x-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                </svg>
+                <span>{{ playlist.likes.count }}</span>
+            </div>
+            <div class="flex items-center space-x-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                </svg>
+                <span>{{ playlist.playlistcomment_set.count }}</span>
+            </div>
+            <span class="text-gray-400">{{ playlist.created_at|date:"Y/m/d" }}</span>
+        </div>
+    </div>
+</div> 

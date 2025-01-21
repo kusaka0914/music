@@ -3,13 +3,12 @@
 
 {% block content %}
 <div class="gradient-background">
-    <div class="container">
+    <div class="result-container">
         <div class="spotify-card fade-in" style="max-width: 800px; margin: 2rem auto;">
             <div class="playlist-header">
-                <i class="bi bi-music-note-list spotify-icon" style="font-size: 2.5rem; color: var(--spotify-green);"></i>
-                <div>
-                    <h1 class="spotify-title">新規プレイリスト作成</h1>
-                    <p class="spotify-subtitle">お気に入りの曲をコレクションとしてまとめましょう</p>
+                <div class="playlist-header-text">
+                    <h1 class="spotify-title">プレイリスト作成</h1>
+                    <p class="spotify-subtitle">お気に入りの曲をプレイリストにしよう</p>
                 </div>
             </div>
             
@@ -18,7 +17,6 @@
                 
                 <div class="form-group">
                     <label for="title" class="spotify-label">
-                        <i class="bi bi-music-note-list"></i>
                         プレイリスト名
                     </label>
                     <div class="input-wrapper">
@@ -34,8 +32,7 @@
 
                 <div class="form-group">
                     <label for="description" class="spotify-label">
-                        <i class="bi bi-pencil"></i>
-                        説明
+                        プレイリストの説明
                     </label>
                     <div class="input-wrapper">
                         <textarea id="description" 
@@ -49,7 +46,6 @@
 
                 <div class="form-group">
                     <label class="spotify-label">
-                        <i class="bi bi-music-note-beamed"></i>
                         曲を追加
                     </label>
                     <div class="search-section">
@@ -71,7 +67,6 @@
                 <div class="form-group privacy-setting">
                     <div class="privacy-header">
                         <label class="spotify-label">
-                            <i class="bi bi-eye"></i>
                             公開設定
                         </label>
                         <div class="privacy-toggle">
@@ -89,7 +84,6 @@
                     </div>
                     <p class="privacy-hint">
                         <small>
-                            <i class="bi bi-info-circle"></i>
                             公開設定をオンにすると、他のユーザーがこのプレイリストを見ることができます
                         </small>
                     </p>
@@ -97,7 +91,6 @@
 
                 <div class="form-actions">
                     <button type="submit" class="spotify-button" id="submitButton" disabled>
-                        <i class="bi bi-plus-circle"></i>
                         プレイリストを作成
                     </button>
                     <a href="{% url 'core:home' %}" class="spotify-button secondary">
@@ -110,13 +103,32 @@
 </div>
 
 <style>
+.result-container {
+    margin: 0 64px;
+    padding: 2rem 1rem;
+    width: 100vw;
+}
+
 .playlist-header {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 1rem;
     margin-bottom: 2rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid var(--spotify-border);
+}
+
+.playlist-header-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.playlist-header-text h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--spotify-green);
 }
 
 .form-group {

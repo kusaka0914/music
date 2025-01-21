@@ -26,6 +26,9 @@ logger = logging.getLogger(__name__)
 
 
 def home(request):
+    # 検索クエリの取得
+    search_query = request.GET.get('q', '')
+    
     # 特定の投稿IDが指定された場合、その投稿を取得
     featured_post_id = request.GET.get('featured')
     featured_post = None
@@ -57,6 +60,12 @@ def home(request):
         posts = list(posts)
         posts.insert(0, featured_post)
     
+    # Ajaxリクエストの場合、投稿リストのみを返す
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        html = render_to_string('core/includes/post_list.html', {'posts': posts}, request=request)
+        return JsonResponse({'html': html})
+    
+    # 通常のリクエストの場合は以下の処理を続行
     # アクティブなストーリーを取得（24時間以内）
     active_stories = MusicStory.objects.filter(
         expires_at__gt=timezone.now(),
@@ -305,7 +314,7 @@ def create_post(request):
             )
 
             messages.success(request, '投稿が作成されました！')
-            return redirect('core:post_detail', post_id=post.id)
+            return redirect('core:home')
 
         except Exception as e:
             logger.error(f"投稿作成中にエラーが発生: {str(e)}")
@@ -575,6 +584,20 @@ def playlist_detail(request, pk):
         engagement=Count('likes') + Count('playlist_comments')
     ).order_by('-engagement')[:5]
 
+    
+    first_track = playlist.playlistmusic_set.first()
+    if first_track:
+        playlist.cover_image = first_track.music.album_art
+    else:
+        playlist.cover_image = None
+
+    for playlist_music in recommended_playlists:
+        first_track = playlist_music.playlistmusic_set.first()
+        if first_track:
+            playlist_music.cover_image = first_track.music.album_art
+        else:
+            playlist_music.cover_image = None
+
     # Spotifyから人気の曲を取得
     try:
         spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(
@@ -765,6 +788,13 @@ def search(request):
                 track_count=Count('playlistmusic'),
                 likes_count=Count('likes')
             ).order_by('-created_at')[:5]
+
+            for playlist in playlists:
+                first_track = playlist.playlistmusic_set.first()
+                if first_track:
+                    playlist.cover_image = first_track.music.album_art
+                else:
+                    playlist.cover_image = None
             
             context = {
                 'query': query,

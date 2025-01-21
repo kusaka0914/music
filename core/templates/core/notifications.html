@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-<div class="container">
+<div class="main-container">
     <div class="notifications-container">
         <h2 class="notifications-title">通知</h2>
         
@@ -68,11 +68,13 @@
 </div>
 
 <style>
+.main-container {
+    margin: 0 64px;
+}
+
 .notifications-container {
-    max-width: 800px;
     margin: 64px auto 0;
     padding: 20px;
-    background-color: #000;
     min-height: calc(100vh - 64px);
 }
 
@@ -81,7 +83,6 @@
     font-weight: 600;
     margin-bottom: 20px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #2d2d2d;
     color: #fff;
 }
 

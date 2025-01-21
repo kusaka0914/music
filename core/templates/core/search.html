@@ -2,118 +2,967 @@
 {% load static %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-8">
-    <!-- 検索フォーム -->
-    <div class="mb-8">
-        <form method="GET" action="{% url 'core:search' %}" class="flex gap-4">
-            <input type="text" name="q" value="{{ query }}" 
-                   class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                   placeholder="検索キーワードを入力...">
-            <select name="type" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="all" {% if search_type == 'all' %}selected{% endif %}>すべて</option>
-                <option value="posts" {% if search_type == 'posts' %}selected{% endif %}>投稿</option>
-                <option value="users" {% if search_type == 'users' %}selected{% endif %}>ユーザー</option>
-                <option value="playlists" {% if search_type == 'playlists' %}selected{% endif %}>プレイリスト</option>
-            </select>
-            <button type="submit" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                検索
-            </button>
-        </form>
-    </div>
+<div class="search-container">
+    <div class="result-container">
+        <!-- 検索フォーム -->
+        <div class="search-form-wrapper">
+            <form method="GET" action="{% url 'core:search' %}" class="search-form">
+                <div class="search-input-wrapper">
+                    <input type="text" name="q" value="{{ query }}" 
+                           class="search-input"
+                           placeholder="曲、アーティスト、プレイリストを検索...">
+                    <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+                <select name="type" class="search-select">
+                    <option value="all" {% if search_type == 'all' %}selected{% endif %}>すべて</option>
+                    <option value="posts" {% if search_type == 'posts' %}selected{% endif %}>投稿</option>
+                    <option value="users" {% if search_type == 'users' %}selected{% endif %}>ユーザー</option>
+                    <option value="playlists" {% if search_type == 'playlists' %}selected{% endif %}>プレイリスト</option>
+                </select>
+            </form>
+        </div>
 
-    {% if query %}
-        <!-- 検索結果 -->
-        {% if search_type == 'all' %}
-            <!-- 投稿の検索結果 -->
-            {% if posts %}
-                <div class="mb-8">
-                    <h2 class="text-2xl font-bold mb-4">投稿</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {% for post in posts %}
-                            {% include 'core/includes/post_card.html' with post=post %}
-                        {% endfor %}
+        {% if query %}
+            <!-- 検索結果 -->
+            {% if search_type == 'all' or search_type == 'posts' %}
+                <!-- 投稿の検索結果 -->
+                <div class="posts-section">
+                    <div class="section-header">
+                        <h2 class="section-title">投稿</h2>
                     </div>
-                    {% if posts|length >= 5 %}
-                        <a href="?q={{ query }}&type=posts" class="mt-4 inline-block text-blue-500 hover:underline">
-                            すべての投稿を見る →
-                        </a>
+                    {% if posts %}
+                        <div class="posts-container">
+                            {% for post in posts %}
+                                {% if post.user and post.user.username %}
+                                    <div class="post-card">
+                                        {% if post.spotify_link %}
+                                            <div class="spotify-player">
+                                                <iframe 
+                                                    id="spotify-iframe-{{ post.spotify_link|slice:'31:' }}"
+                                                    src="https://open.spotify.com/embed/track/{{ post.spotify_link|slice:'31:' }}?utm_source=generator" 
+                                                    width="100%" 
+                                                    height="152" 
+                                                    frameborder="0" 
+                                                    allowtransparency="true" 
+                                                    allow="encrypted-media">
+                                                </iframe>
+                                            </div>
+                                        {% endif %}
+                                        <div class="post-content">
+                                            <div class="post-header">
+                                                <a href="{% url 'core:profile' post.user.username %}" class="post-user">
+                                                    {% if post.user.profile.avatar %}
+                                                        <img src="{{ post.user.profile.avatar.url }}" alt="{{ post.user.username }}">
+                                                    {% else %}
+                                                        <img src="{% static 'images/default-avatar.svg' %}" alt="{{ post.user.username }}">
+                                                    {% endif %}
+                                                    <span>{{ post.user.username }}</span>
+                                                </a>
+                                                <span class="post-time">{{ post.created_at|timesince }}前</span>
+                                            </div>
+                                            {% if post.description %}
+                                                <p class="post-description">{{ post.description }}</p>
+                                            {% endif %}
+                                            <div class="post-actions">
+                                                <div class="action-group">
+                                                    <button class="like-button {% if user in post.likes.all %}liked{% endif %}" 
+                                                            data-post-id="{{ post.id }}"
+                                                            onclick="toggleLike('{{ post.id }}', this)">
+                                                        <i class="bi {% if user in post.likes.all %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
+                                                    </button>
+                                                    <button class="likes-list-button" onclick="showLikesModal('{{ post.id }}')">
+                                                        <span class="like-count">{{ post.likes.count }}人がいいね</span>
+                                                    </button>
+                                                </div>
+                                                <button class="comment-button" 
+                                                        data-post-id="{{ post.id }}"
+                                                        onclick="toggleComments('{{ post.id }}')">
+                                                    <i class="bi bi-chat"></i>
+                                                    <span class="comment-count">{{ post.comments.count }}</span>
+                                                    <span class="comment-text">コメントを表示</span>
+                                                </button>
+                                            </div>
+                                            <div id="comments-{{ post.id }}" class="comments-section" style="display: none;">
+                                                <div class="comments-list">
+                                                    {% for comment in post.comments.all|slice:":3" %}
+                                                        <div class="comment">
+                                                            <div class="comment-user">
+                                                                {% if comment.user.profile.avatar %}
+                                                                    <img src="{{ comment.user.profile.avatar.url }}" alt="{{ comment.user.username }}">
+                                                                {% else %}
+                                                                    <img src="{% static 'images/default-avatar.svg' %}" alt="{{ comment.user.username }}">
+                                                                {% endif %}
+                                                            </div>
+                                                            <div class="comment-content">
+                                                                <span class="comment-username">{{ comment.user.username }}</span>
+                                                                <p class="comment-text">{{ comment.content }}</p>
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                    {% if post.comments.count > 3 %}
+                                                        <a href="{% url 'core:post_detail' post.id %}" class="view-all-comments">
+                                                            すべてのコメントを表示 ({{ post.comments.count }})
+                                                        </a>
+                                                    {% endif %}
+                                                </div>
+                                                {% if user.is_authenticated %}
+                                                <form class="comment-form" data-post-id="{{ post.id }}" onsubmit="submitComment(event, '{{ post.id }}')">
+                                                    <input type="text" name="comment" placeholder="コメントを追加..." class="comment-input">
+                                                    <button type="submit"><i class="bi bi-send"></i></button>
+                                                </form>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="no-results">投稿が見つかりませんでした。</p>
                     {% endif %}
                 </div>
             {% endif %}
 
-            <!-- ユーザーの検索結果 -->
-            {% if users %}
-                <div class="mb-8">
-                    <h2 class="text-2xl font-bold mb-4">ユーザー</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {% for user in users %}
-                            {% include 'core/includes/user_card.html' with user=user %}
-                        {% endfor %}
+            {% if search_type == 'all' or search_type == 'users' %}
+                <!-- ユーザーの検索結果 -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">ユーザー</h2>
                     </div>
-                    {% if users|length >= 5 %}
-                        <a href="?q={{ query }}&type=users" class="mt-4 inline-block text-blue-500 hover:underline">
-                            すべてのユーザーを見る →
-                        </a>
+                    {% if users %}
+                        <div class="search-results">
+                            {% for user in users %}
+                            <div class="result-item">
+                                <div class="result-image">
+                                    <img src="{{ user.profile.avatar.url|default:'/static/images/default-avatar.svg' }}" 
+                                         alt="{{ user.username }}" 
+                                         class="user-avatar">
+                                </div>
+                                <div class="result-content">
+                                    <div class="result-header">
+                                        <h3 class="result-title">{{ user.username }}</h3>
+                                        {% if user.profile.nickname %}
+                                            <p class="result-subtitle">{{ user.profile.nickname }}</p>
+                                        {% endif %}
+                                    </div>
+                                    {% if user.profile.bio %}
+                                        <p class="result-description">{{ user.profile.bio }}</p>
+                                    {% endif %}
+                                    {% if request.user.is_authenticated and request.user != user %}
+                                        <div class="follow-button-wrapper">
+                                            {% if user.profile in request.user.profile.following.all %}
+                                                <button class="follow-button following" 
+                                                        data-username="{{ user.username }}" 
+                                                        data-following="true">
+                                                    フォロー中
+                                                </button>
+                                            {% else %}
+                                                <button class="follow-button" 
+                                                        data-username="{{ user.username }}" 
+                                                        data-following="false">
+                                                    フォロー
+                                                </button>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                    {% if user.profile.favorite_genres %}
+                                        <div class="genre-tags">
+                                            {% for genre in user.profile.favorite_genres|slice:":3" %}
+                                                <span class="genre-tag">{{ genre }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="no-results">ユーザーが見つかりませんでした。</p>
                     {% endif %}
                 </div>
             {% endif %}
 
-            <!-- プレイリストの検索結果 -->
-            {% if playlists %}
-                <div class="mb-8">
-                    <h2 class="text-2xl font-bold mb-4">プレイリスト</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {% for playlist in playlists %}
-                            {% include 'core/includes/playlist_card.html' with playlist=playlist %}
-                        {% endfor %}
+            {% if search_type == 'all' or search_type == 'playlists' %}
+                <!-- プレイリストの検索結果 -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">プレイリスト</h2>
                     </div>
-                    {% if playlists|length >= 5 %}
-                        <a href="?q={{ query }}&type=playlists" class="mt-4 inline-block text-blue-500 hover:underline">
-                            すべてのプレイリストを見る →
-                        </a>
+                    {% if playlists %}
+                        <div class="playlists-grid">
+                            {% for playlist in playlists %}
+                                <div class="playlist-card">
+                                    <div class="playlist-cover">
+                                        {% if playlist.cover_image %}
+                                            <img src="{{ playlist.cover_image }}" alt="{{ playlist.title }}">
+                                        {% else %}
+                                            <div class="playlist-cover-placeholder">
+                                                <i class="bi bi-music-note-list"></i>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="playlist-info">
+                                        <h3 class="playlist-title">{{ playlist.title }}</h3>
+                                        <p class="playlist-creator">作成者: {{ playlist.user.username }}</p>
+                                        <div class="playlist-stats">
+                                            <span class="playlist-tracks">
+                                                <i class="bi bi-music-note"></i>
+                                                {{ playlist.track_count }}曲
+                                            </span>
+                                            <span class="playlist-likes">
+                                                <i class="bi bi-heart"></i>
+                                                {{ playlist.likes.count }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <a href="{% url 'core:playlist_detail' playlist.id %}" class="playlist-link"></a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="no-results">プレイリストが見つかりませんでした。</p>
                     {% endif %}
                 </div>
             {% endif %}
-
-        {% elif search_type == 'posts' %}
-            <!-- 投稿のみの検索結果 -->
-            {% if posts %}
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {% for post in posts %}
-                        {% include 'core/includes/post_card.html' with post=post %}
-                    {% endfor %}
-                </div>
-            {% else %}
-                <p class="text-center text-gray-500">投稿が見つかりませんでした。</p>
-            {% endif %}
-
-        {% elif search_type == 'users' %}
-            <!-- ユーザーのみの検索結果 -->
-            {% if users %}
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {% for user in users %}
-                        {% include 'core/includes/user_card.html' with user=user %}
-                    {% endfor %}
-                </div>
-            {% else %}
-                <p class="text-center text-gray-500">ユーザーが見つかりませんでした。</p>
-            {% endif %}
-
-        {% elif search_type == 'playlists' %}
-            <!-- プレイリストのみの検索結果 -->
-            {% if playlists %}
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {% for playlist in playlists %}
-                        {% include 'core/includes/playlist_card.html' with playlist=playlist %}
-                    {% endfor %}
-                </div>
-            {% else %}
-                <p class="text-center text-gray-500">プレイリストが見つかりませんでした。</p>
-            {% endif %}
+        {% else %}
+            <p class="no-results">検索キーワードを入力してください。</p>
         {% endif %}
-
-    {% else %}
-        <p class="text-center text-gray-500">検索キーワードを入力してください。</p>
-    {% endif %}
+    </div>
 </div>
+
+<style>
+.search-container {
+    background: linear-gradient(to bottom, #1a1a1a, #000);
+    min-height: 100vh;
+    color: white;
+}
+
+.result-container {
+    margin: 0 64px;
+    padding: 2rem 1rem;
+    width: 100vw;
+}
+
+.search-form-wrapper {
+    margin-bottom: 2rem;
+}
+
+.search-form {
+    display: flex;
+    gap: 1rem;
+    max-width: 48rem;
+    margin: 0 auto;
+    margin-top: 16px;
+}
+
+.search-input-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 3rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: none;
+    border-radius: 9999px;
+}
+
+.search-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #22c55e;
+}
+
+.search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.25rem;
+    height: 1.25rem;
+    color: #9ca3af;
+}
+
+.search-select {
+    padding: 0.75rem 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: none;
+    border-radius: 9999px;
+}
+
+.search-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #22c55e;
+}
+
+.section {
+    margin-bottom: 3rem;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.view-all-link {
+    font-size: 0.875rem;
+    color: #9ca3af;
+}
+
+.view-all-link:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1rem;
+}
+
+@media (min-width: 640px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1280px) {
+    .grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.user-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    transition: background-color 0.2s;
+}
+
+.user-card:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.user-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-avatar {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 9999px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.user-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.user-name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: white;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.user-name:hover {
+    color: #22c55e;
+}
+
+.user-nickname {
+    color: #9ca3af;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.user-bio {
+    color: #9ca3af;
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.follow-button-wrapper {
+    margin-top: 1rem;
+}
+
+.follow-button {
+    width: 100%;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 9999px;
+    background: #22c55e;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.follow-button:hover {
+    background: #16a34a;
+}
+
+.follow-button.following {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.follow-button.following:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.genre-tags {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.genre-tag {
+    padding: 0.25rem 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 9999px;
+    font-size: 0.75rem;
+}
+
+.no-results {
+    text-align: center;
+    color: #9ca3af;
+}
+
+/* 新しい検索結果のスタイル */
+.search-results {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    width: 100%;
+}
+
+.result-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 0.5rem;
+    transition: background-color 0.2s;
+    max-width: 600px;
+}
+
+.result-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.result-image {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+}
+
+.post-image,
+.playlist-image,
+.user-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
+.post-image-placeholder,
+.playlist-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 0.5rem;
+}
+
+.playlist-track-count {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 9999px;
+    font-size: 0.75rem;
+}
+
+.result-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.result-header {
+    margin-bottom: 0.5rem;
+}
+
+.result-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 0.25rem;
+}
+
+.result-subtitle {
+    color: #9ca3af;
+    font-size: 0.875rem;
+}
+
+.result-description {
+    color: #9ca3af;
+    font-size: 0.875rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.result-meta {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.result-user {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.user-avatar-small {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 9999px;
+    object-fit: cover;
+}
+
+.username {
+    color: #9ca3af;
+    font-size: 0.875rem;
+}
+
+.result-stats {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: #9ca3af;
+    font-size: 0.875rem;
+}
+
+/* レスポンシブ対応 */
+@media (min-width: 768px) {
+    .result-item {
+        padding: 1.25rem;
+    }
+
+    .result-image {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+.playlists-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+.playlist-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.playlist-card:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-4px);
+}
+
+.playlist-cover {
+    position: relative;
+    padding-top: 100%;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.playlist-cover img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.playlist-cover-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.playlist-info {
+    padding: 1rem;
+}
+
+.playlist-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: white;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.playlist-creator {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 0.5rem;
+}
+
+.playlist-stats {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.playlist-tracks,
+.playlist-likes {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.playlist-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* 投稿一覧のスタイル */
+.posts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+.posts-section {
+    margin-bottom: 3rem;
+}
+
+.posts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.post-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: transform 0.2s;
+}
+
+.post-card:hover {
+    transform: translateY(-2px);
+}
+
+.spotify-player {
+    width: 100%;
+    background: #000;
+}
+
+.spotify-player iframe {
+    display: block;
+}
+
+.post-content {
+    padding: 1rem;
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+}
+
+.post-user {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: white;
+    text-decoration: none;
+}
+
+.post-user:hover {
+    color: #22c55e;
+}
+
+.post-user img {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+    object-fit: cover;
+}
+
+.post-time {
+    font-size: 0.875rem;
+    color: #9ca3af;
+}
+
+.post-description {
+    margin-bottom: 1rem;
+    color: #e5e7eb;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.post-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+.action-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.like-button {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 0.25rem;
+    transition: color 0.2s;
+}
+
+.like-button:hover,
+.like-button.liked {
+    color: #ef4444;
+}
+
+.likes-list-button {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+
+.likes-list-button:hover {
+    color: white;
+}
+
+.comment-button {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    font-size: 0.875rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.comment-button:hover {
+    color: white;
+}
+
+.comments-section {
+    margin-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1rem;
+}
+
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.comment {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.comment-user img {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+    object-fit: cover;
+}
+
+.comment-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.comment-username {
+    font-weight: 600;
+    color: white;
+    margin-right: 0.5rem;
+}
+
+.comment-text {
+    color: #e5e7eb;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.view-all-comments {
+    color: #9ca3af;
+    font-size: 0.875rem;
+    text-decoration: none;
+}
+
+.view-all-comments:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+.comment-form {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.comment-input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    border-radius: 9999px;
+    padding: 0.5rem 1rem;
+    color: white;
+    font-size: 0.875rem;
+}
+
+.comment-input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.comment-form button {
+    background: none;
+    border: none;
+    color: #22c55e;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.comment-form button:hover {
+    color: #16a34a;
+}
+</style>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const followButtons = document.querySelectorAll('.follow-button');
+    
+    followButtons.forEach(button => {
+        button.addEventListener('click', async function() {
+            const username = this.dataset.username;
+            const isFollowing = this.dataset.following === 'true';
+            
+            try {
+                const response = await fetch(`/toggle-follow/${username}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken'),
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.status === 'followed') {
+                        this.textContent = 'フォロー中';
+                        this.classList.add('following');
+                        this.dataset.following = 'true';
+                    } else {
+                        this.textContent = 'フォロー';
+                        this.classList.remove('following');
+                        this.dataset.following = 'false';
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    });
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
+</script>
+{% endblock %}
 {% endblock %} 

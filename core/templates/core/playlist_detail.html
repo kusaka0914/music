@@ -12,8 +12,8 @@
                     <div class="playlist-header spotify-card">
                         <div class="playlist-cover-container">
                             <div class="playlist-cover">
-                                {% if playlist.music.first.album_art %}
-                                <img src="{{ playlist.music.first.album_art }}" alt="{{ playlist.title }}">
+                                {% if playlist.cover_image %}
+                                <img src="{{ playlist.cover_image }}" alt="{{ playlist.title }}">
                                 {% else %}
                                     <div class="default-cover">
                                         <i class="bi bi-music-note-list"></i>
@@ -153,8 +153,8 @@
                         {% if playlist.user and playlist.user.username %}
                             <div class="playlist-card">
                                 <div class="playlist-card-cover">
-                                    {% if playlist.music.first.album_art %}
-                                        <img src="{{ playlist.music.first.album_art }}" alt="{{ playlist.title }}">
+                                    {% if playlist.cover_image %}
+                                        <img src="{{ playlist.cover_image }}" alt="{{ playlist.title }}">
                                     {% else %}
                                         <div class="playlist-card-default">
                                             <i class="bi bi-music-note-list"></i>
@@ -655,14 +655,13 @@
 }
 
 .spotify-container {
-    max-width: 1400px;
-    margin: 0 auto;
+    margin: 0 64px;
     padding: 0 1rem;
 }
 
 .playlist-layout {
     display: grid;
-    grid-template-columns: 1fr 350px;
+    grid-template-columns: 3fr 1fr;
     gap: 2rem;
     position: relative;
 }
@@ -678,7 +677,6 @@
     height: calc(100vh - 4rem);
     overflow-y: auto;
     padding-right: 1rem;
-    width: 350px;
 }
 
 .recommended-playlists,

@@ -21,11 +21,6 @@
                     <div class="conversation-content">
                         <div class="conversation-header">
                             <span class="username">{{ conv_data.other_user.username }}</span>
-                            <span class="time">
-                                {% if conv_data.last_message %}
-                                    {{ conv_data.last_message.created_at|timesince }}前
-                                {% endif %}
-                            </span>
                         </div>
                         <div class="last-message">
                             {% if conv_data.last_message %}
@@ -77,30 +72,36 @@
                 {% csrf_token %}
                 <div class="message-actions">
                     <button type="button" class="action-button">
-                        <i class="bi bi-emoji-smile"></i>
-                    </button>
-                    <button type="button" class="action-button">
                         <i class="bi bi-image"></i>
                     </button>
                     <button type="button" class="action-button">
                         <i class="bi bi-paperclip"></i>
                     </button>
                 </div>
-                <input type="text" id="messageContent" placeholder="メッセージを入力..." required>
-                <button type="submit" class="send-button">
-                    <i class="bi bi-send"></i>
-                </button>
+                <div class="message-input-container">
+                    <input type="text" id="messageContent" placeholder="メッセージを入力..." required>
+                    <button type="submit" class="send-button">
+                        <i class="bi bi-send"></i>
+                    </button>
+                </div>
             </form>
         </div>
     </div>
 </div>
 
 <style>
+    body {
+        overflow: hidden;
+    }
 .messages-container {
     display: flex;
-    height: calc(100vh - 64px);
-    margin-top: 64px;
+    height: calc(100vh - 64px); 
     background-color: #000;
+    margin-top: 30px;
+}
+
+.message-input-container {
+    display: flex;
 }
 
 .messages-sidebar {
@@ -119,7 +120,7 @@
 
 .messages-header h2 {
     margin: 0;
-    font-size: 1.5rem;
+    font-size: 16px;
     font-weight: 600;
     color: #fff;
 }
@@ -130,7 +131,7 @@
 
 .conversations-list {
     flex: 1;
-    overflow-y: auto;
+    overflow-y: scroll;
 }
 
 .conversation-item {
@@ -193,10 +194,16 @@
     text-overflow: ellipsis;
 }
 
+.conversation-header a:hover {
+    opacity: 0.8;
+}
+
 .user-info {
     display: flex;
     align-items: center;
     gap: 15px;
+    margin-top: 16px;
+    margin-left: 24px;
 }
 
 .user-info .avatar {
@@ -313,6 +320,8 @@
     background-color: #2d2d2d;
     color: #fff;
     transition: all 0.2s;
+    width: 90%;
+    margin-right: 10px;
 }
 
 .message-form input:focus {
@@ -400,8 +409,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 messageDiv.className = 'message sent';
                 messageDiv.innerHTML = `
                     <div class="message-content">
-                        ${data.message.content}
-                        <span class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                        ${data.message.content} 
                     </div>
                 `;
                 messagesList.appendChild(messageDiv);
