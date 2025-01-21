@@ -32,12 +32,17 @@
                     <p class="post-description">{{ post.description }}</p>
                 {% endif %}
                 <div class="post-actions">
-                    <button class="action-button like-button {% if user in post.likes.all %}liked{% endif %}" 
-                            data-post-id="{{ post.id }}">
-                        <i class="bi {% if user in post.likes.all %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
-                        <span class="like-count">{{ post.likes.count }}</span>
-                    </button>
-                    <button class="action-button comment-button" 
+                    <div class="action-group">
+                        <button class="like-button {% if user in post.likes.all %}liked{% endif %}" 
+                                data-post-id="{{ post.id }}"
+                                onclick="toggleLike('{{ post.id }}', this)">
+                            <i class="bi {% if user in post.likes.all %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
+                        </button>
+                        <button class="likes-list-button" onclick="showLikesModal('{{ post.id }}')">
+                            <span class="like-count">{{ post.likes.count }}人がいいね</span>
+                        </button>
+                    </div>
+                    <button class="comment-button" 
                             data-post-id="{{ post.id }}"
                             onclick="toggleComments('{{ post.id }}')">
                         <i class="bi bi-chat"></i>
@@ -47,29 +52,31 @@
                 </div>
                 <div id="comments-{{ post.id }}" class="comments-section" style="display: none;">
                     <div class="comments-list">
-                        {% for comment in post.comments.all %}
-                        <div class="comment">
-                            <div class="comment-user">
-                                <img src="{{ comment.user.profile.avatar.url|default:'/static/images/default-avatar.svg' }}" 
-                                     alt="{{ comment.user.username }}">
+                        {% for comment in post.comments.all|slice:":3" %}
+                            <div class="comment">
+                                <div class="comment-user">
+                                    {% if comment.user.profile.avatar %}
+                                        <img src="{{ comment.user.profile.avatar.url }}" alt="{{ comment.user.username }}">
+                                    {% else %}
+                                        <img src="{% static 'images/default-avatar.svg' %}" alt="{{ comment.user.username }}">
+                                    {% endif %}
+                                </div>
                                 <div class="comment-content">
-                                    <div class="comment-header">
-                                        <span class="comment-username">{{ comment.user.username }}</span>
-                                        <span class="comment-time">{{ comment.created_at|timesince }}前</span>
-                                    </div>
+                                    <span class="comment-username">{{ comment.user.username }}</span>
                                     <p class="comment-text">{{ comment.content }}</p>
                                 </div>
                             </div>
-                        </div>
                         {% endfor %}
+                        {% if post.comments.count > 3 %}
+                            <a href="{% url 'core:post_detail' post.id %}" class="view-all-comments">
+                                すべてのコメントを表示 ({{ post.comments.count }})
+                            </a>
+                        {% endif %}
                     </div>
-                    
                     {% if user.is_authenticated %}
                     <form class="comment-form" data-post-id="{{ post.id }}" onsubmit="submitComment(event, '{{ post.id }}')">
-                        <input type="text" name="comment" placeholder="コメントを追加...">
-                        <button type="submit">
-                            <i class="bi bi-send"></i>
-                        </button>
+                        <input type="text" name="comment" placeholder="コメントを追加..." class="comment-input">
+                        <button type="submit"><i class="bi bi-send"></i></button>
                     </form>
                     {% endif %}
                 </div>

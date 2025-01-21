@@ -123,17 +123,34 @@ def home(request):
         for profile in other_users:
             if profile.user and profile.user.username:  # ユーザーとユーザー名が存在する場合のみ処理
                 compatibility = calculate_music_compatibility(request.user.profile, profile)
-            recommended_users.append({
-                'user': profile.user,
-                'compatibility_score': int(compatibility)
-            })
+                recommended_users.append({
+                    'user': profile.user,
+                    'compatibility_score': compatibility['score']  # 辞書から'score'値を取得
+                })
         
         # 互換性スコアで降順ソート
         recommended_users.sort(key=lambda x: x['compatibility_score'], reverse=True)
     
     # おすすめのプレイリストを取得
-    recommended_playlists = get_recommended_playlists()
-    
+    recommended_playlists = Playlist.objects.filter(
+        is_public=True
+    ).annotate(
+        track_count=Count('playlistmusic'),
+        likes_count=Count('likes')
+    ).select_related(
+        'user', 'user__profile'
+    ).prefetch_related(
+        'playlistmusic_set__music'
+    ).order_by('-created_at')[:5]
+
+    # プレイリストのカバー画像を設定
+    for playlist in recommended_playlists:
+        first_track = playlist.playlistmusic_set.first()
+        if first_track:
+            playlist.cover_image = first_track.music.album_art
+        else:
+            playlist.cover_image = None
+
     context = {
         'posts': posts,
         'stories_by_user': stories_by_user_list,
@@ -145,7 +162,21 @@ def home(request):
     return render(request, 'core/home.html', context)
 
 def register_view(request):
-    return render(request, 'core/register.html')
+    if request.method == 'POST':
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            try:
+                user = form.save()
+                # プロフィールが存在しない場合のみ作成
+                Profile.objects.get_or_create(user=user)
+                messages.success(request, '登録が完了しました。ログインしてください。')
+                return redirect('core:login')
+            except Exception as e:
+                messages.error(request, '登録中にエラーが発生しました。')
+                return redirect('core:register')
+    else:
+        form = UserRegisterForm()
+    return render(request, 'core/register.html', {'form': form})
 
 def calculate_music_compatibility(user1, user2):
     """ユーザー間の音楽の相性スコアを計算"""
@@ -647,7 +678,7 @@ def notification_redirect(request, notification_id):
     if notification.notification_type == 'follow':
         return redirect('core:profile', username=notification.sender.username)
     elif notification.notification_type in ['like_post', 'comment_post']:
-        return redirect('core:home') + f'?post_id={notification.post.id}'
+        return redirect(f'/?featured={notification.post.id}')
     elif notification.notification_type == 'like_playlist':
         return redirect('core:playlist_detail', playlist_id=notification.playlist.id)
     
@@ -1815,8 +1846,11 @@ def send_message(request):
 
 @login_required
 def get_unread_messages_count(request):
-    """未読メッセージ数を取得するAPI"""
-    count = Message.objects.filter(recipient=request.user, is_read=False).count()
+    """未読メッセージの総数を取得するAPI"""
+    count = Message.objects.filter(
+        recipient=request.user,
+        is_read=False
+    ).count()
     return JsonResponse({'count': count})
 
 @login_required
@@ -1846,3 +1880,18 @@ def toggle_follow(request, username):
         except User.DoesNotExist:
             return JsonResponse({'error': 'User not found'}, status=404)
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+@login_required
+def get_post_likes(request, post_id):
+    """投稿にいいねしたユーザーのリストを取得するAPI"""
+    post = get_object_or_404(MusicPost, id=post_id)
+    users = post.likes.all().select_related('profile')
+    
+    user_data = [{
+        'username': user.username,
+        'name': user.get_full_name(),
+        'avatar': user.profile.avatar.url if user.profile.avatar else None,
+        'is_following': request.user.profile.following.filter(user=user).exists() if request.user.is_authenticated else False
+    } for user in users]
+    
+    return JsonResponse({'users': user_data})

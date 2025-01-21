@@ -420,7 +420,7 @@
     }
 
     function updateMessageCount() {
-        fetch('{% url "core:get_unread_messages_count" %}')
+        fetch('/api/messages/unread-count/')
             .then(response => response.json())
             .then(data => {
                 const badge = document.querySelector('.message-badge');
@@ -430,7 +430,8 @@
                 } else {
                     badge.style.display = 'none';
                 }
-            });
+            })
+            .catch(error => console.error('Error:', error));
     }
 
     document.addEventListener('DOMContentLoaded', function() {

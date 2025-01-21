@@ -60,24 +60,28 @@
     display: flex;
     height: calc(100vh - 64px);
     margin-top: 64px;
+    background-color: #000;
 }
 
 .messages-sidebar {
     width: 350px;
-    border-right: 1px solid #dee2e6;
+    background-color: #1a1a1a;
+    border-right: 1px solid #2d2d2d;
     display: flex;
     flex-direction: column;
 }
 
 .messages-header {
     padding: 20px;
-    border-bottom: 1px solid #dee2e6;
+    border-bottom: 1px solid #2d2d2d;
+    background-color: #1a1a1a;
 }
 
 .messages-header h2 {
     margin: 0;
     font-size: 1.5rem;
     font-weight: 600;
+    color: #fff;
 }
 
 .conversations-list {
@@ -90,17 +94,18 @@
     align-items: center;
     padding: 15px 20px;
     text-decoration: none;
-    color: inherit;
-    transition: background-color 0.2s;
+    color: #fff;
+    transition: all 0.2s;
+    border-bottom: 1px solid #2d2d2d;
     position: relative;
 }
 
 .conversation-item:hover {
-    background-color: #f8f9fa;
+    background-color: #2d2d2d;
 }
 
 .conversation-item.unread {
-    background-color: #e7f1ff;
+    background-color: rgba(13, 110, 253, 0.1);
 }
 
 .conversation-avatar {
@@ -128,7 +133,7 @@
 
 .username {
     font-weight: 600;
-    color: #212529;
+    color: #fff;
 }
 
 .time {
@@ -161,7 +166,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f8f9fa;
+    background-color: #000;
 }
 
 .select-conversation {

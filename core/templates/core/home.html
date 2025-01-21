@@ -52,14 +52,20 @@
             <div class="posts-section">
                 <div class="section-header">
                     <h2>投稿一覧</h2>
-                    <div class="sort-options">
-                        <select id="postSort" class="sort-select">
-                            <option value="recommended">おすすめ順</option>
-                            <option value="newest">新着順</option>
-                            <option value="popular">人気順</option>
-                        </select>
-                            </div>
-                            </div>
+                    <div class="header-controls">
+                        <form class="search-form" id="searchForm">
+                            <i class="bi bi-search search-icon"></i>
+                            <input type="text" class="search-input" placeholder="アーティスト名・曲名で検索" id="searchInput">
+                        </form>
+                        <div class="sort-options">
+                            <select id="postSort" class="sort-select">
+                                <option value="recommended">おすすめ順</option>
+                                <option value="newest">新着順</option>
+                                <option value="popular">人気順</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
                 <div class="posts-container">
                     {% include 'core/includes/post_list.html' %}
                 </div>
@@ -126,41 +132,43 @@
             {% endif %}
 
             <!-- おすすめのプレイリスト -->
-            <div class="recommended-playlists-section">
-                <h3 class="section-title">
+            <div class="recommended-playlists">
+                <h2 class="section-title">
                     <i class="bi bi-music-note-list"></i>
                     おすすめのプレイリスト
-                </h3>
-                <div class="recommended-playlists">
+                </h2>
+                <div class="playlists-grid">
                     {% for playlist in recommended_playlists %}
-                    <div class="playlist-card">
-                        <div class="playlist-cover">
-                            {% if playlist.music.first.album_art %}
-                                <img src="{{ playlist.music.first.album_art }}" alt="{{ playlist.title }}">
-                            {% else %}
-                                <div class="default-cover">
-                                    <i class="bi bi-music-note-list"></i>
-                                </div>
-                            {% endif %}
-                        </div>
-                        <div class="playlist-info">
-                            <h4 class="playlist-title">{{ playlist.title }}</h4>
-                            <p class="playlist-creator">作成者: {{ playlist.user.profile.nickname|default:playlist.user.username }}</p>
-                            <div class="playlist-stats">
-                                <span class="playlist-tracks">
-                                    <i class="bi bi-music-note"></i>
-                                    {{ playlist.music.count }}曲
-                                </span>
-                                <span class="playlist-likes">
-                                    <i class="bi bi-heart"></i>
-                                    {{ playlist.likes.count }}
-                                </span>
+                        <div class="playlist-card">
+                            <div class="playlist-cover">
+                                {% if playlist.cover_image %}
+                                    <img src="{{ playlist.cover_image }}" alt="{{ playlist.title }}">
+                                {% else %}
+                                    <div class="playlist-cover-placeholder">
+                                        <i class="bi bi-music-note-list"></i>
+                                    </div>
+                                {% endif %}
                             </div>
+                            <div class="playlist-info">
+                                <h3 class="playlist-title">{{ playlist.title }}</h3>
+                                <p class="playlist-creator">作成者: {{ playlist.user.username }}</p>
+                                <div class="playlist-stats">
+                                    <span class="playlist-tracks">
+                                        <i class="bi bi-music-note"></i>
+                                        {{ playlist.track_count }}曲
+                                    </span>
+                                    <span class="playlist-likes">
+                                        <i class="bi bi-heart"></i>
+                                        {{ playlist.likes_count }}
+                                    </span>
+                                </div>
+                            </div>
+                            <a href="{% url 'core:playlist_detail' playlist.id %}" class="playlist-link"></a>
                         </div>
-                        <a href="{% url 'core:playlist_detail' playlist.id %}" class="playlist-link"></a>
-                    </div>
                     {% empty %}
-                    <p class="no-playlists">プレイリストがまだありません</p>
+                        <div class="no-playlists">
+                            <p>プレイリストがありません</p>
+                        </div>
                     {% endfor %}
                 </div>
             </div>
@@ -275,6 +283,27 @@
         </div>
         
         <button class="create-button" disabled>ストーリーを作成</button>
+    </div>
+</div>
+
+<!-- いいねしたユーザーモーダル -->
+<div class="modal fade" id="likesModal" tabindex="-1" aria-labelledby="likesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content dark-modal">
+            <div class="modal-header">
+                <h5 class="modal-title" id="likesModalLabel">いいねしたユーザー</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="search-container">
+                <i class="bi bi-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="検索">
+            </div>
+            <div class="modal-body">
+                <div class="user-list likes-list">
+                    <!-- いいねしたユーザーのリストがここに動的に挿入されます -->
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -493,66 +522,169 @@
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.like-button, .comment-button {
-    background: transparent;
-    border: none;
-    color: rgba(255, 255, 255, 0.7);
+.post-actions {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.action-group {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.like-button {
+    background: transparent;
+    border: none;
+    color: #b3b3b3;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
     cursor: pointer;
-    transition: all 0.3s ease;
-    padding: 0.5rem 1rem;
+    transition: all 0.3s;
     border-radius: 500px;
 }
 
-.like-button:hover, .comment-button:hover {
+.likes-list-button {
+    background: transparent;
+    border: none;
+    color: #b3b3b3;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: color 0.2s;
+    padding: 4px 8px;
+}
+
+.likes-list-button:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.like-button:hover {
     background: rgba(255, 255, 255, 0.1);
     color: #fff;
-    transform: translateY(-2px);
 }
 
 .like-button.liked {
     color: #1DB954;
-    background: rgba(29, 185, 84, 0.1);
 }
 
-.like-button.liked:hover {
-    background: rgba(29, 185, 84, 0.2);
-}
-
-.like-button i, .comment-button i {
-    font-size: 1.2rem;
-}
-
-.mood-tag {
-    background: rgba(29, 185, 84, 0.15);
+.like-button.liked i {
     color: #1DB954;
-    padding: 0.4rem 1rem;
-    border-radius: 500px;
-    font-size: 0.9rem;
-    font-weight: 500;
+}
+
+.comment-button {
+    background: transparent;
+    border: none;
+    color: #b3b3b3;
     display: flex;
     align-items: center;
-    gap: 0.3rem;
-    transition: all 0.3s ease;
-    border: 1px solid rgba(29, 185, 84, 0.3);
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    padding: 0.5rem 1rem;
+    border-radius: 500px;
 }
 
-.mood-tag:hover {
-    background: rgba(29, 185, 84, 0.2);
-    transform: translateY(-2px);
+.comment-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
 }
 
-.no-posts {
-    text-align: center;
-    padding: 3rem;
+.comment-count {
+    margin: 0 0.25rem;
+}
+
+.comment-text {
+    color: inherit;
+    font-size: 0.875rem;
+}
+
+.comments-section {
+    padding: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.comment {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.comment-user img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+.comment-content {
+    flex: 1;
+}
+
+.comment-username {
+    font-weight: 500;
+    font-size: 14px;
+    color: #fff;
+    margin-bottom: 4px;
+    display: inline-block;
+}
+
+.comment-text {
     color: #b3b3b3;
+    margin: 0;
+    font-size: 14px;
 }
 
-.no-posts i {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+.view-all-comments {
+    display: block;
+    color: #b3b3b3;
+    font-size: 14px;
+    text-decoration: none;
+    margin-top: 10px;
+    transition: color 0.2s;
+}
+
+.view-all-comments:hover {
+    color: white;
+}
+
+.comment-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.comment-input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    color: white;
+    font-size: 14px;
+}
+
+.comment-form button {
+    background: #1DB954;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.comment-form button:hover {
+    background: #1ed760;
 }
 
 .trending-section, .recommended-users {
@@ -567,30 +699,91 @@
 .trending-item {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 0.8rem;
-    border-radius: 4px;
-    transition: background-color 0.3s;
+    padding: 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    margin-bottom: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .trending-item:hover {
     background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
 }
 
 .trending-number {
-    color: #1DB954;
+    font-size: 1.2rem;
     font-weight: bold;
+    color: #1DB954;
+    margin-right: 1rem;
+    min-width: 30px;
 }
 
-.trending-content h4 {
+.trending-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    text-decoration: none;
+    color: inherit;
+}
+
+.trending-info {
+    flex: 1;
+}
+
+.trending-info h4 {
+    font-size: 1rem;
+    margin: 0 0 0.3rem;
+    color: #fff;
+    font-weight: 600;
+}
+
+.trending-info p {
     font-size: 0.9rem;
-    margin: 0;
+    color: #b3b3b3;
+    margin: 0 0 0.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4;
 }
 
-.trending-content p {
-    color: #b3b3b3;
+.trending-stats {
+    display: flex;
+    gap: 1rem;
     font-size: 0.8rem;
-    margin: 0;
+    color: #b3b3b3;
+}
+
+.trending-stats span {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.trending-stats i {
+    font-size: 0.9rem;
+}
+
+.trending-image {
+    width: 50px;
+    height: 50px;
+    margin-left: 1rem;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.trending-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.trending-item:hover .trending-description {
+    -webkit-line-clamp: 2;
 }
 
 .recommended-user {
@@ -1185,18 +1378,6 @@
     float: right;
 }
 
-.create-button {
-    width: 100%;
-    padding: 1rem;
-    background: #1DB954;
-    border: none;
-    border-radius: 500px;
-    color: #fff;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
 .create-button:hover:not(:disabled) {
     background: #1ed760;
     transform: scale(1.02);
@@ -1208,43 +1389,43 @@
     cursor: not-allowed;
 }
 
-.recommended-playlists-section {
+.recommended-playlists {
     margin-top: 2rem;
+    padding: 1rem;
     background: rgba(0, 0, 0, 0.3);
-    border-radius: 8px;
-    padding: 1.5rem;
+    border-radius: 12px;
 }
 
-.recommended-playlists-section .section-title {
+.section-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
+    color: #fff;
 }
 
-.recommended-playlists {
-    display: flex;
-    flex-direction: column;
+.playlists-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 1rem;
 }
 
 .playlist-card {
-    position: relative;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     overflow: hidden;
-    transition: all 0.3s ease;
+    position: relative;
+    transition: transform 0.3s ease;
 }
 
 .playlist-card:hover {
-    transform: translateY(-2px);
-    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-5px);
 }
 
 .playlist-cover {
-    width: 100%;
-    height: 120px;
+    aspect-ratio: 1;
+    position: relative;
     overflow: hidden;
 }
 
@@ -1254,34 +1435,47 @@
     object-fit: cover;
 }
 
+.playlist-cover-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #282828;
+    font-size: 2rem;
+    color: #666;
+}
+
 .playlist-info {
     padding: 1rem;
 }
 
 .playlist-title {
-    margin: 0 0 0.5rem;
     font-size: 1rem;
-    font-weight: 500;
+    margin: 0 0 0.5rem;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .playlist-creator {
+    font-size: 0.875rem;
     color: #b3b3b3;
-    font-size: 0.9rem;
     margin: 0 0 0.5rem;
 }
 
 .playlist-stats {
     display: flex;
-    align-items: center;
     gap: 1rem;
-    font-size: 0.8rem;
+    font-size: 0.875rem;
     color: #b3b3b3;
 }
 
 .playlist-tracks, .playlist-likes {
     display: flex;
     align-items: center;
-    gap: 0.3rem;
+    gap: 0.25rem;
 }
 
 .playlist-link {
@@ -1293,241 +1487,10 @@
 }
 
 .no-playlists {
+    grid-column: 1 / -1;
     text-align: center;
     padding: 2rem;
     color: #b3b3b3;
-}
-
-.post-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.like-button, .comment-button {
-    background: transparent;
-    border: none;
-    color: #b3b3b3;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-    transition: all 0.3s;
-    padding: 0.5rem 1rem;
-    border-radius: 500px;
-}
-
-.like-button:hover, .comment-button:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-}
-
-.like-button.liked {
-    color: #1DB954;
-}
-
-.like-button.liked i {
-    color: #1DB954;
-}
-
-.comments-section {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.comments-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.comment {
-    display: flex;
-    gap: 0.8rem;
-    align-items: flex-start;
-}
-
-.comment-user img {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-}
-
-.comment-content {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 0.8rem;
-    border-radius: 12px;
-    flex: 1;
-}
-
-.comment-username {
-    font-weight: 500;
-    margin-bottom: 0.3rem;
-    display: block;
-}
-
-.comment-content p {
-    margin: 0;
-    color: rgba(255, 255, 255, 0.8);
-}
-
-.comment-form {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 1rem;
-}
-
-.comment-form input {
-    flex: 1;
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    padding: 0.8rem;
-    border-radius: 500px;
-    color: #fff;
-}
-
-.comment-form button {
-    background: #1DB954;
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    color: #fff;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.comment-form button:hover {
-    background: #1ed760;
-    transform: scale(1.05);
-}
-
-.comment-button {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: none;
-    border: none;
-    color: #b3b3b3;
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-}
-
-.comment-button:hover {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.comment-text {
-    font-size: 0.9rem;
-}
-
-.trending-section {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-.trending-section h3 {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-    color: #fff;
-}
-
-.trending-item {
-    display: flex;
-    align-items: center;
-    padding: 1rem;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    margin-bottom: 0.5rem;
-    background: rgba(255, 255, 255, 0.05);
-}
-
-.trending-item:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
-}
-
-.trending-number {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #1DB954;
-    margin-right: 1rem;
-    min-width: 30px;
-}
-
-.trending-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex: 1;
-    text-decoration: none;
-    color: inherit;
-}
-
-.trending-info {
-    flex: 1;
-}
-
-.trending-info h4 {
-    font-size: 1rem;
-    margin: 0 0 0.3rem;
-    color: #fff;
-    font-weight: 600;
-}
-
-.trending-info p {
-    font-size: 0.9rem;
-    color: #b3b3b3;
-    margin: 0 0 0.5rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 1.4;
-}
-
-.trending-stats {
-    display: flex;
-    gap: 1rem;
-    font-size: 0.8rem;
-    color: #b3b3b3;
-}
-
-.trending-stats span {
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-}
-
-.trending-stats i {
-    font-size: 0.9rem;
-}
-
-.trending-image {
-    width: 50px;
-    height: 50px;
-    margin-left: 1rem;
-    border-radius: 4px;
-    overflow: hidden;
-}
-
-.trending-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.trending-item:hover .trending-description {
-    -webkit-line-clamp: 2;
 }
 
 .section-header {
@@ -1535,6 +1498,50 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.section-header h2 {
+    margin: 0;
+}
+
+.header-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.search-form {
+    position: relative;
+    flex: 1;
+    min-width: 250px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.5rem 1rem 0.5rem 2.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    color: white;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.search-input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #1DB954;
+}
+
+.search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #b3b3b3;
+    pointer-events: none;
 }
 
 .sort-select {
@@ -1769,6 +1776,158 @@ document.addEventListener('DOMContentLoaded', function() {
                 .catch(error => console.error('Error:', error));
         });
     }
+});
+</script>
+
+<script>
+function showComments(postId, button) {
+    const commentsSection = button.closest('.post-card').querySelector('.comments-section');
+    const buttonText = button.querySelector('span');
+    const isHidden = commentsSection.style.display === 'none';
+    
+    commentsSection.style.display = isHidden ? 'block' : 'none';
+    buttonText.textContent = `${button.querySelector('span').textContent.split(' ')[0]} ${isHidden ? 'コメントを非表示' : 'コメントを表示'}`;
+}
+</script>
+
+<script>
+function showLikesModal(postId) {
+    // いいねしたユーザーのデータを取得
+    fetch(`/api/posts/${postId}/likes/`)
+        .then(response => response.json())
+        .then(data => {
+            const userList = document.querySelector('.likes-list');
+            userList.innerHTML = '';
+
+            if (data.users.length === 0) {
+                userList.innerHTML = `
+                    <div class="no-users">
+                        <p>まだいいねしたユーザーはいません</p>
+                    </div>
+                `;
+                return;
+            }
+
+            data.users.forEach(user => {
+                const userItem = document.createElement('div');
+                userItem.className = 'user-item';
+                userItem.innerHTML = `
+                    <div class="user-info">
+                        <img src="${user.avatar || '/static/images/default-avatar.svg'}" alt="${user.username}" class="user-avatar">
+                        <div class="user-details">
+                            <a href="/profile/${user.username}/" class="username">${user.username}</a>
+                            <span class="user-meta">${user.name || ''}</span>
+                        </div>
+                    </div>
+                    ${user.is_following ? `
+                        <button class="follow-button following" onclick="toggleFollow('${user.username}', this)">
+                            フォロー中
+                        </button>
+                    ` : `
+                        <button class="follow-button" onclick="toggleFollow('${user.username}', this)">
+                            フォローする
+                        </button>
+                    `}
+                `;
+                userList.appendChild(userItem);
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+    // モーダルを表示
+    const modal = new bootstrap.Modal(document.getElementById('likesModal'));
+    modal.show();
+}
+
+// 検索機能
+document.querySelector('.search-input').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    const userItems = document.querySelectorAll('.user-item');
+    
+    userItems.forEach(item => {
+        const username = item.querySelector('.username').textContent.toLowerCase();
+        if (username.includes(searchTerm)) {
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+});
+</script>
+
+<script>
+function toggleLike(postId, button) {
+    fetch(`/post/${postId}/like/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            const icon = button.querySelector('i');
+            const countSpan = button.parentElement.querySelector('.like-count');
+            
+            if (data.liked) {
+                button.classList.add('liked');
+                icon.classList.remove('bi-heart');
+                icon.classList.add('bi-heart-fill');
+            } else {
+                button.classList.remove('liked');
+                icon.classList.remove('bi-heart-fill');
+                icon.classList.add('bi-heart');
+            }
+            
+            countSpan.textContent = `${data.like_count}人がいいね`;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchForm = document.getElementById('searchForm');
+    const searchInput = document.getElementById('searchInput');
+    const postsContainer = document.querySelector('.posts-container');
+    let searchTimeout;
+
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            const query = this.value.trim();
+            const sortValue = document.getElementById('postSort').value;
+            
+            // URLSearchParamsを使用してクエリパラメータを構築
+            const urlParams = new URLSearchParams();
+            if (query) urlParams.set('q', query);
+            if (sortValue) urlParams.set('sort', sortValue);
+            
+            // 検索リクエストを送信
+            fetch(`/?${urlParams.toString()}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                postsContainer.innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }, 300); // 300ミリ秒のデバウンス
+    });
+
+    searchForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+    });
 });
 </script>
 {% endblock %} 

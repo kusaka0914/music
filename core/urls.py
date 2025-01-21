@@ -53,5 +53,11 @@ urlpatterns = [
     path('messages/new/<str:username>/', views.new_conversation, name='new_conversation'),
     path('api/messages/send/', views.send_message, name='send_message'),
     path('api/messages/unread-count/', views.get_unread_messages_count, name='get_unread_messages_count'),
-    path('toggle-follow/<str:username>/', views.toggle_follow, name='toggle_follow'),
+    path('api/toggle-follow/<str:username>/', views.toggle_follow, name='toggle_follow'),
+    
+    # 通知関連のURL
+    path('notifications/', views.notifications, name='notifications'),
+    path('notifications/<int:notification_id>/redirect/', views.notification_redirect, name='notification_redirect'),
+    path('api/notifications/unread-count/', views.get_unread_notification_count, name='get_unread_notification_count'),
+    path('api/posts/<int:post_id>/likes/', views.get_post_likes, name='get_post_likes'),
 ] 

@@ -41,21 +41,33 @@
     </div>
     <div class="conversation-detail">
         <div class="conversation-header">
-            <div class="user-info">
-                {% if other_user.profile.avatar %}
-                    <img src="{{ other_user.profile.avatar.url }}" alt="{{ other_user.username }}" class="avatar">
-                {% else %}
+            <a href="{% url 'core:profile' other_user.username %}">
+                <div class="user-info">
+                    {% if other_user.profile.avatar %}
+                        <img src="{{ other_user.profile.avatar.url }}" alt="{{ other_user.username }}" class="avatar">
+                    {% else %}
                     <img src="{% static 'images/default-avatar.svg' %}" alt="{{ other_user.username }}" class="avatar">
                 {% endif %}
                 <h3>{{ other_user.username }}</h3>
             </div>
+            </a>
+            <!-- <div class="header-actions">
+                <button class="action-button">
+                    <i class="bi bi-telephone"></i>
+                </button>
+                <button class="action-button">
+                    <i class="bi bi-camera-video"></i>
+                </button>
+                <button class="action-button">
+                    <i class="bi bi-info-circle"></i>
+                </button>
+            </div> -->
         </div>
         <div class="messages-list" id="messagesList">
             {% for message in messages %}
                 <div class="message {% if message.sender == user %}sent{% else %}received{% endif %}">
                     <div class="message-content">
                         {{ message.content }}
-                        <span class="message-time">{{ message.created_at|time:"H:i" }}</span>
                     </div>
                 </div>
             {% endfor %}
@@ -63,8 +75,19 @@
         <div class="message-input">
             <form id="messageForm" class="message-form">
                 {% csrf_token %}
+                <div class="message-actions">
+                    <button type="button" class="action-button">
+                        <i class="bi bi-emoji-smile"></i>
+                    </button>
+                    <button type="button" class="action-button">
+                        <i class="bi bi-image"></i>
+                    </button>
+                    <button type="button" class="action-button">
+                        <i class="bi bi-paperclip"></i>
+                    </button>
+                </div>
                 <input type="text" id="messageContent" placeholder="メッセージを入力..." required>
-                <button type="submit">
+                <button type="submit" class="send-button">
                     <i class="bi bi-send"></i>
                 </button>
             </form>
@@ -73,17 +96,101 @@
 </div>
 
 <style>
-.conversation-detail {
-    flex: 1;
+.messages-container {
+    display: flex;
+    height: calc(100vh - 64px);
+    margin-top: 64px;
+    background-color: #000;
+}
+
+.messages-sidebar {
+    width: 350px;
+    background-color: #1a1a1a;
+    border-right: 1px solid #2d2d2d;
     display: flex;
     flex-direction: column;
-    background-color: #fff;
+}
+
+.messages-header {
+    padding: 20px;
+    border-bottom: 1px solid #2d2d2d;
+    background-color: #1a1a1a;
+}
+
+.messages-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.alert {
+    display: none;
+}
+
+.conversations-list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.conversation-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    text-decoration: none;
+    color: #fff;
+    transition: all 0.2s;
+    border-bottom: 1px solid #2d2d2d;
+    position: relative;
+}
+
+.conversation-item:hover {
+    background-color: #2d2d2d;
+}
+
+.conversation-item.active {
+    background-color: rgba(13, 110, 253, 0.1);
+}
+
+.conversation-avatar {
+    margin-right: 15px;
+}
+
+.conversation-avatar img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.conversation-content {
+    flex: 1;
+    min-width: 0;
 }
 
 .conversation-header {
-    padding: 15px 20px;
-    border-bottom: 1px solid #dee2e6;
-    background-color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.username {
+    font-weight: 600;
+    color: #fff;
+}
+
+.time {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.last-message {
+    color: #6c757d;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .user-info {
@@ -101,8 +208,36 @@
 
 .user-info h3 {
     margin: 0;
+    color: #fff;
     font-size: 1.1rem;
     font-weight: 600;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.action-button {
+    background: none;
+    border: none;
+    color: #6c757d;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.action-button:hover {
+    background-color: #2d2d2d;
+    color: #fff;
+}
+
+.conversation-detail {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #000;
 }
 
 .messages-list {
@@ -112,6 +247,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    background-color: #000;
 }
 
 .message {
@@ -125,86 +261,107 @@
 
 .message-content {
     max-width: 70%;
-    padding: 10px 15px;
-    border-radius: 15px;
+    padding: 12px 16px;
+    border-radius: 16px;
     position: relative;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .message.sent .message-content {
     background-color: #0d6efd;
     color: white;
-    border-bottom-right-radius: 5px;
+    border-bottom-right-radius: 4px;
 }
 
 .message.received .message-content {
-    background-color: #f0f2f5;
-    color: #212529;
-    border-bottom-left-radius: 5px;
+    background-color: #2d2d2d;
+    color: #fff;
+    border-bottom-left-radius: 4px;
 }
 
 .message-time {
     font-size: 0.75rem;
-    color: #6c757d;
-    margin-top: 5px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 4px;
     display: block;
-}
-
-.message.sent .message-time {
-    color: rgba(255, 255, 255, 0.8);
 }
 
 .message-input {
     padding: 20px;
-    border-top: 1px solid #dee2e6;
-    background-color: #fff;
+    background-color: #1a1a1a;
+    border-top: 1px solid #2d2d2d;
 }
 
 .message-form {
     display: flex;
-    gap: 10px;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.message-actions {
+    display: flex;
+    gap: 8px;
 }
 
 .message-form input {
     flex: 1;
-    padding: 10px 15px;
-    border: 1px solid #dee2e6;
-    border-radius: 20px;
+    padding: 12px 20px;
+    border: 1px solid #2d2d2d;
+    border-radius: 24px;
     outline: none;
+    font-size: 0.95rem;
+    background-color: #2d2d2d;
+    color: #fff;
+    transition: all 0.2s;
 }
 
 .message-form input:focus {
     border-color: #0d6efd;
+    background-color: #2d2d2d;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
 }
 
-.message-form button {
+.message-form input::placeholder {
+    color: #6c757d;
+}
+
+.send-button {
     background-color: #0d6efd;
     color: white;
     border: none;
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(13, 110, 253, 0.2);
 }
 
-.message-form button:hover {
+.send-button:hover {
     background-color: #0b5ed7;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(13, 110, 253, 0.2);
 }
 
-.conversation-item.active {
-    background-color: #e7f1ff;
+.send-button i {
+    font-size: 1.2rem;
 }
 
 @media (max-width: 768px) {
+    .messages-container {
+        flex-direction: column;
+    }
+
     .messages-sidebar {
-        display: none;
+        width: 100%;
+        height: 100%;
     }
 
     .conversation-detail {
-        width: 100%;
+        border-radius: 0;
     }
 }
 </style>

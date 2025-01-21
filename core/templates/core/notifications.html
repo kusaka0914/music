@@ -18,6 +18,21 @@
                             {% endif %}
                         </div>
                         <div class="notification-content">
+                            <div class="notification-type">
+                                {% if notification.notification_type == 'follow' %}
+                                    <i class="bi bi-person-plus"></i>
+                                    <span>フォロー</span>
+                                {% elif notification.notification_type == 'like_post' %}
+                                    <i class="bi bi-heart-fill"></i>
+                                    <span>いいね</span>
+                                {% elif notification.notification_type == 'comment_post' %}
+                                    <i class="bi bi-chat-fill"></i>
+                                    <span>コメント</span>
+                                {% elif notification.notification_type == 'like_playlist' %}
+                                    <i class="bi bi-music-note-list"></i>
+                                    <span>プレイリストいいね</span>
+                                {% endif %}
+                            </div>
                             <div class="notification-text">
                                 <strong>{{ notification.sender.username }}</strong>
                                 {% if notification.notification_type == 'follow' %}
@@ -55,8 +70,10 @@
 <style>
 .notifications-container {
     max-width: 800px;
-    margin: 0 auto;
+    margin: 64px auto 0;
     padding: 20px;
+    background-color: #000;
+    min-height: calc(100vh - 64px);
 }
 
 .notifications-title {
@@ -64,7 +81,8 @@
     font-weight: 600;
     margin-bottom: 20px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #dee2e6;
+    border-bottom: 1px solid #2d2d2d;
+    color: #fff;
 }
 
 .notifications-list {
@@ -77,21 +95,22 @@
     display: flex;
     align-items: flex-start;
     padding: 16px;
-    background: #fff;
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 12px;
-    border: 1px solid #dee2e6;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     text-decoration: none;
-    color: inherit;
-    transition: background-color 0.2s;
+    color: #fff;
+    transition: all 0.2s;
 }
 
 .notification-item:hover {
-    background-color: #f8f9fa;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
 }
 
 .notification-item.unread {
-    background-color: #e7f1ff;
-    border-color: #0d6efd;
+    background: rgba(13, 110, 253, 0.1);
+    border-color: rgba(13, 110, 253, 0.3);
 }
 
 .notification-avatar {
@@ -103,63 +122,95 @@
     height: 48px;
     border-radius: 50%;
     object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 .notification-content {
     flex: 1;
 }
 
+.notification-type {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+    color: #1DB954;
+    font-size: 0.875rem;
+}
+
+.notification-type i {
+    font-size: 1rem;
+}
+
+.notification-type span {
+    font-weight: 500;
+}
+
 .notification-text {
     margin-bottom: 4px;
     line-height: 1.4;
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .notification-text strong {
-    color: #212529;
+    color: #fff;
+    font-weight: 600;
 }
 
 .notification-comment {
     display: block;
-    margin-top: 4px;
-    color: #6c757d;
+    margin-top: 8px;
+    color: rgba(255, 255, 255, 0.7);
     font-style: italic;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px 12px;
+    border-radius: 8px;
 }
 
 .notification-time {
     font-size: 0.875rem;
-    color: #6c757d;
+    color: rgba(255, 255, 255, 0.5);
 }
 
 .follow-button {
     display: inline-block;
     margin-left: 8px;
-    padding: 4px 12px;
-    background: #0d6efd;
+    padding: 6px 16px;
+    background: #1DB954;
     color: #fff;
     border: none;
     border-radius: 20px;
     font-size: 0.875rem;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.2s;
 }
 
 .follow-button:hover {
-    background: #0b5ed7;
+    background: #1ed760;
+    transform: scale(1.02);
 }
 
 .follow-button.following {
-    background: #6c757d;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.follow-button.following:hover {
+    background: rgba(255, 255, 255, 0.15);
 }
 
 .no-notifications {
     text-align: center;
     padding: 40px;
-    color: #6c757d;
+    color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    margin-top: 20px;
 }
 
 .no-notifications i {
     font-size: 3rem;
     margin-bottom: 16px;
+    color: rgba(255, 255, 255, 0.3);
 }
 
 .no-notifications p {

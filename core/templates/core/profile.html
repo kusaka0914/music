@@ -52,16 +52,21 @@
                         <span class="label">フォロー中</span>
                     </div>
                 </div>
-                {% if user != profile_user %}
-                    <button class="follow-btn {% if profile_user.profile in user.profile.following.all %}following{% endif %}"
-                            data-username="{{ profile_user.username }}"
-                            onclick="toggleFollow(this)">
-                        {% if profile_user.profile in user.profile.following.all %}
-                            フォロー中
-                        {% else %}
-                            フォロー
-                        {% endif %}
-                    </button>
+                {% if profile_user != user %}
+                    <div class="profile-actions">
+                        <button class="follow-button {% if is_following %}following{% endif %}" 
+                                onclick="toggleFollow('{{ profile_user.username }}', this)">
+                            {% if is_following %}
+                                フォロー中
+                            {% else %}
+                                フォロー
+                            {% endif %}
+                        </button>
+                        <a href="{% url 'core:new_conversation' profile_user.username %}" class="message-button">
+                            <i class="bi bi-chat"></i>
+                            メッセージ
+                        </a>
+                    </div>
                 {% else %}
                     <a href="{% url 'core:profile_edit' %}" class="edit-profile-button">プロフィールを編集</a>
                 {% endif %}
@@ -321,11 +326,6 @@
                                 {% if post.description %}
                                     <p class="post-description">{{ post.description }}</p>
                                 {% endif %}
-                                {% if post.mood %}
-                                    <div class="mood-tag">
-                                        {{ post.get_mood_emoji }} {{ post.get_mood_display }}
-                                    </div>
-                                {% endif %}
                                 <div class="post-actions">
                                     <div class="action-button">
                                         <button class="like-button {% if user in post.likes.all %}liked{% endif %}" 
@@ -425,7 +425,7 @@
         {% endif %} -->
 
         <!-- バッジセクション -->
-        <div class="badges-section">
+        <!-- <div class="badges-section">
             <h3>獲得バッジ</h3>
             {% with badges=profile_user.profile.get_achievement_badges %}
                 {% if badges %}
@@ -441,10 +441,10 @@
                     <p>まだバッジを獲得していません。</p>
                 {% endif %}
             {% endwith %}
-        </div>
+        </div> -->
 
         <!-- おすすめユーザーセクション -->
-        {% if user == profile_user %}
+        <!-- {% if user == profile_user %}
             <div class="recommended-users-section">
                 <h3>おすすめのユーザー</h3>
                 {% with recommended_users=user.profile.get_recommended_users %}
@@ -484,7 +484,7 @@
                     {% endif %}
                 {% endwith %}
             </div>
-        {% endif %}
+        {% endif %} -->
     </div>
 </div>
 
@@ -2052,9 +2052,66 @@
     padding: 16px;
     color: #8e8e8e;
 }
+
+.profile-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.message-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 16px;
+    background-color: #0d6efd;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.message-button:hover {
+    background-color: #0b5ed7;
+    color: white;
+    text-decoration: none;
+}
+
+.message-button i {
+    font-size: 1.1rem;
+}
 </style>
 
 <script>
+function toggleFollow(username, button) {
+    fetch(`/api/toggle-follow/${username}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'followed') {
+            button.classList.add('following');
+            button.textContent = 'フォロー中';
+        } else if (data.status === 'unfollowed') {
+            button.classList.remove('following');
+            button.textContent = 'フォロー';
+        }
+        
+        // フォロワー数を更新
+        const followerCount = document.querySelector('.followers-count');
+        if (followerCount) {
+            followerCount.textContent = data.follower_count;
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
 function likePost(postId, button) {
     fetch(`/post/${postId}/like/`, {
         method: 'POST',
@@ -2143,44 +2200,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// フォローボタンの処理
-function toggleFollow(button) {
-    const username = button.dataset.username;
-    fetch(`/toggle-follow/${username}/`, {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        // すべてのフォローボタンを更新
-        document.querySelectorAll(`[data-username="${username}"]`).forEach(btn => {
-            if (data.status === 'followed') {
-                btn.textContent = 'フォロー中';
-                btn.classList.add('following');
-            } else {
-                btn.textContent = 'フォロー';
-                btn.classList.remove('following');
-            }
-        });
-
-        // フォロワー数を更新
-        const followerCount = document.querySelector('.followers-count');
-        if (followerCount) {
-            followerCount.textContent = data.follower_count;
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
-
 // DOMContentLoadedイベントでフォローボタンにイベントリスナーを追加
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('[data-username]').forEach(button => {
         button.addEventListener('click', function() {
-            toggleFollow(this);
+            toggleFollow(this.dataset.username, this);
         });
     });
 });

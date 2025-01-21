@@ -1,16 +1,16 @@
 from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
 from django.contrib.auth.models import User
-from .models import MusicPost, Comment, Playlist, Notification
+from .models import MusicPost, Comment, Playlist, Notification, Profile
 
-@receiver(m2m_changed, sender=User.following.through)
+@receiver(m2m_changed, sender=Profile.following.through)
 def create_follow_notification(sender, instance, action, pk_set, **kwargs):
     if action == "post_add":
         for pk in pk_set:
-            followed_user = User.objects.get(pk=pk)
+            followed_profile = Profile.objects.get(pk=pk)
             Notification.objects.create(
-                recipient=followed_user,
-                sender=instance,
+                recipient=followed_profile.user,
+                sender=instance.user,
                 notification_type='follow'
             )
 
