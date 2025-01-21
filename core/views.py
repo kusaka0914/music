@@ -692,18 +692,94 @@ def following_posts(request):
 
 def search(request):
     query = request.GET.get('q', '')
-    posts = []
+    search_type = request.GET.get('type', 'all')  # 検索タイプ（all, posts, users, playlists）
+    
     if query:
-        posts = MusicPost.objects.filter(
-            Q(title__icontains=query) |
-            Q(artist__icontains=query) |
-            Q(description__icontains=query) |
-            Q(user__username__icontains=query)
-        ).order_by('-created_at')
-    return render(request, 'core/search.html', {
-        'query': query,
-        'posts': posts
-    })
+        if search_type == 'users':
+            # ユーザー検索
+            users = User.objects.filter(
+                Q(username__icontains=query) |
+                Q(profile__bio__icontains=query)
+            ).select_related('profile').distinct()
+            
+            context = {
+                'query': query,
+                'search_type': search_type,
+                'users': users
+            }
+            
+        elif search_type == 'playlists':
+            # プレイリスト検索
+            playlists = Playlist.objects.filter(
+                Q(title__icontains=query) |
+                Q(description__icontains=query),
+                is_public=True
+            ).select_related('user', 'user__profile').annotate(
+                track_count=Count('playlistmusic'),
+                likes_count=Count('likes')
+            ).order_by('-created_at')
+            
+            context = {
+                'query': query,
+                'search_type': search_type,
+                'playlists': playlists
+            }
+            
+        elif search_type == 'posts':
+            # 投稿検索
+            posts = MusicPost.objects.filter(
+                Q(title__icontains=query) |
+                Q(artist__icontains=query) |
+                Q(description__icontains=query) |
+                Q(mood__icontains=query)
+            ).select_related('user', 'user__profile').prefetch_related(
+                'likes', 'comments'
+            ).order_by('-created_at')
+            
+            context = {
+                'query': query,
+                'search_type': search_type,
+                'posts': posts
+            }
+            
+        else:  # all
+            # 全体検索
+            posts = MusicPost.objects.filter(
+                Q(title__icontains=query) |
+                Q(artist__icontains=query) |
+                Q(description__icontains=query)
+            ).select_related('user', 'user__profile').prefetch_related(
+                'likes', 'comments'
+            ).order_by('-created_at')[:5]
+            
+            users = User.objects.filter(
+                Q(username__icontains=query) |
+                Q(profile__bio__icontains=query)
+            ).select_related('profile').distinct()[:5]
+            
+            playlists = Playlist.objects.filter(
+                Q(title__icontains=query) |
+                Q(description__icontains=query),
+                is_public=True
+            ).select_related('user', 'user__profile').annotate(
+                track_count=Count('playlistmusic'),
+                likes_count=Count('likes')
+            ).order_by('-created_at')[:5]
+            
+            context = {
+                'query': query,
+                'search_type': search_type,
+                'posts': posts,
+                'users': users,
+                'playlists': playlists
+            }
+    else:
+        context = {
+            'query': '',
+            'search_type': search_type
+        }
+    
+    return render(request, 'core/search.html', context)
 
 @login_required
 def profile_edit(request):

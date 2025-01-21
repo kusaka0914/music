@@ -1,0 +1,113 @@
+# Python
+*.py[cod]
+__pycache__/
+*.so
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+bin/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+.pytest_cache/
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.env
+
+# Django
+*.log
+*.pot
+*.pyc
+db.sqlite3
+media/
+staticfiles/
+local_settings.py
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Cache
+.cache/
+.sass-cache/
+.eslintcache
+
+# Temporary files
+*.bak
+*.tmp
+*.temp
+
+# Spotify
+.spotify_caches/
+spotify.log
+
+# Test
+.pytest_cache/
+.tox/
+.coverage
+coverage.xml
+*.cover
+.hypothesis/
+
+# Database backups
+*.dump
+*.sql
+*.sqlite3-journal
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+.env.development
+.env.test
+.env.production
+
+# Node modules (if using any JavaScript/Node.js)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Compiled static files
+core/static/core/dist/
+core/static/core/build/
+
+# Migration files (optional, depending on your team's workflow)
+# */migrations/*.py
+# !*/migrations/__init__.py 
