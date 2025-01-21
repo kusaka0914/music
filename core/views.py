@@ -154,35 +154,12 @@ def calculate_music_compatibility(user1, user2):
         common_artists = []
         common_tracks = []
         
-        # Spotifyのデータを取得
-        if user1.profile.spotify_connected and user2.profile.spotify_connected:
-            spotify_client1 = get_spotify_client(user1)
-            spotify_client2 = get_spotify_client(user2)
-            
-            if spotify_client1 and spotify_client2:
-                # トップトラックを比較
-                tracks1 = get_top_tracks(spotify_client1)
-                tracks2 = get_top_tracks(spotify_client2)
-                
-                track_ids1 = {track['spotify_id'] for track in tracks1}
-                track_ids2 = {track['spotify_id'] for track in tracks2}
-                common_track_ids = track_ids1 & track_ids2
-                
-                # 共通のトラックを保存
-                common_tracks = [track for track in tracks1 if track['spotify_id'] in common_track_ids]
-                score += len(common_tracks) * 15  # 共通の曲ごとに15ポイント
-                
-                # 最近再生した曲を比較
-                recent1 = get_recently_played_tracks(spotify_client1)
-                recent2 = get_recently_played_tracks(spotify_client2)
-                
-                recent_artists1 = {track['artist'] for track in recent1}
-                recent_artists2 = {track['artist'] for track in recent2}
-                common_recent_artists = recent_artists1 & recent_artists2
-                
-                # 共通のアーティストを保存
-                common_artists = list(common_recent_artists)
-                score += len(common_recent_artists) * 10  # 共通のアーティストごとに10ポイント
+        # お気に入りアーティストを比較
+        user1_artists = [artist['name'] for artist in user1.music_taste.favorite_artists]
+        user2_artists = [artist['name'] for artist in user2.music_taste.favorite_artists]
+        
+        common_artists = [artist for artist in user1_artists if artist in user2_artists]
+        score += len(common_artists) * 15  # 共通のアーティストごとに15ポイント
         
         # 投稿の傾向を比較
         posts1 = MusicPost.objects.filter(user=user1)
@@ -199,7 +176,7 @@ def calculate_music_compatibility(user1, user2):
         return {
             'score': normalized_score,
             'common_artists': common_artists[:5],  # 上位5アーティストまで
-            'common_tracks': common_tracks[:3],    # 上位3曲まで
+            'common_tracks': [],    # トラックの比較は現在未実装
             'common_moods': list(common_moods)     # 共通の気分
         }
     except Exception as e:
@@ -1841,3 +1818,31 @@ def get_unread_messages_count(request):
     """未読メッセージ数を取得するAPI"""
     count = Message.objects.filter(recipient=request.user, is_read=False).count()
     return JsonResponse({'count': count})
+
+@login_required
+def toggle_follow(request, username):
+    if request.method == 'POST':
+        try:
+            target_user = User.objects.get(username=username)
+            user_profile = request.user.profile
+            target_profile = target_user.profile
+
+            if target_profile in user_profile.following.all():
+                # フォロー解除
+                user_profile.following.remove(target_profile)
+                status = 'unfollowed'
+            else:
+                # フォロー
+                user_profile.following.add(target_profile)
+                status = 'followed'
+
+            # フォロワー数を取得（target_userをフォローしているユーザー数）
+            follower_count = Profile.objects.filter(following=target_profile).count()
+
+            return JsonResponse({
+                'status': status,
+                'follower_count': follower_count
+            })
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'User not found'}, status=404)
+    return JsonResponse({'error': 'Invalid request'}, status=400)

@@ -53,12 +53,13 @@
                     </div>
                 </div>
                 {% if user != profile_user %}
-                    <button class="follow-button {% if user.profile in profile_user.profile.following.all %}following{% endif %}"
-                            data-username="{{ profile_user.username }}">
-                        {% if user.profile in profile_user.profile.following.all %}
+                    <button class="follow-btn {% if profile_user.profile in user.profile.following.all %}following{% endif %}"
+                            data-username="{{ profile_user.username }}"
+                            onclick="toggleFollow(this)">
+                        {% if profile_user.profile in user.profile.following.all %}
                             フォロー中
                         {% else %}
-                            フォローする
+                            フォロー
                         {% endif %}
                     </button>
                 {% else %}
@@ -385,7 +386,7 @@
         
 
         <!-- 共通の音楽趣味セクション -->
-        {% if user != profile_user and user.is_authenticated %}
+        <!-- {% if user != profile_user and user.is_authenticated %}
             <div class="common-interests-section">
                 <h3>{{ profile_user.username }}さんとの共通点</h3>
                 {% if common_interests %}
@@ -421,7 +422,7 @@
                     <p>まだ共通点が見つかっていません。</p>
                 {% endif %}
             </div>
-        {% endif %}
+        {% endif %} -->
 
         <!-- バッジセクション -->
         <div class="badges-section">
@@ -654,25 +655,24 @@
     font-size: 0.9rem;
 }
 
-.follow-button, .edit-profile-button {
-    background: #1db954;
-    color: #fff;
-    border: none;
-    padding: 0.8rem 2rem;
-    border-radius: 500px;
+.follow-btn {
+    padding: 8px 20px;
+    border-radius: 20px;
+    border: 1px solid #1DB954;
+    background-color: #1DB954;
+    color: white;
     font-weight: bold;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
 }
 
-.follow-button:hover, .edit-profile-button:hover {
-    background: #1ed760;
-    transform: scale(1.02);
+.follow-btn.following {
+    background-color: transparent;
+    color: #1DB954;
 }
 
-.follow-button.following {
-    background: transparent;
-    border: 1px solid #fff;
+.follow-btn:hover {
+    opacity: 0.8;
 }
 
 .edit-profile-button {
@@ -2144,27 +2144,43 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // フォローボタンの処理
-document.querySelectorAll('.follow-button').forEach(button => {
-    button.addEventListener('click', function() {
-        const username = this.dataset.username;
-        fetch(`/toggle-follow/${username}/`, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
+function toggleFollow(button) {
+    const username = button.dataset.username;
+    fetch(`/toggle-follow/${username}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        // すべてのフォローボタンを更新
+        document.querySelectorAll(`[data-username="${username}"]`).forEach(btn => {
             if (data.status === 'followed') {
-                this.textContent = 'フォロー中';
-                this.classList.add('following');
+                btn.textContent = 'フォロー中';
+                btn.classList.add('following');
             } else {
-                this.textContent = 'フォローする';
-                this.classList.remove('following');
+                btn.textContent = 'フォロー';
+                btn.classList.remove('following');
             }
-            // フォロワー数を更新
-            const followerCount = document.querySelector('.profile-stats .count');
+        });
+
+        // フォロワー数を更新
+        const followerCount = document.querySelector('.followers-count');
+        if (followerCount) {
             followerCount.textContent = data.follower_count;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+// DOMContentLoadedイベントでフォローボタンにイベントリスナーを追加
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('[data-username]').forEach(button => {
+        button.addEventListener('click', function() {
+            toggleFollow(this);
         });
     });
 });

@@ -53,4 +53,5 @@ urlpatterns = [
     path('messages/new/<str:username>/', views.new_conversation, name='new_conversation'),
     path('api/messages/send/', views.send_message, name='send_message'),
     path('api/messages/unread-count/', views.get_unread_messages_count, name='get_unread_messages_count'),
+    path('toggle-follow/<str:username>/', views.toggle_follow, name='toggle_follow'),
 ] 
