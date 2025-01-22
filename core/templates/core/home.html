@@ -42,6 +42,7 @@
                 <div class="feed-filters">
                     <button class="filter-button active" data-filter="all">すべて</button>
                     <button class="filter-button" data-filter="following">フォロー中</button>
+                    <button class="filter-button" data-filter="today">今日</button>
                 </div>
                 <a href="{% url 'core:create_post' %}" class="create-post-button">
                     <i class="bi bi-plus-lg"></i>
@@ -103,23 +104,27 @@
                 <div class="recommended-users">
                     {% for recommendation in recommended_users %}
                         {% if recommendation.user.username %}
-                        <div class="recommended-user">
-                            <div class="user-info">
-                                {% if recommendation.user.profile.avatar %}
-                                    <img src="{{ recommendation.user.profile.avatar.url }}" alt="{{ recommendation.user.username }}">
-                                {% else %}
-                                    <img src="{% static 'images/default-avatar.svg' %}" alt="{{ recommendation.user.username }}">
-                                {% endif %}
-                                <div class="user-details">
-                                    <a href="{% url 'core:profile' recommendation.user.username %}">{{ recommendation.user.username }}</a>
-                                    <span class="compatibility">音楽の相性: {{ recommendation.compatibility_score }}%</span>
+                        <div class="recommended-user-container">
+                            <a href="{% url 'core:profile' recommendation.user.username %}">
+                            <div class="recommended-user">
+                                <div class="user-info-recommended">
+                                    {% if recommendation.user.profile.avatar %}
+                                        <img src="{{ recommendation.user.profile.avatar.url }}" alt="{{ recommendation.user.username }}">
+                                    {% else %}
+                                        <img src="{% static 'images/default-avatar.svg' %}" alt="{{ recommendation.user.username }}">
+                                    {% endif %}
+                                    <div class="user-flex">
+                                        <span class="user-name">{{ recommendation.user.username }}</span>
+                                        <span class="compatibility">音楽の相性: {{ recommendation.compatibility_score }}%</span>
+                                    </div>
                                 </div>
-                                <button 
-                                            onclick="followUser('{{ recommendation.user.username }}', this)" 
-                                            class="follow-button {% if recommendation.user in request.user.profile.following.all %}following{% endif %}">
-                                            {% if recommendation.user in request.user.profile.following.all %}フォロー中{% else %}フォローする{% endif %}
-                                        </button>
                             </div>
+                            </a>
+                            <button 
+                                onclick="followUser('{{ recommendation.user.username }}', this)" 
+                                class="follow-button {% if recommendation.user in request.user.profile.following.all %}following{% endif %}">
+                                {% if recommendation.user in request.user.profile.following.all %}フォロー中{% else %}フォローする{% endif %}
+                            </button>
                         </div>
                         {% endif %}
                     {% endfor %}
@@ -319,6 +324,17 @@
     min-width: 0;
 }
 
+
+.user-name {
+    color: #fff;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+}
+
+.recommended-user-container {
+    position: relative;
+}
+
 .sidebar-right {
     position: sticky;
     top: 2rem;
@@ -453,9 +469,6 @@
 }
 
 .post-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     margin-bottom: 1.2rem;
 }
 
@@ -505,14 +518,15 @@
     font-size: 18px;
     margin-bottom: 1.5rem;
     line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .post-meta {
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .post-actions {
@@ -539,7 +553,7 @@
     padding: 0.5rem;
     cursor: pointer;
     transition: all 0.3s;
-    border-radius: 500px;
+    border-radius: 50%;
 }
 
 .likes-list-button {
@@ -719,10 +733,12 @@
     flex: 1;
     text-decoration: none;
     color: inherit;
+    max-width: 80%;
 }
 
 .trending-info {
     flex: 1;
+    width: 70%;
 }
 
 .trending-info h4 {
@@ -737,11 +753,13 @@
     color: #b3b3b3;
     margin: 0 0 0.5rem;
     display: -webkit-box;
-    -webkit-line-clamp: 1;
+    -webkit-line-clamp: 2;
+    max-width: 90%;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.4;
+    max-height: 2.8em;
 }
 
 .trending-stats {
@@ -796,9 +814,18 @@
     display: flex;
     align-items: center;
     gap: 0.8rem;
+    position: relative;
+    justify-content: space-between;
 }
 
-.user-info img {
+.user-info-recommended {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    position: relative;
+}
+
+.user-info img, .user-info-recommended img {
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -806,10 +833,14 @@
 
 .user-details {
     display: flex;
+}
+
+.user-flex {
+    display: flex;
     flex-direction: column;
 }
 
-.user-details a {
+.user-flex a {
     color: #fff;
     text-decoration: none;
     font-weight: 500;
@@ -833,21 +864,24 @@
     cursor: pointer;
     transition: all 0.3s ease;
     z-index: 10;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 16px;
 }
 
 .follow-button:hover {
-    background-color: rgba(29, 185, 84, 0.1);
+    background-color: var(--spotify-green);
+    color: white;
 }
 
 .follow-button.following {
-    background-color: #1DB954;
+    background-color: var(--spotify-green);
     color: white;
 }
 
 .follow-button.following:hover {
-    background-color: #ff4444;
-    border-color: #ff4444;
-    content: 'フォロー解除';
+    opacity: 0.8;
 }
 
 .loading {
@@ -1563,48 +1597,37 @@
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const storiesData = {};
-    {% for user_data in stories_by_user %}
-    storiesData["{{ forloop.counter }}"] = {{ user_data.stories|safe }};
-    {% endfor %}
-    
-    // いいねボタンの処理
-    const setupLikeButtons = () => {
-        document.querySelectorAll('.like-button').forEach(button => {
-            button.addEventListener('click', function() {
-                const postId = this.dataset.postId;
-                fetch(`/post/${postId}/like/`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+// いいねボタンの処理
+const setupLikeButtons = () => {
+    document.querySelectorAll('.like-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const postId = this.dataset.postId;
+            fetch(`/post/${postId}/like/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const likeCount = this.querySelector('.like-count');
+                    likeCount.textContent = data.like_count;
+                    if (data.liked) {
+                        this.classList.add('liked');
+                        this.querySelector('i').classList.add('bi-heart-fill');
+                        this.querySelector('i').classList.remove('bi-heart');
+                    } else {
+                        this.classList.remove('liked');
+                        this.querySelector('i').classList.remove('bi-heart-fill');
+                        this.querySelector('i').classList.add('bi-heart');
                     }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        const likeCount = this.querySelector('.like-count');
-                        likeCount.textContent = data.like_count;
-                        if (data.liked) {
-                            this.classList.add('liked');
-                            this.querySelector('i').classList.add('bi-heart-fill');
-                            this.querySelector('i').classList.remove('bi-heart');
-                        } else {
-                            this.classList.remove('liked');
-                            this.querySelector('i').classList.remove('bi-heart-fill');
-                            this.querySelector('i').classList.add('bi-heart');
-                        }
-                    }
-                });
+                }
             });
         });
-    };
-    
-    setupLikeButtons();
-});
-</script>
+    });
+};
 
-<script>
 document.addEventListener('DOMContentLoaded', function() {
     const filterButtons = document.querySelectorAll('.filter-button');
     const sortSelect = document.getElementById('postSort');
@@ -1629,21 +1652,37 @@ document.addEventListener('DOMContentLoaded', function() {
     // 投稿を取得する関数
     function fetchPosts() {
         const sort = sortSelect.value;
+        const loadingHtml = '<div class="loading"><i class="bi bi-arrow-repeat spinning"></i></div>';
+        postsContainer.innerHTML = loadingHtml;
+
         fetch(`/filter_posts/?filter=${currentFilter}&sort=${sort}`, {
             headers: {
-                'X-Requested-With': 'XMLHttpRequest'
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
             }
         })
-        .then(response => response.text())
-        .then(html => {
-            postsContainer.innerHTML = html;
-            // いいねボタンのイベントリスナーを再設定
-            setupLikeButtons();
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'success') {
+                postsContainer.innerHTML = data.html;
+                setupLikeButtons();
+            } else {
+                throw new Error(data.message || '投稿の読み込みに失敗しました。');
+            }
         })
         .catch(error => {
             console.error('Error:', error);
+            postsContainer.innerHTML = `<div class="error">${error.message || '投稿の読み込みに失敗しました。'}</div>`;
         });
     }
+
+    // 初期化時にいいねボタンのイベントリスナーを設定
+    setupLikeButtons();
 });
 </script>
 
@@ -1682,65 +1721,64 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // コメントを送信する関数
-    window.submitComment = function(event, postId) {
-        event.preventDefault();
-        const form = event.target;
-        const input = form.querySelector('input[name="comment"]');
-        const content = input.value.trim();
+    // window.submitComment = function(event, postId) {
+    //     event.preventDefault();
+    //     const form = event.target;
+    //     const input = form.querySelector('input[name="comment"]');
+    //     const content = input.value.trim();
         
-        if (!content) return;
+    //     if (!content) return;
 
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    //     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         
-        fetch(`/post/${postId}/comment/`, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': csrfToken,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ content: content })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                // コメントリストを更新
-                const commentsList = document.querySelector(`#comments-${postId} .comments-list`);
-                const newComment = document.createElement('div');
-                newComment.className = 'comment';
-                newComment.innerHTML = `
-                    <div class="comment-user">
-                        <img src="${data.comment.avatar_url || '/static/images/default-avatar.svg'}" alt="${data.comment.username}">
-                        <div class="comment-content">
-                            <div class="comment-header">
-                                <span class="comment-username">${data.comment.username}</span>
-                                <span class="comment-time">たった今</span>
-                            </div>
-                            <p class="comment-text">${data.comment.content}</p>
-                        </div>
-                    </div>
-                `;
-                commentsList.appendChild(newComment);
+    //     fetch(`/post/${postId}/comment/`, {
+    //         method: 'POST',
+    //         headers: {
+    //             'X-CSRFToken': csrfToken,
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify({ content: content })
+    //     })
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         if (data.status === 'success') {
+    //             // コメントリストを更新
+    //             const commentsList = document.querySelector(`#comments-${postId} .comments-list`);
+    //             const newComment = document.createElement('div');
+    //             newComment.className = 'comment';
+    //             newComment.innerHTML = `
+    //                 <div class="comment-user">
+    //                     <img src="${data.comment.avatar_url || '/static/images/default-avatar.svg'}" alt="${data.comment.username}">
+    //                     <div class="comment-content">
+    //                         <div class="comment-header">
+    //                             <span class="comment-username">${data.comment.username}</span>
+    //                         </div>
+    //                         <p class="comment-text">${data.comment.content}</p>
+    //                     </div>
+    //                 </div>
+    //             `;
+    //             commentsList.appendChild(newComment);
                 
-                // コメント数を更新
-                const commentCount = document.querySelector(`[data-post-id="${postId}"].comment-button .comment-count`);
-                const currentCount = parseInt(commentCount.textContent);
-                commentCount.textContent = currentCount + 1;
+    //             // コメント数を更新
+    //             const commentCount = document.querySelector(`[data-post-id="${postId}"].comment-button .comment-count`);
+    //             const currentCount = parseInt(commentCount.textContent);
+    //             commentCount.textContent = currentCount + 1;
                 
-                // 入力フィールドをクリア
-                input.value = '';
+    //             // 入力フィールドをクリア
+    //             input.value = '';
                 
-                // コメントセクションを表示
-                const commentsSection = document.getElementById(`comments-${postId}`);
-                commentsSection.style.display = 'block';
-            } else {
-                alert('コメントの投稿に失敗しました。');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('エラーが発生しました。');
-        });
-    };
+    //             // コメントセクションを表示
+    //             const commentsSection = document.getElementById(`comments-${postId}`);
+    //             commentsSection.style.display = 'block';
+    //         } else {
+    //             alert('コメントの投稿に失敗しました。');
+    //         }
+    //     })
+    //     .catch(error => {
+    //         console.error('Error:', error);
+    //         alert('エラーが発生しました。');
+    //     });
+    // };
 
     // コメントフォームのEnterキー処理
     document.querySelectorAll('.comment-form input[name="comment"]').forEach(input => {
@@ -1912,4 +1950,5 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
 {% endblock %} 

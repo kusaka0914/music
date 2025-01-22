@@ -9,6 +9,7 @@
         {% if notifications %}
             <div class="notifications-list">
                 {% for notification in notifications %}
+                <div class="notification-item-container">
                     <a href="{% url 'core:notification_redirect' notification.id %}" class="notification-item {% if not notification.is_read %}unread{% endif %}">
                         <div class="notification-avatar">
                             {% if notification.sender.profile.avatar %}
@@ -37,13 +38,6 @@
                                 <strong>{{ notification.sender.username }}</strong>
                                 {% if notification.notification_type == 'follow' %}
                                     があなたをフォローしました
-                                    <button class="follow-button" onclick="followUser('{{ notification.sender.username }}', this)">
-                                        {% if notification.sender in user.following.all %}
-                                            フォロー中
-                                        {% else %}
-                                            フォローする
-                                        {% endif %}
-                                    </button>
                                 {% elif notification.notification_type == 'like_post' %}
                                     があなたの投稿にいいねしました
                                 {% elif notification.notification_type == 'comment_post' %}
@@ -56,6 +50,16 @@
                             <span class="notification-time">{{ notification.created_at|timesince }}前</span>
                         </div>
                     </a>
+                    {% if notification.notification_type == 'follow' %}
+                    <button class="follow-button" onclick="followUser('{{ notification.sender.username }}', this)">
+                        {% if notification.sender in user.following.all %}
+                            フォロー中
+                        {% else %}
+                            フォローする
+                        {% endif %}
+                    </button>
+                    {% endif %}
+                    </div>
                 {% endfor %}
             </div>
         {% else %}
@@ -92,9 +96,8 @@
     gap: 12px;
 }
 
-.notification-item {
+.notification-item-container {
     display: flex;
-    align-items: flex-start;
     padding: 16px;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 12px;
@@ -102,9 +105,21 @@
     text-decoration: none;
     color: #fff;
     transition: all 0.2s;
+    justify-content: space-between;
+    align-items: center;
+}   
+
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 16px;
+    text-decoration: none;
+    color: #fff;
+    transition: all 0.2s;
+    width: 80%;
 }
 
-.notification-item:hover {
+.notification-item-container:hover {
     background: rgba(255, 255, 255, 0.1);
     transform: translateY(-2px);
 }

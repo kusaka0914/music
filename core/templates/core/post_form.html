@@ -11,38 +11,145 @@
     <form method="post" class="post-form">
         {% csrf_token %}
         
-        <!-- 曲検索セクション -->
-        <div class="form-section search-section">
-            <div class="search-box">
-                <i class="bi bi-search"></i>
-                <input type="text" id="song-search" placeholder="曲名やアーティスト名で検索..." autocomplete="off">
-                <div class="search-animation">
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                </div>
-            </div>
-            <div id="search-results" class="search-results" style="display: none;"></div>
-            
-            <!-- 選択された曲の表示 -->
-            <div id="selected-track" class="selected-track" style="display: none;">
-                <div class="track-image-container">
-                    <img id="track-image" src="" alt="アルバムアート">
-                    <div class="spotify-overlay">
-                        <i class="bi bi-spotify"></i>
+        <!-- 投稿対象の選択 -->
+        <div class="form-section target-type-section">
+            <h3>投稿対象を選択</h3>
+            <div class="target-type-options">
+                <label class="target-type-option">
+                    <input type="radio" name="target_type" value="track" checked>
+                    <div class="target-type-content">
+                        <div class="target-type-flex">
+                            <i class="bi bi-music-note"></i>
+                            <span>曲</span>
+                        </div>
+                        <p class="target-type-description">曲について投稿</p>
                     </div>
-                </div>
-                <div class="track-info">
-                    <h3 id="track-title"></h3>
-                    <p id="track-artist"></p>
-                </div>
-                <button type="button" class="change-track-btn">
-                    <i class="bi bi-pencil"></i>
-                </button>
-                <input type="hidden" name="spotify_track_id" id="spotify-track-id">
-                <input type="hidden" name="title" id="title">
-                <input type="hidden" name="artist" id="artist">
-                <input type="hidden" name="album_image" id="album-image">
+                </label>
+                <label class="target-type-option">
+                    <input type="radio" name="target_type" value="artist">
+                    <div class="target-type-content">
+                        <div class="target-type-flex">
+                            <i class="bi bi-person-circle"></i>
+                            <span>アーティスト</span>
+                        </div>
+                        <p class="target-type-description">アーティストについて投稿</p>
+                    </div>
+                </label>
+                <label class="target-type-option">
+                    <input type="radio" name="target_type" value="album">
+                    <div class="target-type-content">
+                        <div class="target-type-flex">
+                            <i class="bi bi-disc"></i>
+                            <span>アルバム</span>
+                        </div>
+                        <p class="target-type-description">アルバムについて投稿</p>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- 検索セクション -->
+        <div class="form-section search-section">
+            <div class="search-box track-search" data-target-type="track">
+                <i class="bi bi-search search-icon"></i>
+                <input type="text" placeholder="曲を検索..." class="search-input">
+                <div class="search-results"></div>
+            </div>
+            <div class="search-box artist-search" data-target-type="artist" style="display: none;">
+                <i class="bi bi-search search-icon"></i>
+                <input type="text" placeholder="アーティストを検索..." class="search-input">
+                <div class="search-results"></div>
+            </div>
+            <div class="search-box album-search" data-target-type="album" style="display: none;">
+                <i class="bi bi-search search-icon"></i>
+                <input type="text" placeholder="アルバムを検索..." class="search-input">
+                <div class="search-results"></div>
+            </div>
+        </div>
+
+        <!-- 投稿タイプの選択 -->
+        <div class="form-section post-type-section">
+            <h3>投稿の種類を選択</h3>
+            <!-- 曲の投稿タイプ -->
+            <div class="post-type-options track-types">
+                <label class="post-type-option">
+                    <input type="radio" name="post_type" value="lyrics_analysis">
+                    <div class="post-type-content">
+                        <i class="bi bi-journal-text"></i>
+                        <span>歌詞考察</span>
+                        <p class="post-type-description">歌詞の意味や解釈を共有</p>
+                    </div>
+                </label>
+                <label class="post-type-option">
+                    <input type="radio" name="post_type" value="track_impression">
+                    <div class="post-type-content">
+                        <i class="bi bi-chat-heart"></i>
+                        <span>感想共有</span>
+                        <p class="post-type-description">曲の感想や印象を共有</p>
+                    </div>
+                </label>
+                <label class="post-type-option">
+                    <input type="radio" name="post_type" value="track_memory">
+                    <div class="post-type-content">
+                        <i class="bi bi-chat-dots"></i>
+                        <span>思い出共有</span>
+                        <p class="post-type-description">曲の思い出を共有</p>
+                    </div>
+                </label>
+            </div>
+            <!-- アーティストの投稿タイプ -->
+            <div class="post-type-options artist-types" style="display: none;">
+                <label class="post-type-option">
+                    <input type="radio" name="post_type" value="artist_introduction">
+                    <div class="post-type-content">
+                        <i class="bi bi-person-lines-fill"></i>
+                        <span>アーティスト紹介</span>
+                        <p class="post-type-description">歌手の魅力を紹介</p>
+                    </div>
+                </label>
+                <label class="post-type-option">
+                    <input type="radio" name="post_type" value="artist_impression">
+                    <div class="post-type-content">
+                        <i class="bi bi-chat-heart"></i>
+                        <span>感想共有</span>
+                        <p class="post-type-description">歌手への想いを共有</p>
+                    </div>
+                </label>
+                <label class="post-type-option">
+                    <input type="radio" name="post_type" value="artist_memory">
+                    <div class="post-type-content">
+                        <i class="bi bi-chat-dots"></i>
+                        <span>思い出共有</span>
+                        <p class="post-type-description">歌手の思い出を共有</p>
+                    </div>
+                </label>
+            </div>
+            <!-- アルバムの投稿タイプ -->
+            <div class="post-type-options album-types" style="display: none;">
+                <label class="post-type-option">
+                    <input type="radio" name="post_type" value="album_review">
+                    <div class="post-type-content">
+                        <i class="bi bi-star"></i>
+                        <span>アルバムレビュー</span>
+                        <p class="post-type-description">アルバムの講評</p>
+                    </div>
+                </label>
+                <label class="post-type-option">
+                    <input type="radio" name="post_type" value="album_impression">
+                    <div class="post-type-content">
+                        <i class="bi bi-chat-heart"></i>
+                        <span>感想共有</span>
+                        <p class="post-type-description">アルバムの感想を共有</p>
+                    </div>
+                </label>
+                <label class="post-type-option">
+                    <input type="radio" name="post_type" value="album_memory">
+                    <div class="post-type-content">
+                        <i class="bi bi-chat-dots"></i>
+                        <span>思い出共有</span>
+                        <p class="post-type-description">アルバムの思い出を共有</p>
+                    </div>
+                </label>
             </div>
         </div>
 
@@ -54,55 +161,6 @@
             </div>
         </div>
 
-        <!-- おすすめシーン -->
-        <div class="form-section scene-section">
-            <h3>どんな時におすすめ？</h3>
-            <div class="scene-options">
-                <label class="scene-option">
-                    <input type="radio" name="scene" value="morning" required>
-                    <span class="scene-content">
-                        <span class="emoji">🌅</span>
-                        <span class="label">朝の目覚めに</span>
-                    </span>
-                </label>
-                <label class="scene-option">
-                    <input type="radio" name="scene" value="night">
-                    <span class="scene-content">
-                        <span class="emoji">🌙</span>
-                        <span class="label">夜にゆっくり</span>
-                    </span>
-                </label>
-                <label class="scene-option">
-                    <input type="radio" name="scene" value="workout">
-                    <span class="scene-content">
-                        <span class="emoji">🏃</span>
-                        <span class="label">運動中に</span>
-                    </span>
-                </label>
-                <label class="scene-option">
-                    <input type="radio" name="scene" value="work">
-                    <span class="scene-content">
-                        <span class="emoji">💻</span>
-                        <span class="label">作業中に</span>
-                    </span>
-                </label>
-                <label class="scene-option">
-                    <input type="radio" name="scene" value="drive">
-                    <span class="scene-content">
-                        <span class="emoji">🚗</span>
-                        <span class="label">ドライブに</span>
-                    </span>
-                </label>
-                <label class="scene-option">
-                    <input type="radio" name="scene" value="relax">
-                    <span class="scene-content">
-                        <span class="emoji">😌</span>
-                        <span class="label">リラックスタイムに</span>
-                    </span>
-                </label>
-            </div>
-        </div>
-
         <button type="submit" class="submit-button" disabled>
             シェアする
         </button>
@@ -110,12 +168,22 @@
 </div>
 
 <style>
+.target-type-flex {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .post-form-container {
     max-width: 800px;
     margin: 3rem auto;
     padding: 2.5rem;
     border-radius: 24px;
     color: #fff;
+}
+
+.target-type-section h3, .post-type-section h3 {
+    font-size: 20px;
 }
 
 .form-header {
@@ -174,7 +242,7 @@
     outline: none;
 } */
 
-.search-box i {
+.search-box .search-icon {
     position: absolute;
     left: 1rem;
     top: 50%;
@@ -213,48 +281,139 @@
 /* 検索結果 */
 .search-results {
     position: absolute;
-    width: 100%;
-    background: rgba(23, 23, 23, 0.95);
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(30, 30, 30, 0.95);
     border-radius: 12px;
-    max-height: 400px;
+    margin-top: 0.5rem;
+    max-height: 300px;
     overflow-y: auto;
     z-index: 1000;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .search-result-item {
     display: flex;
     align-items: center;
     padding: 1rem;
-    gap: 1rem;
     cursor: pointer;
-    transition: all 0.3s ease;
-    border-radius: 8px;
-    margin: 0.5rem;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* .search-result-item:hover {
-    background: rgba(29, 185, 84, 0.1);
-    transform: translateX(5px);
-} */
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
 
 .search-result-item img {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    object-fit: cover;
+    margin-right: 1rem;
+}
+
+.search-result-item div {
+    flex-grow: 1;
 }
 
 .search-result-item h4 {
+    margin: 0;
+    font-size: 1rem;
+    color: #fff;
+}
+
+.search-result-item p {
+    margin: 0.2rem 0 0;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* 選択された項目のスタイル */
+.selected-item {
+    background: rgba(30, 30, 30, 0.95);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-top: 0.5rem;
+}
+
+.selected-content {
+    display: flex;
+    align-items: center;
+}
+
+.selected-content img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-right: 1rem;
+}
+
+.selected-info {
+    flex-grow: 1;
+}
+
+.selected-info h4 {
     margin: 0;
     font-size: 1.1rem;
     color: #fff;
 }
 
-.search-result-item p {
-    margin: 0.3rem 0 0;
-    color: rgba(255, 255, 255, 0.7);
+.selected-info p {
+    margin: 0.2rem 0 0;
     font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.change-selection-btn {
+    background: transparent;
+    border: none;
+    color: #1DB954;
+    cursor: pointer;
+    margin-left: 1rem;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.change-selection-btn:hover {
+    background: rgba(29, 185, 84, 0.1);
+}
+
+.change-selection-btn i {
+    font-size: 1.2rem;
+}
+
+/* エラーメッセージと検索結果なしのスタイル */
+.search-error,
+.no-results {
+    padding: 1rem;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* スクロールバーのスタイル */
+.search-results::-webkit-scrollbar {
+    width: 8px;
+}
+
+.search-results::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.search-results::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+.search-results::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4);
 }
 
 /* 選択された曲 */
@@ -494,118 +653,543 @@ textarea:focus {
 
 .form-section:nth-child(2) { animation-delay: 0.1s; }
 .form-section:nth-child(3) { animation-delay: 0.2s; }
+
+/* 投稿タイプのスタイル */
+.post-type-section {
+    margin-top: 2rem;
+}
+
+.post-type-section h3 {
+    margin-bottom: 1rem;
+    color: var(--spotify-white);
+}
+
+.post-type-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.post-type-option {
+    cursor: pointer;
+    position: relative;
+}
+
+.post-type-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+}
+
+.post-type-content {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.post-type-content i {
+    font-size: 2rem;
+    color: var(--spotify-green);
+    margin-bottom: 0.5rem;
+}
+
+.post-type-content span {
+    display: block;
+    font-size: 1.1rem;
+    color: var(--spotify-white);
+    margin-bottom: 0.5rem;
+}
+
+.post-type-description {
+    font-size: 0.9rem;
+    color: var(--spotify-gray);
+    margin: 0;
+}
+
+.post-type-option input[type="radio"]:checked + .post-type-content {
+    background: rgba(29, 185, 84, 0.1);
+    border: 2px solid var(--spotify-green);
+}
+
+.post-type-option:hover .post-type-content {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* 投稿対象の選択スタイル */
+.target-type-section {
+    margin-bottom: 2rem;
+}
+
+.target-type-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 3fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.target-type-option {
+    cursor: pointer;
+}
+
+.target-type-option input[type="radio"] {
+    display: none;
+}
+
+.target-type-content {
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.target-type-option input[type="radio"]:checked + .target-type-content {
+    background: rgba(29, 185, 84, 0.3);
+    transform: translateY(-2px);
+}
+
+.target-type-content i {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #1DB954;
+}
+
+.target-type-content span {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.target-type-description {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+}
+
+
+/* 検索ボックスのスタイル */
+.search-box {
+    margin-bottom: 1.5rem;
+}
+
+.search-box input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: #1DB954;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.search-box i {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.preview-btn {
+    background: none;
+    border: none;
+    color: #1DB954;
+    cursor: pointer;
+    padding: 8px;
+    margin-left: 8px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.preview-btn:hover {
+    background: rgba(29, 185, 84, 0.1);
+}
+
+.preview-btn i {
+    font-size: 1.5rem;
+}
+
+.search-result-item small {
+    display: block;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.8rem;
+    margin-top: 2px;
+}
+
+.artist-details,
+.album-details {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.3rem;
+}
+
+.artist-details small,
+.album-details small {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+}
+
+.search-result-item div {
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.search-result-item h4 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const songSearch = document.getElementById('song-search');
-    const searchResults = document.getElementById('search-results');
-    const selectedTrack = document.getElementById('selected-track');
+    // 投稿対象の選択に応じて検索ボックスと投稿タイプを切り替える
+    const targetTypeInputs = document.querySelectorAll('input[name="target_type"]');
+    const searchBoxes = document.querySelectorAll('.search-box');
+    const postTypeOptions = document.querySelectorAll('.post-type-options');
     const submitButton = document.querySelector('.submit-button');
     let searchTimeout;
 
-    // 曲検索
-    songSearch.addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        const query = this.value.trim();
-        
-        if (query.length < 2) {
-            searchResults.style.display = 'none';
-            return;
-        }
+    // 検索ボックスと投稿タイプの切り替え
+    targetTypeInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            // 検索ボックスの切り替え
+            searchBoxes.forEach(box => {
+                if (box.dataset.targetType === this.value) {
+                    box.style.display = 'block';
+                } else {
+                    box.style.display = 'none';
+                }
+            });
 
-        searchTimeout = setTimeout(() => {
-            fetch(`/spotify/search/?q=${encodeURIComponent(query)}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('検索に失敗しました');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.tracks && data.tracks.length > 0) {
-                        searchResults.innerHTML = data.tracks.map(track => `
-                            <div class="search-result-item" data-track-id="${track.id}" 
-                                data-title="${track.title}"
-                                data-artist="${track.artist}"
-                                data-image="${track.imageUrl}">
-                                <img src="${track.imageUrl}" alt="${track.title}">
-                                <div>
-                                    <h4>${track.title}</h4>
-                                    <p>${track.artist}</p>
+            // 投稿タイプの切り替え
+            postTypeOptions.forEach(options => {
+                if (options.classList.contains(`${this.value}-types`)) {
+                    options.style.display = 'grid';
+                } else {
+                    options.style.display = 'none';
+                }
+            });
+
+            // 選択状態をリセット
+            clearSelection();
+            
+            // 投稿ボタンを無効化
+            submitButton.disabled = true;
+        });
+    });
+
+    // 検索機能の実装
+    searchBoxes.forEach(searchBox => {
+        const input = searchBox.querySelector('.search-input');
+        const results = searchBox.querySelector('.search-results');
+        const targetType = searchBox.dataset.targetType;
+
+        input.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            const query = this.value.trim();
+            
+            if (query.length < 2) {
+                results.style.display = 'none';
+                return;
+            }
+
+            // 検索中は既存の選択をクリア
+            const existingSelected = searchBox.querySelector('.selected-item');
+            if (existingSelected) {
+                existingSelected.remove();
+                clearHiddenFields();
+                submitButton.disabled = true;
+            }
+
+            searchTimeout = setTimeout(() => {
+                fetch(`/spotify/search/${targetType}/?q=${encodeURIComponent(query)}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('検索に失敗しました');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        displaySearchResults(data, results, targetType);
+                    })
+                    .catch(error => {
+                        console.error('検索エラー:', error);
+                        results.innerHTML = '<div class="search-error">検索中にエラーが発生しました</div>';
+                        results.style.display = 'block';
+                    });
+            }, 300);
+        });
+
+        // 検索ボックス以外をクリックしたときに結果を非表示にする
+        document.addEventListener('click', function(e) {
+            if (!searchBox.contains(e.target)) {
+                results.style.display = 'none';
+            }
+        });
+    });
+
+    // 検索結果の表示
+    function displaySearchResults(data, resultsContainer, targetType) {
+        let resultsHtml = '';
+
+        switch (targetType) {
+            case 'track':
+                if (data.tracks && data.tracks.length > 0) {
+                    resultsHtml = data.tracks.map(track => `
+                        <div class="search-result-item" 
+                            data-id="${track.id}"
+                            data-type="track"
+                            data-title="${track.title}"
+                            data-artist="${track.artist}"
+                            data-image="${track.imageUrl}"
+                            data-preview-url="${track.preview_url || ''}">
+                            <img src="${track.imageUrl}" alt="${track.title}">
+                            <div>
+                                <h4>${track.title}</h4>
+                                <p>${track.artist}</p>
+                            </div>
+                            ${track.preview_url ? `
+                                <button class="preview-btn" onclick="togglePreview(event, '${track.preview_url}')">
+                                    <i class="bi bi-play-circle"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    `).join('');
+                }
+                break;
+
+            case 'artist':
+                if (data.artists && data.artists.length > 0) {
+                    resultsHtml = data.artists.map(artist => `
+                        <div class="search-result-item"
+                            data-id="${artist.id}"
+                            data-type="artist"
+                            data-name="${artist.name}"
+                            data-image="${artist.imageUrl}"
+                            data-external-url="${artist.external_url || ''}">
+                            <img src="${artist.imageUrl}" alt="${artist.name}">
+                            <div>
+                                <h4>${artist.name}</h4>
+                                <p>${artist.genres.join(', ') || 'ジャンル未設定'}</p>
+                                <div class="artist-details">
+                                    <small>フォロワー: ${formatNumber(artist.followers)}人</small>
+                                    <small>人気度: ${artist.popularity}%</small>
                                 </div>
                             </div>
-                        `).join('');
-                        searchResults.style.display = 'block';
-                        
-                        // 検索結果クリックイベント
-                        document.querySelectorAll('.search-result-item').forEach(item => {
-                            item.addEventListener('click', function() {
-                                const trackId = this.dataset.trackId;
-                                const title = this.dataset.title;
-                                const artist = this.dataset.artist;
-                                const image = this.dataset.image;
+                        </div>
+                    `).join('');
+                }
+                break;
 
-                                document.getElementById('spotify-track-id').value = trackId;
-                                document.getElementById('title').value = title;
-                                document.getElementById('artist').value = artist;
-                                document.getElementById('album-image').value = image;
-                                
-                                document.getElementById('track-image').src = image;
-                                document.getElementById('track-title').textContent = title;
-                                document.getElementById('track-artist').textContent = artist;
-                                
-                                selectedTrack.style.display = 'flex';
-                                searchResults.style.display = 'none';
-                                songSearch.value = '';
-                                
-                                validateForm();
-                            });
-                        });
-                    } else {
-                        searchResults.innerHTML = '<div class="no-results">検索結果が見つかりませんでした</div>';
-                        searchResults.style.display = 'block';
-                    }
-                })
-                .catch(error => {
-                    console.error('Search error:', error);
-                    searchResults.innerHTML = '<div class="no-results">検索中にエラーが発生しました</div>';
-                    searchResults.style.display = 'block';
-                });
-        }, 500);
-    });
+            case 'album':
+                if (data.albums && data.albums.length > 0) {
+                    resultsHtml = data.albums.map(album => `
+                        <div class="search-result-item"
+                            data-id="${album.id}"
+                            data-type="album"
+                            data-name="${album.name}"
+                            data-artist="${album.artist}"
+                            data-image="${album.imageUrl}"
+                            data-external-url="${album.external_url || ''}">
+                            <img src="${album.imageUrl}" alt="${album.name}">
+                            <div>
+                                <h4>${album.name}</h4>
+                                <p>${album.artist}</p>
+                                <div class="album-details">
+                                    <small>リリース: ${album.release_date}</small>
+                                    <small>収録曲: ${album.total_tracks}曲</small>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                break;
+        }
 
-    // 文字数カウント
-    const textarea = document.querySelector('textarea');
-    const characterCount = document.querySelector('.character-count');
-    
-    textarea.addEventListener('input', function() {
-        const count = this.value.length;
-        characterCount.textContent = `${count}/200`;
-        validateForm();
-    });
+        if (!resultsHtml) {
+            resultsHtml = '<div class="no-results">検索結果が見つかりませんでした</div>';
+        }
 
-    // フォームバリデーション
-    function validateForm() {
-        const trackId = document.getElementById('spotify-track-id').value;
-        const scene = document.querySelector('input[name="scene"]:checked');
-        const description = document.querySelector('textarea[name="description"]').value.trim();
-        
-        submitButton.disabled = !trackId || !scene || !description;
+        resultsContainer.innerHTML = resultsHtml;
+        resultsContainer.style.display = 'block';
+
+        // 検索結果クリックイベントの設定
+        resultsContainer.querySelectorAll('.search-result-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                // プレビューボタンクリック時は選択処理を実行しない
+                if (!e.target.closest('.preview-btn')) {
+                    handleSelection(this);
+                }
+            });
+        });
     }
 
-    // シーン選択時のバリデーション
-    document.querySelectorAll('input[name="scene"]').forEach(radio => {
-        radio.addEventListener('change', validateForm);
-    });
+    // 数値のフォーマット（カンマ区切り）
+    function formatNumber(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 
-    // 曲変更ボタンのイベント
-    document.querySelector('.change-track-btn').addEventListener('click', function() {
-        selectedTrack.style.display = 'none';
-        songSearch.value = '';
-        document.getElementById('spotify-track-id').value = '';
-        validateForm();
-    });
+    // プレビュー再生の制御
+    let currentAudio = null;
+    let currentPlayButton = null;
+
+    function togglePreview(event, previewUrl) {
+        event.stopPropagation();
+        
+        const button = event.currentTarget;
+        const icon = button.querySelector('i');
+
+        if (currentAudio && currentAudio.src === previewUrl) {
+            // 同じ曲が再生中の場合は停止
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+            currentAudio = null;
+            icon.classList.replace('bi-pause-circle', 'bi-play-circle');
+            currentPlayButton = null;
+        } else {
+            // 他の曲が再生中の場合は停止
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+                currentPlayButton.querySelector('i').classList.replace('bi-pause-circle', 'bi-play-circle');
+            }
+
+            // 新しい曲を再生
+            currentAudio = new Audio(previewUrl);
+            currentAudio.play();
+            icon.classList.replace('bi-play-circle', 'bi-pause-circle');
+            currentPlayButton = button;
+
+            // 再生終了時の処理
+            currentAudio.onended = function() {
+                icon.classList.replace('bi-pause-circle', 'bi-play-circle');
+                currentAudio = null;
+                currentPlayButton = null;
+            };
+        }
+    }
+
+    // 選択処理
+    function handleSelection(selectedItem) {
+        const type = selectedItem.dataset.type;
+        const id = selectedItem.dataset.id;
+        const searchBox = document.querySelector(`.search-box[data-target-type="${type}"]`);
+
+        const searchicon = document.querySelectorAll('.search-icon');
+        searchicon.forEach(icon => {
+            icon.style.display = 'none';
+        });
+        
+        // 既存の選択項目を削除
+        const existingSelected = searchBox.querySelector('.selected-item');
+        if (existingSelected) {
+            existingSelected.remove();
+        }
+
+        // 隠しフィールドをクリア
+        clearHiddenFields();
+        
+        // 新しい隠しフィールドを追加
+        const form = document.querySelector('.post-form');
+        switch (type) {
+            case 'track':
+                form.insertAdjacentHTML('beforeend', `
+                    <input type="hidden" name="spotify_track_id" value="${id}">
+                    <input type="hidden" name="title" value="${selectedItem.dataset.title}">
+                    <input type="hidden" name="artist" value="${selectedItem.dataset.artist}">
+                    <input type="hidden" name="image" value="${selectedItem.dataset.image}">
+                `);
+                break;
+                
+            case 'artist':
+                form.insertAdjacentHTML('beforeend', `
+                    <input type="hidden" name="spotify_artist_id" value="${id}">
+                    <input type="hidden" name="artist_name" value="${selectedItem.dataset.name}">
+                    <input type="hidden" name="image" value="${selectedItem.dataset.image}">
+                `);
+                break;
+                
+            case 'album':
+                form.insertAdjacentHTML('beforeend', `
+                    <input type="hidden" name="spotify_album_id" value="${id}">
+                    <input type="hidden" name="album_name" value="${selectedItem.dataset.name}">
+                    <input type="hidden" name="album_artist" value="${selectedItem.dataset.artist}">
+                    <input type="hidden" name="image" value="${selectedItem.dataset.image}">
+                `);
+                break;
+        }
+
+        // 選択状態の表示
+        const selectedDisplay = document.createElement('div');
+        selectedDisplay.className = 'selected-item';
+        selectedDisplay.innerHTML = `
+            <div class="selected-content">
+                <img src="${selectedItem.dataset.image}" alt="選択された項目">
+                <div class="selected-info">
+                    <h4>${selectedItem.querySelector('h4').textContent}</h4>
+                    <p>${selectedItem.querySelector('p').textContent}</p>
+                </div>
+                <button type="button" class="change-selection-btn" title="選択を解除">
+                <i class="bi bi-x"></i>
+            </button>
+            </div>
+        `;
+
+        // 検索ボックスを非表示にし、選択された項目を表示
+        searchBox.querySelector('.search-input').style.display = 'none';
+        searchBox.querySelector('.search-results').style.display = 'none';
+        searchBox.appendChild(selectedDisplay);
+
+        // 変更ボタンのイベントリスナー
+        selectedDisplay.querySelector('.change-selection-btn').addEventListener('click', (e) => {
+            e.stopPropagation();  // イベントの伝播を停止
+            clearSelection();
+            const input = searchBox.querySelector('.search-input');
+            input.style.display = 'block';
+            input.value = '';
+            input.focus();  // 入力フォーカスを設定
+            selectedDisplay.remove();
+            submitButton.disabled = true;
+        });
+
+        // 投稿ボタンを有効化
+        submitButton.disabled = false;
+    }
+
+    // 選択状態のクリア
+    function clearSelection() {
+        const selectedItems = document.querySelectorAll('.selected-item');
+        selectedItems.forEach(item => item.remove());
+        
+        searchBoxes.forEach(box => {
+            const input = box.querySelector('.search-input');
+            input.style.display = 'block';
+            input.value = '';
+            box.querySelector('.search-results').style.display = 'none';
+        });
+
+        clearHiddenFields();
+        submitButton.disabled = true;
+        const searchicon = document.querySelectorAll('.search-icon');
+        searchicon.forEach(icon => {
+            icon.style.display = 'block';
+        });
+    }
+
+    // 隠しフィールドのクリア
+    function clearHiddenFields() {
+        const hiddenFields = document.querySelectorAll('input[type="hidden"]');
+        hiddenFields.forEach(field => {
+            if (field.name !== 'csrfmiddlewaretoken') {  // CSRFトークンは保持
+                field.remove();
+            }
+        });
+    }
 });
 </script>
 {% endblock %} 

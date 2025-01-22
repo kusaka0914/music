@@ -14,8 +14,23 @@
                 <img src="{% static 'images/default-avatar.svg' %}" alt="{{ profile_user.username }}" class="profile-avatar">
             {% endif %}
             <div class="profile-details">
+                <div class="profile-stats">
+                    <div class="stat">
+                        <span class="count">{{ profile_user.musicpost_set.count }}</span>
+                        <span class="label">投稿</span>
+                    </div>
+                    <div class="stat" data-bs-toggle="modal" data-bs-target="#followersModal" style="cursor: pointer;">
+                        <span class="count followers-count">{{ follower_users.count }}</span>
+                        <span class="label">フォロワー</span>
+                    </div>
+                    <div class="stat" data-bs-toggle="modal" data-bs-target="#followingModal" style="cursor: pointer;">
+                        <span class="count following-count">{{ following_users.count }}</span>
+                        <span class="label">フォロー中</span>
+                    </div>
+                </div>
                 <div class="profile-top">
                     <h1>{{ profile_user.username }}</h1>
+                    
                     {% if user == profile_user %}
                         <div class="spotify-connection">
                             {% if not user.profile.spotify_connected %}
@@ -39,25 +54,11 @@
                         <p class="nickname">{{ profile_user.profile.nickname }}</p>
                     {% endif %}
                 {% if profile_user.profile.bio %}
-                    <p class="bio">{{ profile_user.profile.bio }}</p>
+                    <p class="profile-bio">{{ profile_user.profile.bio }}</p>
                 {% endif %}
                 {% if profile_user.profile.website %}
                     <a href="{{ profile_user.profile.website }}" class="website" target="_blank">{{ profile_user.profile.website }}</a>
                 {% endif %}
-                <div class="profile-stats">
-                    <div class="stat">
-                        <span class="count">{{ profile_user.musicpost_set.count }}</span>
-                        <span class="label">投稿</span>
-                    </div>
-                    <div class="stat" data-bs-toggle="modal" data-bs-target="#followersModal" style="cursor: pointer;">
-                        <span class="count followers-count">{{ follower_users.count }}</span>
-                        <span class="label">フォロワー</span>
-                    </div>
-                    <div class="stat" data-bs-toggle="modal" data-bs-target="#followingModal" style="cursor: pointer;">
-                        <span class="count following-count">{{ following_users.count }}</span>
-                        <span class="label">フォロー中</span>
-                    </div>
-                </div>
                 {% if profile_user != user %}
                     <div class="profile-actions">
                         <button class="follow-button {% if is_following %}following{% endif %}" 
@@ -83,20 +84,20 @@
     <div class="profile-content">
         <!-- 音楽の相性セクション -->
         {% if compatibility_data %}
-        <div class="music-compatibility bg-dark text-white p-4 rounded-lg mb-4">
-            <h3 class="text-xl font-bold mb-3">
-                <i class="bi bi-music-note"></i> 音楽の相性: {{ compatibility_data.score }}%
+        <div class="music-compatibility">
+            <h3 class="music-compatibility-header">
+                <i></i> 音楽の相性: {{ compatibility_data.score }}%
             </h3>
             
             <!-- 共通の曲 -->
             {% if compatibility_data.common_tracks %}
             <div class="mb-3">
-                <h4 class="text-lg font-semibold mb-2">
+                <h4 class="music-compatibility-subheader">
                     <i class="bi bi-disc"></i> 共通の好きな曲
                 </h4>
-                <ul class="list-disc list-inside">
+                <ul class="music-compatibility-list">
                     {% for track in compatibility_data.common_tracks %}
-                    <li class="mb-1">
+                    <li class="music-compatibility-item">
                         {{ track.name }} - {{ track.artist }}
                     </li>
                     {% endfor %}
@@ -107,42 +108,20 @@
             <!-- 共通のアーティスト -->
             {% if compatibility_data.common_artists %}
             <div class="mb-3">
-                <h4 class="text-lg font-semibold mb-2">
+                <h4 class="music-compatibility-subheader">
                     <i class="bi bi-person-video2"></i> 共通のアーティスト
                 </h4>
-                <ul class="list-disc list-inside">
+                <ul class="music-compatibility-list">
                     {% for artist in compatibility_data.common_artists %}
-                    <li class="mb-1">{{ artist }}</li>
+                    <li class="music-compatibility-item">{{ artist }}</li>
                     {% endfor %}
                 </ul>
-            </div>
-            {% endif %}
-            
-            <!-- 共通の音楽の気分 -->
-            {% if compatibility_data.common_moods %}
-            <div>
-                <h4 class="text-lg font-semibold mb-2">
-                    <i class="bi bi-emoji-smile"></i> 共通の音楽の気分
-                </h4>
-                <div class="flex flex-wrap gap-2">
-                    {% for mood in compatibility_data.common_moods %}
-                    <span class="px-3 py-1 bg-primary rounded-full text-sm">
-                        {% if mood == 'happy' %}🎵 ハッピー
-                        {% elif mood == 'chill' %}😌 リラックス
-                        {% elif mood == 'energetic' %}💪 エネルギッシュ
-                        {% elif mood == 'sad' %}😢 メランコリー
-                        {% elif mood == 'love' %}❤️ ラブ
-                        {% else %}{{ mood }}
-                        {% endif %}
-                    </span>
-                    {% endfor %}
-                </div>
             </div>
             {% endif %}
         </div>
         {% endif %}
 
-        <div class="music-taste-section">
+        <!-- <div class="music-taste-section">
             <div class="section-header">
                 <h2>音楽の好み</h2>
                 {% if user == profile_user %}
@@ -179,9 +158,9 @@
             {% else %}
                 <p class="no-taste">音楽の好みが設定されていません</p>
             {% endif %}
-        </div>
+        </div> -->
 
-        {% if profile_user.music_taste.favorite_artists %}
+        {% if profile_user.profile.favorite_artists %}
         <div class="favorite-artists-section">
             <div class="section-header">
                 <h2>好きなアーティスト</h2>
@@ -192,7 +171,7 @@
                 {% endif %}
             </div>
             <div class="artists-grid">
-                {% for artist in profile_user.music_taste.favorite_artists %}
+                {% for artist in profile_user.profile.favorite_artists %}
                     <div class="artist-card">
                         <div class="artist-image">
                             <img src="{{ artist.image|default:'/static/images/default-artist.png' }}" alt="{{ artist.name }}">
@@ -299,10 +278,10 @@
         </div>
 
         <div class="posts-section">
-            <h2>最近の投稿</h2>
-            <div class="posts-grid">
-                {% for post in posts %}
-                    {% if post.user and post.user.username %}
+            <h2>投稿一覧</h2>
+            {% if posts %}
+                <div class="posts-grid">
+                    {% for post in posts %}
                         <div class="post-card">
                             {% if post.spotify_link %}
                                 <div class="spotify-player">
@@ -327,6 +306,7 @@
                                         {% endif %}
                                         <span class="username">{{ post.user.username }}</span>
                                     </div>
+                                    <span class="post-type">{{ post.get_post_type_display }}</span>
                                     <span class="post-time">{{ post.created_at|timesince }}前</span>
                                 </div>
                                 {% if post.description %}
@@ -379,14 +359,14 @@
                                 </form>
                             </div>
                         </div>
-                    {% endif %}
-                {% empty %}
-                    <div class="no-posts">
-                        <i class="bi bi-music-note"></i>
-                        <p>まだ投稿がありません</p>
-                    </div>
-                {% endfor %}
-            </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-posts">
+                    <i class="bi bi-music-note"></i>
+                    <p>まだ投稿がありません</p>
+                </div>
+            {% endif %}
         </div>
 
         
@@ -601,6 +581,16 @@
     color: #fff;
 }
 
+.post-type {
+    color: var(--spotify-green);
+    background: rgba(29, 185, 84, 0.1);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    margin-right: 8px;
+    white-space: nowrap;
+}
+
 .profile-header {
     background: rgba(0, 0, 0, 0.3);
     padding: 2rem;
@@ -613,7 +603,7 @@
 .profile-info {
     display: flex;
     gap: 2rem;
-    align-items: flex-start;
+    align-items: center;
 }
 
 .profile-avatar {
@@ -640,10 +630,13 @@
     margin-bottom: 8px;
 }
 
-.bio {
-    color: #b3b3b3;
-    margin-bottom: 8px;
-    font-size: 16px;
+.profile-bio {
+    color: rgba(255, 255, 255, 0.7);
+    margin: 1rem 0;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .profile-stats {
@@ -656,6 +649,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.music-compatibility {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    border: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 .website {
@@ -1521,7 +1522,6 @@
 
 .user-details {
     display: flex;
-    flex-direction: column;
     gap: 5px;
 }
 
@@ -1800,6 +1800,7 @@
 .no-posts {
     text-align: center;
     padding: 2rem;
+    width: 100%;
     color: #b3b3b3;
 }
 
@@ -2101,19 +2102,18 @@
     align-items: center;
     gap: 5px;
     padding: 8px 16px;
-    background-color: #0d6efd;
+    background-color: var(--spotify-green);
     color: white;
     border: none;
     border-radius: 20px;
     text-decoration: none;
     font-size: 0.9rem;
-    transition: background-color 0.2s;
+    transition: all 0.2s;
 }
 
 .message-button:hover {
-    background-color: #0b5ed7;
-    color: white;
-    text-decoration: none;
+    scale: 1.05;
+    transition: all 0.2s;
 }
 
 .message-button i {

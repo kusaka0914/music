@@ -85,13 +85,20 @@ class ProfileUpdateForm(forms.ModelForm):
 class MusicPostForm(forms.ModelForm):
     class Meta:
         model = MusicPost
-        fields = ['title', 'artist', 'spotify_link', 'description', 'mood']
+        fields = ['title', 'artist', 'spotify_link', 'description', 'post_type']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'artist': forms.TextInput(attrs={'class': 'form-control'}),
             'spotify_link': forms.TextInput(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'mood': forms.Select(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+            'post_type': forms.Select(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'title': '曲名',
+            'artist': 'アーティスト',
+            'spotify_link': 'SpotifyリンクまたはID',
+            'description': '説明',
+            'post_type': '投稿の種類',
         }
 
 class CommentForm(forms.ModelForm):

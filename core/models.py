@@ -32,121 +32,88 @@ class Profile(models.Model):
     def __str__(self):
         return f"{self.user.username}のプロフィール"
 
-    def get_music_compatibility(self, other_profile):
-        """他のユーザーとの音楽の相性を計算"""
-        compatibility_score = 0
-        
-        # ジャンルの比較
-        my_genres = set(self.favorite_genres.get('genres', []))
-        other_genres = set(other_profile.favorite_genres.get('genres', []))
-        genre_match = len(my_genres & other_genres)
-        compatibility_score += genre_match * 2
-        
-        # アーティストの比較
-        my_artists = set(self.favorite_artists.get('artists', []))
-        other_artists = set(other_profile.favorite_artists.get('artists', []))
-        artist_match = len(my_artists & other_artists)
-        compatibility_score += artist_match * 3
-        
-        # ムードの比較
-        my_moods = set(self.music_mood_preferences.get('moods', []))
-        other_moods = set(other_profile.music_mood_preferences.get('moods', []))
-        mood_match = len(my_moods & other_moods)
-        compatibility_score += mood_match
-        
-        # 最大スコアで正規化（0-100の範囲に）
-        max_score = (len(my_genres) + len(other_genres)) * 2 + \
-                   (len(my_artists) + len(other_artists)) * 3 + \
-                   (len(my_moods) + len(other_moods))
-        
-        if max_score == 0:
-            return 0
-            
-        normalized_score = (compatibility_score / max_score) * 100
-        return round(normalized_score, 2)
-
     def get_music_compatibility_with_user(self, other_user):
         """他のユーザーとの音楽の相性を計算"""
-        compatibility_score = 0
-        
-        # 1. ジャンルの比較 (重み: 2点/マッチ)
-        my_genres = set(self.favorite_genres.get('genres', []))
-        other_genres = set(other_user.profile.favorite_genres.get('genres', []))
-        genre_match = len(my_genres & other_genres)
-        compatibility_score += genre_match * 2
-        
-        # 2. アーティストの比較 (重み: 3点/マッチ)
-        my_artists = set(self.favorite_artists.get('artists', []))
-        other_artists = set(other_user.profile.favorite_artists.get('artists', []))
-        artist_match = len(my_artists & other_artists)
-        compatibility_score += artist_match * 3
-        
-        # 3. ムード（曲調）の比較 (重み: 1点/マッチ)
-        my_moods = set(self.music_mood_preferences.get('moods', []))
-        other_moods = set(other_user.profile.music_mood_preferences.get('moods', []))
-        mood_match = len(my_moods & other_moods)
-        compatibility_score += mood_match
-        
-        # 4. スコアの正規化（0-100%）
-        max_score = (len(my_genres) + len(other_genres)) * 2 + \
-                   (len(my_artists) + len(other_artists)) * 3 + \
-                   (len(my_moods) + len(other_moods))
-        
-        if max_score == 0:
-            return 0
-            
-        normalized_score = (compatibility_score / max_score) * 100
-        return round(normalized_score, 2)
-
-    def get_common_music_interests(self, other_user):
-        """他のユーザーとの共通の音楽趣味を取得"""
-        try:
-            my_taste = self.user.music_taste
-            other_taste = other_user.music_taste
-
-            # 共通のジャンル
-            my_genres = set(my_taste.genres.get('preferences', {}).keys())
-            other_genres = set(other_taste.genres.get('preferences', {}).keys())
-            common_genres = my_genres & other_genres
-
-            # 共通のアーティスト
-            my_artists = set(artist['name'] for artist in my_taste.favorite_artists)
-            other_artists = set(artist['name'] for artist in other_taste.favorite_artists)
-            common_artists = my_artists & other_artists
-
-            return {
-                'genres': list(common_genres),
-                'artists': list(common_artists)
-            }
-        except Exception as e:
-            logger.error(f"共通の音楽趣味の取得に失敗: {str(e)}")
-            return {'genres': [], 'artists': []}
+        return self.get_music_compatibility_score(other_user)
 
     def get_music_compatibility_score(self, other_user):
         """他のユーザーとの音楽の相性スコアを計算（0-100）"""
         try:
-            common = self.get_common_music_interests(other_user)
-            my_taste = self.user.music_taste
-            other_taste = other_user.music_taste
+            score = 0
+            
+            # アーティストの比較（15ポイント/アーティスト）
+            my_artists = self.favorite_artists
+            other_artists = other_user.profile.favorite_artists
+            
+            if not my_artists or not other_artists:
+                return 0
 
-            # ジャンルとアーティストの総数を取得
-            total_genres = len(set(my_taste.genres.get('preferences', {}).keys()) | 
-                             set(other_taste.genres.get('preferences', {}).keys()))
-            total_artists = len(set(artist['name'] for artist in my_taste.favorite_artists) | 
-                              set(artist['name'] for artist in other_taste.favorite_artists))
+            my_artist_names = set(artist['name'] for artist in my_artists)
+            other_artist_names = set(artist['name'] for artist in other_artists)
+            artist_match = len(my_artist_names & other_artist_names)
+            score += artist_match * 15  # 共通のアーティストごとに15ポイント
+            
+            # 投稿の傾向を比較（5ポイント/ムード）
+            my_posts = MusicPost.objects.filter(user=self.user)
+            other_posts = MusicPost.objects.filter(user=other_user)
+            
+            my_moods = {post.post_type for post in my_posts}
+            other_moods = {post.post_type for post in other_posts}
+            mood_match = len(my_moods & other_moods)
+            score += mood_match * 5  # 共通のムードごとに5ポイント
+            
+            # スコアを0-100の範囲に正規化
+            return min(100, score)
 
-            # 共通の要素の数を取得
-            common_genres = len(common['genres'])
-            common_artists = len(common['artists'])
-
-            # スコアを計算（ジャンルとアーティストで50点ずつ）
-            genre_score = (common_genres / total_genres * 50) if total_genres > 0 else 0
-            artist_score = (common_artists / total_artists * 50) if total_artists > 0 else 0
-
-            return round(genre_score + artist_score)
         except Exception as e:
             logger.error(f"音楽の相性スコアの計算に失敗: {str(e)}")
             return 0
+
+    def get_common_music_interests(self, other_user):
+        """他のユーザーとの共通の音楽趣味を取得"""
+        try:
+            my_artists = self.favorite_artists
+            other_artists = other_user.profile.favorite_artists
+
+            if not my_artists or not other_artists:
+                return {
+                    'artists': [],
+                    'moods': [],
+                    'score': 0
+                }
+
+            # アーティスト名をキーとした辞書を作成
+            my_artists_dict = {artist['name']: artist for artist in my_artists}
+            other_artists_dict = {artist['name']: artist for artist in other_artists}
+            
+            # 共通のアーティスト名を見つける
+            common_artist_names = set(my_artists_dict.keys()) & set(other_artists_dict.keys())
+            
+            # 共通のアーティストの完全な情報を取得
+            common_artists = [my_artists_dict[name] for name in common_artist_names]
+
+            # 共通のムードを取得
+            my_posts = MusicPost.objects.filter(user=self.user)
+            other_posts = MusicPost.objects.filter(user=other_user)
+            my_moods = {post.post_type for post in my_posts}
+            other_moods = {post.post_type for post in other_posts}
+            common_moods = list(my_moods & other_moods)
+
+            # スコアを計算
+            score = self.get_music_compatibility_score(other_user)
+
+            return {
+                'artists': common_artists[:5],  # 上位5アーティストまで
+                'moods': common_moods,
+                'score': score
+            }
+        except Exception as e:
+            logger.error(f"共通の音楽趣味の取得に失敗: {str(e)}")
+            return {
+                'artists': [],
+                'moods': [],
+                'score': 0
+            }
 
     def get_achievement_badges(self):
         """ユーザーの獲得バッジを取得"""
@@ -235,30 +202,59 @@ class Profile(models.Model):
             return []
 
 class MusicPost(models.Model):
-    MOOD_CHOICES = [
-        ('happy', '楽しい'),
-        ('sad', '悲しい'),
-        ('excited', 'テンション高め'),
-        ('relaxed', 'リラックス'),
-        ('energetic', 'エネルギッシュ'),
-        ('calm', '穏やか'),
-        ('romantic', 'ロマンティック'),
-        ('nostalgic', 'ノスタルジック'),
+    TARGET_TYPE_CHOICES = [
+        ('track', '曲について'),
+        ('artist', 'アーティストについて'),
+        ('album', 'アルバムについて'),
+    ]
+
+    POST_TYPE_CHOICES = [
+        # 曲の投稿タイプ
+        ('lyrics_analysis', '歌詞考察'),
+        ('track_impression', '感想共有'),
+        ('track_memory', '思い出共有'),
+        # アーティストの投稿タイプ
+        ('artist_introduction', 'アーティスト紹介'),
+        ('artist_impression', '感想共有'),
+        ('artist_memory', '思い出共有'),
+        # アルバムの投稿タイプ
+        ('album_review', 'アルバムレビュー'),
+        ('album_impression', '感想共有'),
+        ('album_memory', '思い出共有'),
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    title = models.CharField(max_length=200)
-    artist = models.CharField(max_length=200)
-    spotify_link = models.CharField(max_length=200)
+    target_type = models.CharField(max_length=50, choices=TARGET_TYPE_CHOICES)
+    post_type = models.CharField(max_length=50, choices=POST_TYPE_CHOICES)
+    
+    # 曲の場合
+    title = models.CharField(max_length=200, null=True, blank=True)
+    artist = models.CharField(max_length=200, null=True, blank=True)
+    spotify_track_id = models.CharField(max_length=200, null=True, blank=True)
+    
+    # アーティストの場合
+    artist_name = models.CharField(max_length=200, null=True, blank=True)
+    spotify_artist_id = models.CharField(max_length=200, null=True, blank=True)
+    
+    # アルバムの場合
+    album_name = models.CharField(max_length=200, null=True, blank=True)
+    album_artist = models.CharField(max_length=200, null=True, blank=True)
+    spotify_album_id = models.CharField(max_length=200, null=True, blank=True)
+    spotify_link = models.CharField(max_length=200)   
+    # 共通フィールド
     description = models.TextField(blank=True)
     image = models.URLField(max_length=500, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(User, related_name='liked_posts', blank=True)
-    mood = models.CharField(max_length=50, choices=MOOD_CHOICES, blank=True)
     is_playlist_track = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.title} by {self.artist}"
+        if self.target_type == 'track':
+            return f"Track: {self.title} by {self.artist}"
+        elif self.target_type == 'artist':
+            return f"Artist: {self.artist_name}"
+        else:  # album
+            return f"Album: {self.album_name} by {self.album_artist}"
 
     class Meta:
         ordering = ['-created_at']
@@ -271,9 +267,12 @@ class MusicPost(models.Model):
     def get_similar_posts(self):
         """類似の投稿を取得"""
         return MusicPost.objects.filter(
-            Q(artist=self.artist) |
-            Q(tags__overlap=self.tags) |
-            Q(mood=self.mood)
+            Q(target_type=self.target_type) &
+            (
+                Q(artist=self.artist) if self.target_type == 'track' else
+                Q(artist_name=self.artist_name) if self.target_type == 'artist' else
+                Q(album_artist=self.album_artist)
+            )
         ).exclude(id=self.id)[:5]
 
 class Comment(models.Model):

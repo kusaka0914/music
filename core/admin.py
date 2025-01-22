@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from .models import Profile, MusicPost, Comment, MusicStory, Playlist, PlaylistComment, PlaylistMusic, Music, Event, MusicTaste
+from .models import Profile, MusicPost, Comment, MusicStory, Playlist, PlaylistComment, PlaylistMusic, Music, Event, MusicTaste,Notification
 
 class ProfileInline(admin.StackedInline):
     model = Profile
@@ -34,7 +34,7 @@ class ProfileAdmin(admin.ModelAdmin):
     )
 
     def get_followers_count(self, obj):
-        return obj.followed_by.count()
+        return obj.followers.count()
     get_followers_count.short_description = 'フォロワー数'
 
     def get_following_count(self, obj):
@@ -44,7 +44,7 @@ class ProfileAdmin(admin.ModelAdmin):
 @admin.register(MusicPost)
 class MusicPostAdmin(admin.ModelAdmin):
     list_display = ['title', 'artist', 'user', 'created_at', 'get_likes_count']
-    list_filter = ['mood', 'created_at']
+    list_filter = ['post_type', 'created_at']
     search_fields = ['title', 'artist', 'description']
     readonly_fields = ['created_at']
 
@@ -140,3 +140,10 @@ class MusicTasteAdmin(admin.ModelAdmin):
     list_display = ('user', 'genres', 'moods', 'favorite_artists')
     search_fields = ('user__username',)
     list_filter = ('genres', 'moods', 'favorite_artists')
+
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ('recipient', 'sender', 'notification_type', 'post', 'playlist', 'comment', 'created_at')
+    list_filter = ('created_at',)
+    search_fields = ('recipient__username', 'sender__username', 'notification_type', 'post__title', 'playlist__title', 'comment__content')
+    readonly_fields = ('created_at',)

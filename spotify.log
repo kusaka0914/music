@@ -4941,3 +4941,703 @@ ERROR 2025-01-22 02:57:43,340 views 77 281473269690784 音楽の相性スコア�
 ERROR 2025-01-22 22:31:42,508 views 77 281473280176544 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
 ERROR 2025-01-22 22:31:52,153 views 77 281473162736032 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
 ERROR 2025-01-22 22:32:29,673 views 77 281473162736032 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-22 22:33:53,861 views 77 281473162736032 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-22 22:36:42,427 views 127 281473712189856 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-22 22:39:32,361 views 131 281472760082848 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-22 22:39:42,880 views 131 281472760082848 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-22 22:41:27,423 views 135 281473416491424 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-22 22:41:41,378 views 135 281473416491424 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-22 22:43:24,554 views 135 281473406005664 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-22 22:43:31,608 views 135 281473406005664 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-22 22:48:23,622 views 139 281473080947104 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-22 22:48:56,990 views 139 281473070461344 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-22 22:49:08,617 views 145 281472944632224 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+INFO 2025-01-22 23:24:30,368 spotify_utils 197 281473288565152 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-22 23:24:30,789 spotify_utils 197 281473288565152 アクセストークンの更新に成功しました
+INFO 2025-01-22 23:24:30,790 spotify_utils 197 281473288565152 Spotifyクライアント取得成功
+INFO 2025-01-22 23:25:20,567 spotify_utils 197 281473288565152 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-22 23:25:20,918 spotify_utils 197 281473288565152 アクセストークンの更新に成功しました
+INFO 2025-01-22 23:25:20,919 spotify_utils 197 281473288565152 Spotifyクライアント取得成功
+INFO 2025-01-22 23:26:49,153 spotify_utils 197 281473267593632 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-22 23:26:49,656 spotify_utils 197 281473267593632 アクセストークンの更新に成功しました
+INFO 2025-01-22 23:26:49,659 spotify_utils 197 281473267593632 Spotifyクライアント取得成功
+INFO 2025-01-22 23:27:09,722 spotify_utils 197 281473267593632 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-22 23:27:10,408 spotify_utils 197 281473267593632 アクセストークンの更新に成功しました
+INFO 2025-01-22 23:27:10,409 spotify_utils 197 281473267593632 Spotifyクライアント取得成功
+INFO 2025-01-22 23:28:05,657 spotify_utils 197 281473246622112 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-22 23:28:05,958 spotify_utils 197 281473246622112 アクセストークンの更新に成功しました
+INFO 2025-01-22 23:28:05,959 spotify_utils 197 281473246622112 Spotifyクライアント取得成功
+INFO 2025-01-23 01:05:57,404 views 321 281473152250272 User: a, Top Genres: {}
+ERROR 2025-01-23 01:05:57,411 views 321 281473152250272 音楽の相性計算中にエラーが発生: 'list' object has no attribute 'get'
+ERROR 2025-01-23 01:19:50,424 views 332 281473542320544 投稿のフィルタリングエラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 01:19:56,957 views 332 281473542320544 投稿のフィルタリングエラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 01:20:06,683 views 332 281473542320544 投稿のフィルタリングエラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 01:20:10,691 views 332 281473542320544 投稿のフィルタリングエラー: 'MusicPost' object has no attribute 'mood'
+INFO 2025-01-23 01:22:52,336 spotify_utils 344 281473269690784 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 01:22:52,537 spotify_utils 344 281473269690784 アクセストークンの更新に成功しました
+INFO 2025-01-23 01:22:52,537 spotify_utils 344 281473269690784 Spotifyクライアント取得成功
+INFO 2025-01-23 01:22:59,774 spotify_utils 344 281473269690784 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 01:22:59,944 spotify_utils 344 281473269690784 アクセストークンの更新に成功しました
+INFO 2025-01-23 01:22:59,945 spotify_utils 344 281473269690784 Spotifyクライアント取得成功
+ERROR 2025-01-23 01:23:04,591 views 344 281473259205024 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:23:04,591 views 344 281473259205024 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:24:12,765 views 348 281473601040800 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:24:12,765 views 348 281473601040800 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:24:24,078 views 348 281473601040800 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:24:24,078 views 348 281473601040800 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:24:56,980 views 348 281473601040800 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:24:56,980 views 348 281473601040800 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:25:51,081 views 348 281473498280352 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:25:51,081 views 348 281473498280352 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:26:06,254 views 348 281473580069280 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:26:06,254 views 348 281473580069280 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:26:17,824 views 348 281473487794592 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:26:17,825 views 348 281473487794592 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:26:50,732 views 348 281473601040800 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:26:50,733 views 348 281473601040800 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:26:58,423 views 348 281473601040800 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:26:58,423 views 348 281473601040800 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:27:34,275 views 348 281473487794592 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:27:34,275 views 348 281473487794592 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:27:44,965 views 348 281473601040800 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:27:44,965 views 348 281473601040800 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:27:53,577 views 348 281473487794592 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 01:28:11,110 views 348 281473487794592 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:28:11,110 views 348 281473487794592 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:28:26,952 views 348 281473601040800 投稿のフィルタリングエラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 01:28:28,301 views 348 281473601040800 投稿のフィルタリングエラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 01:28:28,932 views 348 281473601040800 投稿のフィルタリングエラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 01:28:29,899 views 348 281473601040800 投稿のフィルタリングエラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 01:28:30,900 views 348 281473601040800 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:28:30,900 views 348 281473601040800 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:28:32,274 views 348 281473601040800 投稿のフィルタリングエラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 01:28:32,859 views 348 281473601040800 投稿のフィルタリングエラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 01:29:30,426 views 348 281473601040800 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:29:30,426 views 348 281473601040800 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:40:20,825 views 355 281473590555040 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:40:20,825 views 355 281473590555040 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:40:22,408 views 355 281473590555040 投稿のフィルタリングエラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 01:40:23,563 views 355 281473590555040 投稿のフィルタリングエラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 01:40:25,081 views 355 281473590555040 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:40:25,081 views 355 281473590555040 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:41:02,334 views 355 281473498280352 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 01:41:04,605 views 355 281473498280352 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 01:41:07,024 views 355 281473498280352 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:41:07,024 views 355 281473498280352 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:43:38,299 views 364 281473340993952 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:43:38,299 views 364 281473340993952 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:43:49,644 views 364 281473340993952 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:43:49,644 views 364 281473340993952 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:44:45,804 views 364 281473340993952 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:44:45,804 views 364 281473340993952 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:45:03,620 views 364 281473330508192 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:45:03,620 views 364 281473330508192 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+INFO 2025-01-23 01:45:18,823 spotify_utils 364 281473340993952 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 01:45:19,044 spotify_utils 364 281473340993952 アクセストークンの更新に成功しました
+INFO 2025-01-23 01:45:19,045 spotify_utils 364 281473340993952 Spotifyクライアント取得成功
+ERROR 2025-01-23 01:45:37,856 views 364 281473340993952 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:45:37,856 views 364 281473340993952 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:45:38,301 views 364 281473340993952 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:45:38,301 views 364 281473340993952 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:45:39,817 views 364 281473340993952 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:45:39,818 views 364 281473340993952 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:45:40,621 views 364 281473330508192 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:45:40,622 views 364 281473330508192 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:45:41,684 views 364 281473330508192 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:45:41,684 views 364 281473330508192 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:45:44,549 views 364 281473330508192 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+INFO 2025-01-23 01:47:57,207 spotify_utils 364 281473340993952 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 01:47:57,375 spotify_utils 364 281473340993952 アクセストークンの更新に成功しました
+INFO 2025-01-23 01:47:57,376 spotify_utils 364 281473340993952 Spotifyクライアント取得成功
+ERROR 2025-01-23 01:48:44,316 views 364 281473330508192 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:48:44,316 views 364 281473330508192 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:50:41,036 views 364 281473340993952 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:50:41,036 views 364 281473340993952 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:51:09,538 views 364 281473340993952 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:51:09,538 views 364 281473340993952 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:51:55,061 views 364 281473229844896 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:51:55,061 views 364 281473229844896 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:52:23,815 views 364 281473229844896 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:52:23,816 views 364 281473229844896 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:52:36,099 views 364 281473340993952 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:52:36,100 views 364 281473340993952 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:52:53,913 views 364 281473340993952 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:52:53,913 views 364 281473340993952 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:53:27,600 views 364 281473229844896 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:53:27,601 views 364 281473229844896 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:53:42,686 views 364 281473229844896 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:53:42,686 views 364 281473229844896 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:54:04,734 views 364 281473317925280 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:54:04,735 views 364 281473317925280 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+INFO 2025-01-23 01:54:07,394 views 364 281473317925280 User: a, Top Genres: {}
+ERROR 2025-01-23 01:54:07,401 views 364 281473317925280 音楽の相性計算中にエラーが発生: 'list' object has no attribute 'get'
+ERROR 2025-01-23 01:54:46,492 views 364 281473219359136 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:54:46,492 views 364 281473219359136 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+INFO 2025-01-23 01:54:48,134 views 364 281473219359136 User: a, Top Genres: {}
+ERROR 2025-01-23 01:54:48,142 views 364 281473219359136 音楽の相性計算中にエラーが発生: 'list' object has no attribute 'get'
+ERROR 2025-01-23 01:54:51,826 views 364 281473330508192 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:54:51,826 views 364 281473330508192 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+INFO 2025-01-23 01:54:54,655 views 364 281473219359136 User: a, Top Genres: {}
+ERROR 2025-01-23 01:54:54,661 views 364 281473219359136 音楽の相性計算中にエラーが発生: 'list' object has no attribute 'get'
+ERROR 2025-01-23 01:55:02,339 views 364 281473317925280 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:55:02,339 views 364 281473317925280 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 01:55:27,366 views 364 281473317925280 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 01:55:31,929 views 364 281473317925280 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 01:56:13,036 views 364 281473317925280 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 01:56:54,329 views 364 281473317925280 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 01:58:44,373 views 364 281473340993952 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+INFO 2025-01-23 01:58:46,899 spotify_utils 364 281473340993952 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 01:58:47,090 spotify_utils 364 281473340993952 アクセストークンの更新に成功しました
+INFO 2025-01-23 01:58:47,091 spotify_utils 364 281473340993952 Spotifyクライアント取得成功
+INFO 2025-01-23 02:00:31,781 spotify_utils 364 281473330508192 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 02:00:31,944 spotify_utils 364 281473330508192 アクセストークンの更新に成功しました
+INFO 2025-01-23 02:00:31,945 spotify_utils 364 281473330508192 Spotifyクライアント取得成功
+INFO 2025-01-23 02:00:38,909 spotify_utils 364 281473330508192 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 02:00:39,075 spotify_utils 364 281473330508192 アクセストークンの更新に成功しました
+INFO 2025-01-23 02:00:39,076 spotify_utils 364 281473330508192 Spotifyクライアント取得成功
+INFO 2025-01-23 02:00:46,037 spotify_utils 364 281473330508192 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 02:00:46,204 spotify_utils 364 281473330508192 アクセストークンの更新に成功しました
+INFO 2025-01-23 02:00:46,205 spotify_utils 364 281473330508192 Spotifyクライアント取得成功
+INFO 2025-01-23 02:00:59,542 spotify_utils 364 281473317925280 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 02:00:59,729 spotify_utils 364 281473317925280 アクセストークンの更新に成功しました
+INFO 2025-01-23 02:00:59,730 spotify_utils 364 281473317925280 Spotifyクライアント取得成功
+INFO 2025-01-23 02:01:44,152 spotify_utils 364 281473317925280 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 02:01:44,315 spotify_utils 364 281473317925280 アクセストークンの更新に成功しました
+INFO 2025-01-23 02:01:44,315 spotify_utils 364 281473317925280 Spotifyクライアント取得成功
+INFO 2025-01-23 02:02:43,558 spotify_utils 364 281473317925280 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 02:02:43,727 spotify_utils 364 281473317925280 アクセストークンの更新に成功しました
+INFO 2025-01-23 02:02:43,728 spotify_utils 364 281473317925280 Spotifyクライアント取得成功
+INFO 2025-01-23 02:03:12,559 spotify_utils 364 281473317925280 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 02:03:12,728 spotify_utils 364 281473317925280 アクセストークンの更新に成功しました
+INFO 2025-01-23 02:03:12,729 spotify_utils 364 281473317925280 Spotifyクライアント取得成功
+ERROR 2025-01-23 02:03:22,369 views 364 281473317925280 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:03:22,370 views 364 281473317925280 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:03:24,074 views 364 281473330508192 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:04:03,067 views 364 281473317925280 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:05:00,445 views 364 281473317925280 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:05:07,391 views 364 281473317925280 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:05:28,113 views 364 281473317925280 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:05:40,206 views 364 281473317925280 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:05:53,267 views 364 281473317925280 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:05:56,241 views 364 281473317925280 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:06:10,205 views 364 281473317925280 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:06:29,930 views 364 281473317925280 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:06:29,931 views 364 281473317925280 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:06:44,913 views 364 281473317925280 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:08:30,988 views 364 281473317925280 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:08:59,583 views 364 281473330508192 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:09:00,535 views 364 281473330508192 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:09:12,481 views 364 281473340993952 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+INFO 2025-01-23 02:09:20,284 spotify_utils 364 281473330508192 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 02:09:20,480 spotify_utils 364 281473330508192 アクセストークンの更新に成功しました
+INFO 2025-01-23 02:09:20,481 spotify_utils 364 281473330508192 Spotifyクライアント取得成功
+ERROR 2025-01-23 02:09:24,367 views 364 281473317925280 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:09:24,368 views 364 281473317925280 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:10:33,517 views 364 281473317925280 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:10:33,518 views 364 281473317925280 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:10:41,154 views 364 281473317925280 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:10:44,445 views 364 281473317925280 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:11:07,356 views 364 281473330508192 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:11:07,362 views 364 281473330508192 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:11:18,773 views 364 281473317925280 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:11:18,773 views 364 281473317925280 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:11:24,079 views 364 281473317925280 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:11:26,283 views 364 281473340993952 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:11:28,884 views 364 281473330508192 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:11:38,155 views 364 281473340993952 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:13:40,141 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:13:43,132 views 376 281472879620512 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:13:46,659 views 376 281472890106272 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:13:49,417 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:14:00,612 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:14:02,269 views 376 281472890106272 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+INFO 2025-01-23 02:14:07,418 spotify_utils 376 281472890106272 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 02:14:07,609 spotify_utils 376 281472890106272 アクセストークンの更新に成功しました
+INFO 2025-01-23 02:14:07,610 spotify_utils 376 281472890106272 Spotifyクライアント取得成功
+ERROR 2025-01-23 02:14:14,272 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:14:14,273 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:15:27,207 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:15:27,207 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:15:42,473 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:15:42,473 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:15:44,099 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:15:44,099 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:15:47,211 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:15:47,212 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:15:55,105 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:15:55,105 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:15:59,421 views 376 281472890106272 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:16:02,508 views 376 281472879620512 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:16:28,119 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:16:28,120 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:17:29,674 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:17:29,674 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:17:54,336 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:17:54,336 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:17:59,220 views 376 281472879620512 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:18:43,821 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:18:43,821 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:19:19,146 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:19:19,146 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:19:29,546 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:19:29,547 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:19:34,906 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:19:34,906 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:19:36,589 views 376 281472890106272 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:19:42,047 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:19:42,047 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:20:12,565 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:20:12,565 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:20:21,983 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:20:21,983 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:20:44,261 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:20:44,261 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:20:54,746 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+INFO 2025-01-23 02:21:25,735 spotify_utils 376 281472867037600 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 02:21:25,933 spotify_utils 376 281472867037600 アクセストークンの更新に成功しました
+INFO 2025-01-23 02:21:25,934 spotify_utils 376 281472867037600 Spotifyクライアント取得成功
+ERROR 2025-01-23 02:21:31,285 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:21:31,285 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:21:32,982 views 376 281472890106272 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:21:35,641 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:21:35,642 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+INFO 2025-01-23 02:21:38,100 spotify_utils 376 281472867037600 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 02:21:38,277 spotify_utils 376 281472867037600 アクセストークンの更新に成功しました
+INFO 2025-01-23 02:21:38,278 spotify_utils 376 281472867037600 Spotifyクライアント取得成功
+ERROR 2025-01-23 02:21:39,301 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:21:39,301 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:21:41,454 views 376 281472890106272 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:23:19,298 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:23:19,299 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:23:24,543 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:23:24,543 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:24:22,330 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:24:22,330 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:24:30,501 views 376 281472846066080 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:24:30,502 views 376 281472846066080 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:24:59,202 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:24:59,202 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:25:24,559 views 376 281472856551840 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:25:24,560 views 376 281472856551840 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:25:26,951 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:25:26,952 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:25:33,931 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:25:33,931 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+INFO 2025-01-23 02:25:36,063 spotify_utils 376 281472856551840 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 02:25:36,252 spotify_utils 376 281472856551840 アクセストークンの更新に成功しました
+INFO 2025-01-23 02:25:36,252 spotify_utils 376 281472856551840 Spotifyクライアント取得成功
+ERROR 2025-01-23 02:25:53,232 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:25:53,233 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:25:56,806 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:25:56,806 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:26:09,290 views 376 281472856551840 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:26:09,291 views 376 281472856551840 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:27:48,690 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:27:48,690 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:27:55,100 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:27:55,100 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:28:01,487 views 376 281472856551840 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:28:01,487 views 376 281472856551840 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:28:17,452 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:28:17,452 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:28:30,152 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:28:30,152 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:28:37,451 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:28:37,451 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:28:50,116 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:28:50,116 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:29:04,185 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:29:04,185 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:29:13,951 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:29:13,952 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:29:47,433 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:29:47,433 views 376 281472890106272 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:30:31,059 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:30:31,059 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:30:44,617 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:30:44,618 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:31:01,774 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:31:01,775 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:31:09,134 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:31:09,134 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:32:19,789 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:32:19,789 views 376 281472879620512 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:32:38,892 views 376 281472856551840 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:32:38,892 views 376 281472856551840 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:33:08,671 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:33:08,672 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:33:12,927 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:33:12,928 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:33:14,361 views 376 281472856551840 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:33:14,361 views 376 281472856551840 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:33:15,921 views 376 281472856551840 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:33:15,922 views 376 281472856551840 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:36:35,375 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:36:35,375 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+INFO 2025-01-23 02:36:47,106 spotify_utils 376 281472867037600 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 02:36:47,302 spotify_utils 376 281472867037600 アクセストークンの更新に成功しました
+INFO 2025-01-23 02:36:47,302 spotify_utils 376 281472867037600 Spotifyクライアント取得成功
+ERROR 2025-01-23 02:36:53,620 views 376 281472856551840 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:36:53,621 views 376 281472856551840 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+INFO 2025-01-23 02:37:19,329 spotify_utils 376 281472856551840 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 02:37:19,499 spotify_utils 376 281472856551840 アクセストークンの更新に成功しました
+INFO 2025-01-23 02:37:19,500 spotify_utils 376 281472856551840 Spotifyクライアント取得成功
+ERROR 2025-01-23 02:37:21,924 views 376 281472856551840 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:37:21,924 views 376 281472856551840 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:41:40,760 views 376 281472856551840 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:41:40,760 views 376 281472856551840 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:41:58,003 views 376 281472856551840 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:41:58,003 views 376 281472856551840 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:42:35,386 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:42:35,386 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+INFO 2025-01-23 02:42:51,181 spotify_utils 376 281472867037600 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 02:42:51,373 spotify_utils 376 281472867037600 アクセストークンの更新に成功しました
+INFO 2025-01-23 02:42:51,373 spotify_utils 376 281472867037600 Spotifyクライアント取得成功
+ERROR 2025-01-23 02:42:52,888 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:42:52,888 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:43:32,116 views 376 281472856551840 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:43:32,116 views 376 281472856551840 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:44:15,901 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:44:15,901 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+INFO 2025-01-23 02:45:46,196 spotify_utils 376 281472867037600 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 02:45:46,399 spotify_utils 376 281472867037600 アクセストークンの更新に成功しました
+INFO 2025-01-23 02:45:46,399 spotify_utils 376 281472867037600 Spotifyクライアント取得成功
+ERROR 2025-01-23 02:46:09,574 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:46:09,575 views 376 281472867037600 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+INFO 2025-01-23 02:46:59,542 spotify_utils 376 281472867037600 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 02:46:59,708 spotify_utils 376 281472867037600 アクセストークンの更新に成功しました
+INFO 2025-01-23 02:46:59,709 spotify_utils 376 281472867037600 Spotifyクライアント取得成功
+ERROR 2025-01-23 02:49:28,040 views 393 281472806220192 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:49:28,041 views 393 281472806220192 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:50:03,327 views 393 281472806220192 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:50:03,327 views 393 281472806220192 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+INFO 2025-01-23 02:50:08,102 spotify_utils 393 281472692973984 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 02:50:08,292 spotify_utils 393 281472692973984 アクセストークンの更新に成功しました
+INFO 2025-01-23 02:50:08,293 spotify_utils 393 281472692973984 Spotifyクライアント取得成功
+ERROR 2025-01-23 02:50:31,960 views 400 281473733161376 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:50:31,960 views 400 281473733161376 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:50:43,107 views 400 281473733161376 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:50:43,108 views 400 281473733161376 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:51:14,799 views 400 281473743647136 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:51:14,799 views 400 281473743647136 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:51:17,788 views 400 281473733161376 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:51:45,673 views 400 281473733161376 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:51:47,329 views 400 281473733161376 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:51:47,329 views 400 281473733161376 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+INFO 2025-01-23 02:51:49,042 spotify_utils 400 281473733161376 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 02:51:49,211 spotify_utils 400 281473733161376 アクセストークンの更新に成功しました
+INFO 2025-01-23 02:51:49,211 spotify_utils 400 281473733161376 Spotifyクライアント取得成功
+ERROR 2025-01-23 02:51:52,931 views 400 281473733161376 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:51:52,932 views 400 281473733161376 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:51:54,752 views 400 281473743647136 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:54:07,620 views 411 281473733161376 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:54:07,620 views 411 281473733161376 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:54:11,490 views 411 281473743647136 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:55:11,444 views 411 281473733161376 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:55:11,444 views 411 281473733161376 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:55:30,519 views 418 281473387131296 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:55:30,523 views 418 281473387131296 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:55:43,551 views 418 281473296953760 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:55:43,552 views 418 281473296953760 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:56:26,308 views 418 281473376645536 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:56:26,308 views 418 281473376645536 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:56:38,338 views 418 281473387131296 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:56:45,693 views 418 281473387131296 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:57:36,183 views 418 281473286468000 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:57:36,184 views 418 281473286468000 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:57:41,430 views 418 281473387131296 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:57:41,431 views 418 281473387131296 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:59:36,306 views 425 281473351479712 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:59:36,307 views 425 281473351479712 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:59:38,896 views 425 281473351479712 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:59:43,339 views 425 281473351479712 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:59:43,339 views 425 281473351479712 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 02:59:45,112 views 425 281473351479712 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 02:59:49,198 views 425 281473351479712 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 03:03:23,139 views 429 281473364062624 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:03:23,142 views 429 281473364062624 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:04:18,878 views 429 281473364062624 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:04:18,878 views 429 281473364062624 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:04:33,084 views 433 281473523446176 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:04:33,085 views 433 281473523446176 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:04:41,939 views 433 281473523446176 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:04:41,939 views 433 281473523446176 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:05:02,426 views 437 281473015935392 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:05:02,427 views 437 281473015935392 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:05:19,432 views 437 281473015935392 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 03:05:21,548 views 437 281473015935392 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 03:11:22,379 views 441 281473053684128 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 03:11:24,193 views 441 281473053684128 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:11:24,194 views 441 281473053684128 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:11:28,540 views 441 281473053684128 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:11:28,540 views 441 281473053684128 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:12:28,350 views 447 281472982380960 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:12:28,350 views 447 281472982380960 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:12:30,899 views 447 281472982380960 音楽の相性スコア計算エラー: 'MusicPost' object has no attribute 'mood'
+ERROR 2025-01-23 03:13:20,673 views 451 281473429074336 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:13:20,673 views 451 281473429074336 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:13:23,298 views 451 281473429074336 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:13:23,299 views 451 281473429074336 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:16:26,578 views 459 281472881717664 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:16:26,578 views 459 281472881717664 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:17:06,772 views 465 281473632498080 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:17:06,772 views 465 281473632498080 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:17:57,156 views 469 281473510863264 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:17:57,156 views 469 281473510863264 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-23 03:19:29,905 views 475 281472908980640 音楽の相性スコア計算エラー: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 03:19:29,905 views 475 281472908980640 音楽の相性スコア計算エラー: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 03:20:11,532 views 479 281472994963872 音楽の相性スコア計算エラー: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 03:20:11,543 views 479 281472994963872 音楽の相性スコア計算エラー: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 03:20:53,014 views 487 281473257107872 音楽の相性スコア計算エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 03:20:53,015 views 487 281473257107872 音楽の相性スコア計算エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 03:21:54,046 views 491 281472906883488 音楽の相性スコア計算エラー: name 'common_moods' is not defined
+ERROR 2025-01-23 03:21:54,046 views 491 281472906883488 音楽の相性スコア計算エラー: name 'common_moods' is not defined
+INFO 2025-01-23 03:33:03,583 spotify_utils 569 281473296953760 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 03:33:03,784 spotify_utils 569 281473296953760 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:33:03,784 spotify_utils 569 281473296953760 Spotifyクライアント取得成功
+INFO 2025-01-23 03:33:07,256 views 569 281473296953760 人気アーティストの取得を開始
+INFO 2025-01-23 03:33:07,586 views 569 281473296953760 アーティスト取得: Mrs. GREEN APPLE
+INFO 2025-01-23 03:33:07,586 views 569 281473296953760 アーティスト取得: OFFICIAL HIGE DANDISM
+INFO 2025-01-23 03:33:07,587 views 569 281473296953760 アーティスト取得: RADWIMPS
+INFO 2025-01-23 03:33:07,587 views 569 281473296953760 アーティスト取得: YOASOBI
+INFO 2025-01-23 03:33:07,587 views 569 281473296953760 アーティスト取得: Vaundy
+INFO 2025-01-23 03:33:07,588 views 569 281473296953760 アーティスト取得: back number
+INFO 2025-01-23 03:33:07,588 views 569 281473296953760 アーティスト取得: ヨルシカ
+INFO 2025-01-23 03:33:07,588 views 569 281473296953760 アーティスト取得: Kenshi Yonezu
+INFO 2025-01-23 03:33:07,588 views 569 281473296953760 アーティスト取得: Aimyon
+INFO 2025-01-23 03:33:07,589 views 569 281473296953760 アーティスト取得: Fujii Kaze
+INFO 2025-01-23 03:33:07,589 views 569 281473296953760 人気アーティスト取得完了: 10件
+INFO 2025-01-23 03:34:37,698 views 569 281473296953760 人気アーティストの取得を開始
+INFO 2025-01-23 03:34:38,043 views 569 281473296953760 アーティスト取得: Mrs. GREEN APPLE
+INFO 2025-01-23 03:34:38,044 views 569 281473296953760 アーティスト取得: OFFICIAL HIGE DANDISM
+INFO 2025-01-23 03:34:38,044 views 569 281473296953760 アーティスト取得: RADWIMPS
+INFO 2025-01-23 03:34:38,044 views 569 281473296953760 アーティスト取得: YOASOBI
+INFO 2025-01-23 03:34:38,044 views 569 281473296953760 アーティスト取得: Vaundy
+INFO 2025-01-23 03:34:38,045 views 569 281473296953760 アーティスト取得: back number
+INFO 2025-01-23 03:34:38,045 views 569 281473296953760 アーティスト取得: ヨルシカ
+INFO 2025-01-23 03:34:38,045 views 569 281473296953760 アーティスト取得: Kenshi Yonezu
+INFO 2025-01-23 03:34:38,046 views 569 281473296953760 アーティスト取得: Aimyon
+INFO 2025-01-23 03:34:38,046 views 569 281473296953760 アーティスト取得: Fujii Kaze
+INFO 2025-01-23 03:34:38,046 views 569 281473296953760 人気アーティスト取得完了: 10件
+INFO 2025-01-23 03:35:16,811 views 569 281473286468000 人気アーティストの取得を開始
+INFO 2025-01-23 03:35:17,129 views 569 281473286468000 アーティスト取得: Mrs. GREEN APPLE
+INFO 2025-01-23 03:35:17,129 views 569 281473286468000 アーティスト取得: OFFICIAL HIGE DANDISM
+INFO 2025-01-23 03:35:17,129 views 569 281473286468000 アーティスト取得: RADWIMPS
+INFO 2025-01-23 03:35:17,130 views 569 281473286468000 アーティスト取得: YOASOBI
+INFO 2025-01-23 03:35:17,130 views 569 281473286468000 アーティスト取得: Vaundy
+INFO 2025-01-23 03:35:17,130 views 569 281473286468000 アーティスト取得: back number
+INFO 2025-01-23 03:35:17,131 views 569 281473286468000 アーティスト取得: ヨルシカ
+INFO 2025-01-23 03:35:17,131 views 569 281473286468000 アーティスト取得: Kenshi Yonezu
+INFO 2025-01-23 03:35:17,131 views 569 281473286468000 アーティスト取得: Aimyon
+INFO 2025-01-23 03:35:17,131 views 569 281473286468000 アーティスト取得: Fujii Kaze
+INFO 2025-01-23 03:35:17,132 views 569 281473286468000 人気アーティスト取得完了: 10件
+INFO 2025-01-23 03:36:16,664 views 577 281473338896800 人気アーティストの取得を開始
+INFO 2025-01-23 03:36:16,959 views 577 281473338896800 アーティスト取得: Mrs. GREEN APPLE
+INFO 2025-01-23 03:36:16,959 views 577 281473338896800 アーティスト取得: OFFICIAL HIGE DANDISM
+INFO 2025-01-23 03:36:16,960 views 577 281473338896800 アーティスト取得: RADWIMPS
+INFO 2025-01-23 03:36:16,960 views 577 281473338896800 アーティスト取得: YOASOBI
+INFO 2025-01-23 03:36:16,961 views 577 281473338896800 アーティスト取得: Vaundy
+INFO 2025-01-23 03:36:16,961 views 577 281473338896800 アーティスト取得: back number
+INFO 2025-01-23 03:36:16,961 views 577 281473338896800 アーティスト取得: ヨルシカ
+INFO 2025-01-23 03:36:16,961 views 577 281473338896800 アーティスト取得: Kenshi Yonezu
+INFO 2025-01-23 03:36:16,962 views 577 281473338896800 アーティスト取得: Aimyon
+INFO 2025-01-23 03:36:16,962 views 577 281473338896800 アーティスト取得: Fujii Kaze
+INFO 2025-01-23 03:36:16,962 views 577 281473338896800 人気アーティスト取得完了: 10件
+INFO 2025-01-23 03:36:32,766 views 583 281473364062624 人気アーティストの取得を開始
+INFO 2025-01-23 03:36:33,148 views 583 281473364062624 アーティスト取得: Mrs. GREEN APPLE
+INFO 2025-01-23 03:36:33,148 views 583 281473364062624 アーティスト取得: OFFICIAL HIGE DANDISM
+INFO 2025-01-23 03:36:33,149 views 583 281473364062624 アーティスト取得: RADWIMPS
+INFO 2025-01-23 03:36:33,149 views 583 281473364062624 アーティスト取得: YOASOBI
+INFO 2025-01-23 03:36:33,149 views 583 281473364062624 アーティスト取得: Vaundy
+INFO 2025-01-23 03:36:33,150 views 583 281473364062624 アーティスト取得: back number
+INFO 2025-01-23 03:36:33,150 views 583 281473364062624 アーティスト取得: ヨルシカ
+INFO 2025-01-23 03:36:33,150 views 583 281473364062624 アーティスト取得: Kenshi Yonezu
+INFO 2025-01-23 03:36:33,151 views 583 281473364062624 アーティスト取得: Aimyon
+INFO 2025-01-23 03:36:33,151 views 583 281473364062624 アーティスト取得: Fujii Kaze
+INFO 2025-01-23 03:36:33,151 views 583 281473364062624 人気アーティスト取得完了: 10件
+INFO 2025-01-23 03:36:59,837 views 589 281472883814816 人気アーティストの取得を開始
+INFO 2025-01-23 03:37:00,184 views 589 281472883814816 アーティスト取得: Mrs. GREEN APPLE
+INFO 2025-01-23 03:37:00,184 views 589 281472883814816 アーティスト取得: OFFICIAL HIGE DANDISM
+INFO 2025-01-23 03:37:00,184 views 589 281472883814816 アーティスト取得: RADWIMPS
+INFO 2025-01-23 03:37:00,185 views 589 281472883814816 アーティスト取得: YOASOBI
+INFO 2025-01-23 03:37:00,185 views 589 281472883814816 アーティスト取得: Vaundy
+INFO 2025-01-23 03:37:00,185 views 589 281472883814816 アーティスト取得: back number
+INFO 2025-01-23 03:37:00,186 views 589 281472883814816 アーティスト取得: ヨルシカ
+INFO 2025-01-23 03:37:00,186 views 589 281472883814816 アーティスト取得: Kenshi Yonezu
+INFO 2025-01-23 03:37:00,186 views 589 281472883814816 アーティスト取得: Aimyon
+INFO 2025-01-23 03:37:00,186 views 589 281472883814816 アーティスト取得: Fujii Kaze
+INFO 2025-01-23 03:37:00,187 views 589 281472883814816 人気アーティスト取得完了: 10件
+INFO 2025-01-23 03:37:13,294 views 595 281473391325600 人気アーティストの取得を開始
+INFO 2025-01-23 03:37:13,629 views 595 281473391325600 アーティスト取得: Mrs. GREEN APPLE
+INFO 2025-01-23 03:37:13,630 views 595 281473391325600 アーティスト取得: OFFICIAL HIGE DANDISM
+INFO 2025-01-23 03:37:13,631 views 595 281473391325600 アーティスト取得: RADWIMPS
+INFO 2025-01-23 03:37:13,631 views 595 281473391325600 アーティスト取得: YOASOBI
+INFO 2025-01-23 03:37:13,631 views 595 281473391325600 アーティスト取得: Vaundy
+INFO 2025-01-23 03:37:13,632 views 595 281473391325600 アーティスト取得: back number
+INFO 2025-01-23 03:37:13,632 views 595 281473391325600 アーティスト取得: ヨルシカ
+INFO 2025-01-23 03:37:13,632 views 595 281473391325600 アーティスト取得: Kenshi Yonezu
+INFO 2025-01-23 03:37:13,632 views 595 281473391325600 アーティスト取得: Aimyon
+INFO 2025-01-23 03:37:13,633 views 595 281473391325600 アーティスト取得: Fujii Kaze
+INFO 2025-01-23 03:37:13,633 views 595 281473391325600 人気アーティスト取得完了: 10件
+INFO 2025-01-23 03:37:33,135 spotify_utils 595 281473296953760 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 03:37:33,332 spotify_utils 595 281473296953760 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:37:33,332 spotify_utils 595 281473296953760 Spotifyクライアント取得成功
+INFO 2025-01-23 03:37:34,856 spotify_utils 595 281473296953760 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 03:37:35,045 spotify_utils 595 281473296953760 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:37:35,046 spotify_utils 595 281473296953760 Spotifyクライアント取得成功
+INFO 2025-01-23 03:39:12,552 views 595 281473296953760 人気アーティストの取得を開始
+INFO 2025-01-23 03:39:12,931 views 595 281473296953760 アーティスト取得: Mrs. GREEN APPLE
+INFO 2025-01-23 03:39:12,932 views 595 281473296953760 アーティスト取得: OFFICIAL HIGE DANDISM
+INFO 2025-01-23 03:39:12,932 views 595 281473296953760 アーティスト取得: RADWIMPS
+INFO 2025-01-23 03:39:12,932 views 595 281473296953760 アーティスト取得: YOASOBI
+INFO 2025-01-23 03:39:12,933 views 595 281473296953760 アーティスト取得: Vaundy
+INFO 2025-01-23 03:39:12,933 views 595 281473296953760 アーティスト取得: back number
+INFO 2025-01-23 03:39:12,933 views 595 281473296953760 アーティスト取得: ヨルシカ
+INFO 2025-01-23 03:39:12,934 views 595 281473296953760 アーティスト取得: Kenshi Yonezu
+INFO 2025-01-23 03:39:12,934 views 595 281473296953760 アーティスト取得: Aimyon
+INFO 2025-01-23 03:39:12,934 views 595 281473296953760 アーティスト取得: Fujii Kaze
+INFO 2025-01-23 03:39:12,934 views 595 281473296953760 人気アーティスト取得完了: 10件
+INFO 2025-01-23 03:39:22,154 spotify_utils 595 281473380839840 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 03:39:22,354 spotify_utils 595 281473380839840 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:39:22,355 spotify_utils 595 281473380839840 Spotifyクライアント取得成功
+ERROR 2025-01-23 03:39:22,724 views 595 281473380839840 音楽の相性スコア計算エラー: 'User' object has no attribute 'favorite_artists'
+INFO 2025-01-23 03:40:03,627 spotify_utils 602 281473420685728 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 03:40:03,816 spotify_utils 602 281473420685728 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:40:03,817 spotify_utils 602 281473420685728 Spotifyクライアント取得成功
+ERROR 2025-01-23 03:40:04,177 views 602 281473420685728 音楽の相性スコア計算エラー: 'User' object has no attribute 'favorite_artists'
+INFO 2025-01-23 03:40:25,768 spotify_utils 602 281473431171488 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 03:40:25,934 spotify_utils 602 281473431171488 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:40:25,935 spotify_utils 602 281473431171488 Spotifyクライアント取得成功
+ERROR 2025-01-23 03:40:26,308 views 602 281473431171488 音楽の相性スコア計算エラー: 'User' object has no attribute 'favorite_artists'
+INFO 2025-01-23 03:42:24,073 spotify_utils 607 281473080947104 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 03:42:24,266 spotify_utils 607 281473080947104 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:42:24,267 spotify_utils 607 281473080947104 Spotifyクライアント取得成功
+ERROR 2025-01-23 03:42:24,642 views 607 281473080947104 音楽の相性スコア計算エラー: 'User' object has no attribute 'favorite_artists'
+INFO 2025-01-23 03:44:38,906 spotify_utils 620 281472988672416 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 03:44:39,100 spotify_utils 620 281472988672416 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:44:39,101 spotify_utils 620 281472988672416 Spotifyクライアント取得成功
+INFO 2025-01-23 03:44:42,599 spotify_utils 620 281472988672416 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 03:44:42,767 spotify_utils 620 281472988672416 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:44:42,768 spotify_utils 620 281472988672416 Spotifyクライアント取得成功
+INFO 2025-01-23 03:44:56,996 spotify_utils 626 281473487794592 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 03:44:57,174 spotify_utils 626 281473487794592 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:44:57,175 spotify_utils 626 281473487794592 Spotifyクライアント取得成功
+INFO 2025-01-23 03:45:22,866 spotify_utils 630 281473074655648 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 03:45:23,029 spotify_utils 630 281473074655648 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:45:23,030 spotify_utils 630 281473074655648 Spotifyクライアント取得成功
+INFO 2025-01-23 03:45:30,287 spotify_utils 634 281473800270240 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 03:45:30,453 spotify_utils 634 281473800270240 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:45:30,453 spotify_utils 634 281473800270240 Spotifyクライアント取得成功
+INFO 2025-01-23 03:46:17,073 spotify_utils 641 281472908980640 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 03:46:17,247 spotify_utils 641 281472908980640 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:46:17,248 spotify_utils 641 281472908980640 Spotifyクライアント取得成功
+INFO 2025-01-23 03:47:36,322 spotify_utils 653 281472747499936 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 03:47:36,518 spotify_utils 653 281472747499936 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:47:36,519 spotify_utils 653 281472747499936 Spotifyクライアント取得成功
+INFO 2025-01-23 03:47:48,548 spotify_utils 653 281472747499936 Spotifyクライアント取得開始: user=a, refresh_token=AQApSky1aU...
+INFO 2025-01-23 03:47:48,759 spotify_utils 653 281472747499936 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:47:48,759 spotify_utils 653 281472747499936 Spotifyクライアント取得成功
+INFO 2025-01-23 03:49:48,541 views 653 281472726528416 Spotify連携成功: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 03:49:52,836 spotify_utils 653 281472615379360 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 03:49:53,135 spotify_utils 653 281472615379360 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:49:53,142 spotify_utils 653 281472615379360 Spotifyクライアント取得成功
+INFO 2025-01-23 03:50:03,313 spotify_utils 665 281473479405984 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 03:50:03,484 spotify_utils 665 281473479405984 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:50:03,484 spotify_utils 665 281473479405984 Spotifyクライアント取得成功
+INFO 2025-01-23 03:50:11,889 spotify_utils 665 281473468920224 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 03:50:12,061 spotify_utils 665 281473468920224 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:50:12,062 spotify_utils 665 281473468920224 Spotifyクライアント取得成功
+INFO 2025-01-23 03:50:28,023 spotify_utils 665 281473479405984 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 03:50:28,199 spotify_utils 665 281473479405984 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:50:28,199 spotify_utils 665 281473479405984 Spotifyクライアント取得成功
+INFO 2025-01-23 03:52:10,906 spotify_utils 674 281473275982240 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 03:52:11,163 spotify_utils 674 281473275982240 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:52:11,164 spotify_utils 674 281473275982240 Spotifyクライアント取得成功
+INFO 2025-01-23 03:53:44,825 views 674 281473296953760 User: a, Top Genres: {}
+ERROR 2025-01-23 03:53:44,829 views 674 281473296953760 音楽の相性計算中にエラーが発生: 'Profile' object has no attribute 'get_music_compatibility'
+INFO 2025-01-23 03:53:50,880 spotify_utils 674 281473286468000 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 03:53:51,048 spotify_utils 674 281473286468000 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:53:51,050 spotify_utils 674 281473286468000 Spotifyクライアント取得成功
+INFO 2025-01-23 03:53:55,911 views 674 281473275982240 人気アーティストの取得を開始
+INFO 2025-01-23 03:53:56,230 views 674 281473275982240 アーティスト取得: Mrs. GREEN APPLE
+INFO 2025-01-23 03:53:56,231 views 674 281473275982240 アーティスト取得: OFFICIAL HIGE DANDISM
+INFO 2025-01-23 03:53:56,231 views 674 281473275982240 アーティスト取得: RADWIMPS
+INFO 2025-01-23 03:53:56,231 views 674 281473275982240 アーティスト取得: YOASOBI
+INFO 2025-01-23 03:53:56,232 views 674 281473275982240 アーティスト取得: Vaundy
+INFO 2025-01-23 03:53:56,232 views 674 281473275982240 アーティスト取得: back number
+INFO 2025-01-23 03:53:56,232 views 674 281473275982240 アーティスト取得: ヨルシカ
+INFO 2025-01-23 03:53:56,232 views 674 281473275982240 アーティスト取得: Kenshi Yonezu
+INFO 2025-01-23 03:53:56,233 views 674 281473275982240 アーティスト取得: Aimyon
+INFO 2025-01-23 03:53:56,233 views 674 281473275982240 アーティスト取得: Fujii Kaze
+INFO 2025-01-23 03:53:56,233 views 674 281473275982240 人気アーティスト取得完了: 10件
+INFO 2025-01-23 03:54:30,172 views 680 281473116598688 人気アーティストの取得を開始
+INFO 2025-01-23 03:54:30,459 views 680 281473116598688 アーティスト取得: Mrs. GREEN APPLE
+INFO 2025-01-23 03:54:30,459 views 680 281473116598688 アーティスト取得: OFFICIAL HIGE DANDISM
+INFO 2025-01-23 03:54:30,460 views 680 281473116598688 アーティスト取得: RADWIMPS
+INFO 2025-01-23 03:54:30,460 views 680 281473116598688 アーティスト取得: YOASOBI
+INFO 2025-01-23 03:54:30,460 views 680 281473116598688 アーティスト取得: Vaundy
+INFO 2025-01-23 03:54:30,461 views 680 281473116598688 アーティスト取得: back number
+INFO 2025-01-23 03:54:30,461 views 680 281473116598688 アーティスト取得: ヨルシカ
+INFO 2025-01-23 03:54:30,461 views 680 281473116598688 アーティスト取得: Kenshi Yonezu
+INFO 2025-01-23 03:54:30,461 views 680 281473116598688 アーティスト取得: Aimyon
+INFO 2025-01-23 03:54:30,462 views 680 281473116598688 アーティスト取得: Fujii Kaze
+INFO 2025-01-23 03:54:30,462 views 680 281473116598688 人気アーティスト取得完了: 10件
+INFO 2025-01-23 03:54:40,138 views 680 281473007546784 人気アーティストの取得を開始
+INFO 2025-01-23 03:54:40,426 views 680 281473007546784 アーティスト取得: Mrs. GREEN APPLE
+INFO 2025-01-23 03:54:40,426 views 680 281473007546784 アーティスト取得: OFFICIAL HIGE DANDISM
+INFO 2025-01-23 03:54:40,427 views 680 281473007546784 アーティスト取得: RADWIMPS
+INFO 2025-01-23 03:54:40,427 views 680 281473007546784 アーティスト取得: YOASOBI
+INFO 2025-01-23 03:54:40,427 views 680 281473007546784 アーティスト取得: Vaundy
+INFO 2025-01-23 03:54:40,428 views 680 281473007546784 アーティスト取得: back number
+INFO 2025-01-23 03:54:40,428 views 680 281473007546784 アーティスト取得: ヨルシカ
+INFO 2025-01-23 03:54:40,428 views 680 281473007546784 アーティスト取得: Kenshi Yonezu
+INFO 2025-01-23 03:54:40,428 views 680 281473007546784 アーティスト取得: Aimyon
+INFO 2025-01-23 03:54:40,429 views 680 281473007546784 アーティスト取得: Fujii Kaze
+INFO 2025-01-23 03:54:40,429 views 680 281473007546784 人気アーティスト取得完了: 10件
+INFO 2025-01-23 03:55:10,194 spotify_utils 686 281473649275296 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 03:55:10,365 spotify_utils 686 281473649275296 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:55:10,366 spotify_utils 686 281473649275296 Spotifyクライアント取得成功
+INFO 2025-01-23 03:55:11,875 spotify_utils 686 281473649275296 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 03:55:12,045 spotify_utils 686 281473649275296 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:55:12,046 spotify_utils 686 281473649275296 Spotifyクライアント取得成功
+INFO 2025-01-23 03:55:43,958 spotify_utils 686 281473554903456 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 03:55:44,158 spotify_utils 686 281473554903456 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:55:44,159 spotify_utils 686 281473554903456 Spotifyクライアント取得成功
+INFO 2025-01-23 03:56:06,557 spotify_utils 686 281473649275296 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 03:56:06,749 spotify_utils 686 281473649275296 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:56:06,750 spotify_utils 686 281473649275296 Spotifyクライアント取得成功
+INFO 2025-01-23 03:56:59,801 spotify_utils 686 281473554903456 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 03:56:59,962 spotify_utils 686 281473554903456 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:56:59,963 spotify_utils 686 281473554903456 Spotifyクライアント取得成功
+INFO 2025-01-23 03:57:36,173 spotify_utils 686 281473554903456 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 03:57:36,343 spotify_utils 686 281473554903456 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:57:36,343 spotify_utils 686 281473554903456 Spotifyクライアント取得成功
+INFO 2025-01-23 03:57:57,821 spotify_utils 686 281473554903456 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 03:57:58,030 spotify_utils 686 281473554903456 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:57:58,034 spotify_utils 686 281473554903456 Spotifyクライアント取得成功
+INFO 2025-01-23 03:58:45,067 spotify_utils 691 281472781054368 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 03:58:45,260 spotify_utils 691 281472781054368 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:58:45,261 spotify_utils 691 281472781054368 Spotifyクライアント取得成功
+INFO 2025-01-23 03:59:16,852 spotify_utils 695 281473622012320 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 03:59:17,036 spotify_utils 695 281473622012320 アクセストークンの更新に成功しました
+INFO 2025-01-23 03:59:17,037 spotify_utils 695 281473622012320 Spotifyクライアント取得成功
+INFO 2025-01-23 04:28:48,583 spotify_utils 713 281473152250272 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 04:28:48,801 spotify_utils 713 281473152250272 アクセストークンの更新に成功しました
+INFO 2025-01-23 04:28:48,802 spotify_utils 713 281473152250272 Spotifyクライアント取得成功
+INFO 2025-01-23 04:28:53,997 spotify_utils 713 281473152250272 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 04:28:54,164 spotify_utils 713 281473152250272 アクセストークンの更新に成功しました
+INFO 2025-01-23 04:28:54,165 spotify_utils 713 281473152250272 Spotifyクライアント取得成功
+INFO 2025-01-23 04:36:38,784 views 713 281473120792992 User: a, Top Genres: {}
+ERROR 2025-01-23 04:36:38,788 views 713 281473120792992 音楽の相性計算中にエラーが発生: 'Profile' object has no attribute 'get_music_compatibility'
+INFO 2025-01-23 04:49:30,786 spotify_utils 737 281472921563552 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 04:49:30,990 spotify_utils 737 281472921563552 アクセストークンの更新に成功しました
+INFO 2025-01-23 04:49:30,991 spotify_utils 737 281472921563552 Spotifyクライアント取得成功
+INFO 2025-01-23 04:49:36,447 spotify_utils 737 281472921563552 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 04:49:36,622 spotify_utils 737 281472921563552 アクセストークンの更新に成功しました
+INFO 2025-01-23 04:49:36,623 spotify_utils 737 281472921563552 Spotifyクライアント取得成功
+INFO 2025-01-23 04:53:10,270 spotify_utils 746 281473632498080 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 04:53:10,469 spotify_utils 746 281473632498080 アクセストークンの更新に成功しました
+INFO 2025-01-23 04:53:10,470 spotify_utils 746 281473632498080 Spotifyクライアント取得成功
+INFO 2025-01-23 04:54:29,743 spotify_utils 746 281473622012320 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 04:54:29,912 spotify_utils 746 281473622012320 アクセストークンの更新に成功しました
+INFO 2025-01-23 04:54:29,913 spotify_utils 746 281473622012320 Spotifyクライアント取得成功

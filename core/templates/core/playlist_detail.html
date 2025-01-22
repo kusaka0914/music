@@ -54,10 +54,10 @@
                             
                             <div class="playlist-stats">
                                 <div class="creator">
+                                    <a href="{% url 'core:profile' playlist.user.username %}" class="creator-name">
                                     <img src="{% if playlist.user.profile.avatar %}{{ playlist.user.profile.avatar.url }}{% else %}{% static 'images/default-avatar.svg' %}{% endif %}" 
                                          alt="{{ playlist.user.username }}" 
                                          class="creator-avatar">
-                                    <a href="{% url 'core:profile' playlist.user.username %}" class="creator-name">
                                         {{ playlist.user.username }}
                                     </a>
                                 </div>
@@ -430,8 +430,7 @@
 }
 
 .creator-name:hover {
-    color: var(--spotify-green);
-    text-decoration: underline;
+    opacity: 0.8;
 }
 
 .stats-item {

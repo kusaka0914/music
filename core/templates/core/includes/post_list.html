@@ -5,28 +5,54 @@
         <div class="post-card">
             {% if post.spotify_link %}
                 <div class="spotify-player">
-                    <iframe 
-                        id="spotify-iframe-{{ post.spotify_link|slice:'31:' }}"
-                        src="https://open.spotify.com/embed/track/{{ post.spotify_link|slice:'31:' }}?utm_source=generator" 
-                        width="100%" 
-                        height="152" 
-                        frameborder="0" 
-                        allowtransparency="true" 
-                        allow="encrypted-media">
-                    </iframe>
+                    {% if 'track' in post.spotify_link %}
+                        <iframe 
+                            src="https://open.spotify.com/embed/track/{{ post.spotify_link|slice:'31:' }}?utm_source=generator" 
+                            width="100%" 
+                            height="152" 
+                            frameborder="0" 
+                            allowtransparency="true" 
+                            allow="encrypted-media">
+                        </iframe>
+                    {% elif 'artist' in post.spotify_link %}
+                        <iframe 
+                            src="https://open.spotify.com/embed/artist/{{ post.spotify_link|slice:'32:' }}?utm_source=generator" 
+                            width="100%" 
+                            height="352"
+                            frameborder="0" 
+                            allowtransparency="true" 
+                            allow="encrypted-media">
+                        </iframe>
+                    {% elif 'album' in post.spotify_link %}
+                        <iframe 
+                            src="https://open.spotify.com/embed/album/{{ post.spotify_link|slice:'31:' }}?utm_source=generator" 
+                            width="100%" 
+                            height="352"
+                            frameborder="0" 
+                            allowtransparency="true" 
+                            allow="encrypted-media">
+                        </iframe>
+                    {% endif %}
                 </div>
             {% endif %}
             <div class="post-content">
                 <div class="post-header">
-                    <a href="{% url 'core:profile' post.user.username %}" class="post-user">
-                        {% if post.user.profile.avatar %}
-                            <img src="{{ post.user.profile.avatar.url }}" alt="{{ post.user.username }}">
-                        {% else %}
-                            <img src="{% static 'images/default-avatar.svg' %}" alt="{{ post.user.username }}">
-                        {% endif %}
-                        <span>{{ post.user.username }}</span>
-                    </a>
-                    <span class="post-time">{{ post.created_at|timesince }}前</span>
+                    <div class="user-info">
+                        <a href="{% url 'core:profile' post.user.username %}" class="user-link">
+                            {% if post.user.profile.avatar %}
+                                <img src="{{ post.user.profile.avatar.url }}" alt="{{ post.user.username }}" class="user-avatar">
+                            {% else %}
+                                <img src="{% static 'core/images/default_avatar.png' %}" alt="{{ post.user.username }}" class="user-avatar">
+                            {% endif %}
+                            <span class="username">{{ post.user.username }}</span>
+                        </a>
+                        <div class="user-details">
+                            <div class="post-meta">
+                                <span class="post-type">{{ post.get_post_type_display }}</span>
+                                <span class="post-time">{{ post.created_at|timesince }}前</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 {% if post.description %}
                     <p class="post-description">{{ post.description }}</p>
@@ -63,19 +89,22 @@
                                     <a href="{% url 'core:profile' comment.user.username %}" class="comment-username">
                                         {{ comment.user.username }}
                                     </a>
-                                    <p class="comment-text">{{ comment.text }}</p>
+                                    <p class="comment-text">{{ comment.content }}</p>
                                 </div>
                             </div>
                         {% endfor %}
                     </div>
                     {% if post.comments.count > 3 %}
-                        <a href="{% url 'core:post_detail' post.id %}" class="view-all-comments">
-                            すべてのコメントを表示
-                        </a>
+                        <button class="load-more-comments" 
+                                data-post-id="{{ post.id }}" 
+                                data-offset="3" 
+                                onclick="loadMoreComments(this)">
+                            もっとコメントを見る
+                        </button>
                     {% endif %}
-                    <form class="comment-form" data-post-id="{{ post.id }}">
+                    <form class="comment-form" data-post-id="{{ post.id }}" onsubmit="submitComment(event, '{{ post.id }}')">
                         {% csrf_token %}
-                        <input type="text" class="comment-input" placeholder="コメントを追加...">
+                        <input type="text" name="comment" placeholder="コメントを追加..." class="comment-input">
                         <button type="submit">
                             <i class="bi bi-send"></i>
                         </button>
@@ -88,4 +117,220 @@
     <div class="no-posts">
         <p>投稿がありません</p>
     </div>
-{% endfor %} 
+{% endfor %}
+
+<style>
+.post-card {
+    background: var(--spotify-dark-gray);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.post-content {
+    margin-top: 12px;
+}
+
+.post-header {
+    margin-bottom: 12px;
+}
+
+.user-info {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.user-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+}
+
+.user-link:hover {
+    opacity: 0.8;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 12px;
+}
+
+.user-details {
+    display: flex;
+}
+
+.username {
+    font-weight: 600;
+    color: var(--spotify-white);
+    margin-bottom: 2px;
+}
+
+.post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.post-type {
+    color: var(--spotify-green);
+    background: rgba(29, 185, 84, 0.1);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.post-time {
+    color: var(--spotify-gray);
+    font-size: 0.9rem;
+}
+
+.post-description {
+    margin: 12px 0;
+    color: var(--spotify-white);
+    line-height: 1.5;
+}
+
+.post-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 12px;
+}
+
+.action-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.comment-user {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.load-more-comments {
+    background: transparent;
+    border: none;
+    color: #1DB954;
+    padding: 8px 16px;
+    width: 100%;
+    cursor: pointer;
+    transition: color 0.2s;
+    margin: 10px 0;
+}
+
+.load-more-comments:hover {
+    color: #1ed760;
+    text-decoration: underline;
+}
+</style>
+
+<script>
+function submitComment(event, postId) {
+    event.preventDefault();
+    const form = event.target;
+    const input = form.querySelector('input[name="comment"]');
+    const content = input.value.trim();
+    
+    if (!content) return;
+
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+    fetch(`/post/${postId}/comment/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ content: content })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            // コメントリストを更新
+            const commentsList = document.querySelector(`#comments-${postId} .comments-list`);
+            const newComment = document.createElement('div');
+            newComment.className = 'comment';
+            newComment.innerHTML = `
+                <div class="comment-user">
+                    <img src="${data.comment.avatar_url || '/static/images/default-avatar.svg'}" alt="${data.comment.username}">
+                    <div class="comment-content">
+                        <a href="/profile/${data.comment.username}/" class="comment-username">
+                            ${data.comment.username}
+                        </a>
+                        <p class="comment-text">${data.comment.content}</p>
+                    </div>
+                </div>
+            `;
+            commentsList.appendChild(newComment);
+            
+            // コメント数を更新
+            const commentCount = document.querySelector(`[data-post-id="${postId}"].comment-button .comment-count`);
+            const currentCount = parseInt(commentCount.textContent);
+            commentCount.textContent = currentCount + 1;
+            
+            // 入力フィールドをクリア
+            input.value = '';
+            
+            // コメントセクションを表示
+            const commentsSection = document.getElementById(`comments-${postId}`);
+            commentsSection.style.display = 'block';
+        } else {
+            alert('コメントの投稿に失敗しました。');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('エラーが発生しました。');
+    });
+}
+
+function loadMoreComments(button) {
+    const postId = button.dataset.postId;
+    const offset = parseInt(button.dataset.offset);
+    const commentsList = button.closest('.comments-section').querySelector('.comments-list');
+    
+    fetch(`/api/posts/${postId}/comments/?offset=${offset}&limit=10`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.comments.length > 0) {
+                data.comments.forEach(comment => {
+                    const commentElement = document.createElement('div');
+                    commentElement.className = 'comment';
+                    commentElement.innerHTML = `
+                        <div class="comment-user">
+                            <img src="${comment.user.avatar_url || '/static/images/default-avatar.svg'}" 
+                                 alt="${comment.user.username}">
+                        </div>
+                        <div class="comment-content">
+                            <a href="/profile/${comment.user.username}/" class="comment-username">
+                                ${comment.user.username}
+                            </a>
+                            <p class="comment-text">${comment.content}</p>
+                        </div>
+                    `;
+                    commentsList.appendChild(commentElement);
+                });
+                
+                // 次のオフセットを設定
+                button.dataset.offset = offset + data.comments.length;
+                
+                // もし取得したコメント数が10未満なら、もっと見るボタンを非表示
+                if (data.comments.length < 10) {
+                    button.style.display = 'none';
+                }
+            } else {
+                button.style.display = 'none';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+</script> 

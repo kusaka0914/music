@@ -60,4 +60,12 @@ urlpatterns = [
     path('notifications/<int:notification_id>/redirect/', views.notification_redirect, name='notification_redirect'),
     path('api/notifications/unread-count/', views.get_unread_notification_count, name='get_unread_notification_count'),
     path('api/posts/<int:post_id>/likes/', views.get_post_likes, name='get_post_likes'),
+    path('spotify/search/<str:search_type>/', views.spotify_search, name='spotify_search'),
+    path('api/posts/<int:post_id>/comments/', views.get_post_comments, name='get_post_comments'),
+
+    path('popular-artists/', views.popular_artists, name='popular_artists'),
+    path('recommended-artists/', views.recommended_artists, name='recommended_artists'),
+    path('edit-music-taste/', views.edit_music_taste, name='edit_music_taste'),
+    path('search-artists/', views.search_artists, name='search_artists'),
+    
 ] 
