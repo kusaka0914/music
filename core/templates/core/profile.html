@@ -281,85 +281,7 @@
             <h2>投稿一覧</h2>
             {% if posts %}
                 <div class="posts-grid">
-                    {% for post in posts %}
-                        <div class="post-card">
-                            {% if post.spotify_link %}
-                                <div class="spotify-player">
-                                    <iframe 
-                                        src="https://open.spotify.com/embed/track/{{ post.spotify_link|slice:'31:' }}?utm_source=generator" 
-                                        width="100%" 
-                                        height="152" 
-                                        frameborder="0" 
-                                        allowfullscreen="" 
-                                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-                                        loading="lazy">
-                                    </iframe>
-                                </div>
-                            {% endif %}
-                            <div class="post-info">
-                                <div class="post-user-info">
-                                    <div class="user-info">
-                                        {% if post.user.profile.avatar %}
-                                            <img src="{{ post.user.profile.avatar.url }}" alt="{{ post.user.username }}" class="user-avatar">
-                                        {% else %}
-                                            <img src="{% static 'images/default-avatar.svg' %}" alt="{{ post.user.username }}" class="user-avatar">
-                                        {% endif %}
-                                        <span class="username">{{ post.user.username }}</span>
-                                    </div>
-                                    <span class="post-type">{{ post.get_post_type_display }}</span>
-                                    <span class="post-time">{{ post.created_at|timesince }}前</span>
-                                </div>
-                                {% if post.description %}
-                                    <p class="post-description">{{ post.description }}</p>
-                                {% endif %}
-                                <div class="post-actions">
-                                    <div class="action-button">
-                                        <button class="like-button {% if user in post.likes.all %}liked{% endif %}" 
-                                                data-post-id="{{ post.id }}"
-                                                onclick="likePost({{ post.id }}, this)">
-                                            <i class="bi bi-heart{% if user in post.likes.all %}-fill{% endif %}"></i>
-                                            <span class="like-count">{{ post.likes.count }}</span>
-                                        </button>
-                                    </div>
-                                    <div class="action-button">
-                                        <button class="comment-button" onclick="showComments({{ post.id }}, this)">
-                                            <i class="bi bi-chat"></i>
-                                            <span class="comment-count">{{ post.comments.count }}</span>
-                                            <span class="comment-text">コメントを表示</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="comments-section" style="display: none;">
-                                <div class="comments-list">
-                                    {% for comment in post.comments.all|slice:":3" %}
-                                        <div class="comment">
-                                            <div class="comment-user">
-                                                {% if comment.user.profile.avatar %}
-                                                    <img src="{{ comment.user.profile.avatar.url }}" alt="{{ comment.user.username }}">
-                                                {% else %}
-                                                    <img src="{% static 'images/default-avatar.svg' %}" alt="{{ comment.user.username }}">
-                                                {% endif %}
-                                            </div>
-                                            <div class="comment-content">
-                                                <span class="comment-username">{{ comment.user.username }}</span>
-                                                <p class="comment-text">{{ comment.content }}</p>
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-                                    {% if post.comments.count > 3 %}
-                                        <a href="{% url 'core:post_detail' post.id %}" class="view-all-comments">
-                                            すべてのコメントを表示 ({{ post.comments.count }})
-                                        </a>
-                                    {% endif %}
-                                </div>
-                                <form class="comment-form" data-post-id="{{ post.id }}">
-                                    <input type="text" placeholder="コメントを追加..." class="comment-input">
-                                    <button type="submit"><i class="bi bi-send"></i></button>
-                                </form>
-                            </div>
-                        </div>
-                    {% endfor %}
+                    {% include 'core/includes/post_list.html' %}
                 </div>
             {% else %}
                 <div class="no-posts">
@@ -848,8 +770,13 @@
 }
 
 .post-description {
-    margin: 10px 0;
-    color: white;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 18px;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .mood-tag {
@@ -1113,8 +1040,8 @@
 
 .playlist-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 2fr));
-    gap: 1rem;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 40px;
 }
 
 .playlist-card {
@@ -1381,7 +1308,7 @@
         flex-direction: column;
         align-items: center;
         text-align: center;
-    }
+    } 
 
     .profile-avatar {
         width: 150px;
@@ -1510,6 +1437,7 @@
 .user-info {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 15px;
 }
 
@@ -1673,10 +1601,9 @@
     font-size: 14px;
 }
 
-.post-description {
-    margin: 10px 0;
-    color: white;
-    font-size: 14px;
+.comment a {
+    color: #fff;
+    text-decoration: none;
 }
 
 .mood-tag {
@@ -1815,12 +1742,22 @@
         grid-template-columns: repeat(2, 1fr);
         max-width: 1000px;
     }
+    .playlist-grid {
+        grid-template-columns: repeat(2, 1fr);
+        
+    }
 }
 
 @media (max-width: 768px) {
     .posts-grid {
         grid-template-columns: 1fr;
         max-width: 600px;
+    }
+    .playlist-grid {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
 }
 

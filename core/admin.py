@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from .models import Profile, MusicPost, Comment, MusicStory, Playlist, PlaylistComment, PlaylistMusic, Music, Event, MusicTaste,Notification
+from .models import Profile, MusicPost, Comment, MusicStory, Playlist, PlaylistComment, PlaylistMusic, Music, Event, MusicTaste,Notification,Message
 
 class ProfileInline(admin.StackedInline):
     model = Profile
@@ -146,4 +146,11 @@ class NotificationAdmin(admin.ModelAdmin):
     list_display = ('recipient', 'sender', 'notification_type', 'post', 'playlist', 'comment', 'created_at')
     list_filter = ('created_at',)
     search_fields = ('recipient__username', 'sender__username', 'notification_type', 'post__title', 'playlist__title', 'comment__content')
+    readonly_fields = ('created_at',)
+
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ('sender', 'recipient', 'content', 'created_at')
+    list_filter = ('created_at',)
+    search_fields = ('sender__username', 'recipient__username', 'content')
     readonly_fields = ('created_at',)

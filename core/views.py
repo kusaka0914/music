@@ -10,7 +10,7 @@ from django.conf import settings
 from .models import (
     MusicPost, MusicStory, Comment, Profile, MusicTaste,
     Playlist, Notification, PlaylistComment, Music, PlaylistMusic, Event,
-    Conversation, Message
+    Conversation, Message, MessageAttachment
 )
 from .forms import MusicPostForm, MusicStoryForm, CommentForm, MusicTasteForm, ProfileEditForm, MusicStoryForm,UserLoginForm,UserRegisterForm,PlaylistForm
 from .spotify_utils import get_spotify_client, get_recently_played_tracks, get_top_tracks, get_spotify_oauth
@@ -1960,6 +1960,7 @@ def conversation_detail(request, conversation_id):
             'other_user': conv_other_user,
             'is_active': conv.id == conversation_id,
             'last_message': conv.last_message
+            
         })
     
     messages = Message.objects.filter(
@@ -1967,9 +1968,25 @@ def conversation_detail(request, conversation_id):
         recipient__in=conversation.participants.all()
     ).order_by('created_at')
     
+    # メッセージをJSONシリアライズ可能な形式に変換
+    messages_json = []
+    for message in messages:
+        attachments = [{
+            'url': attachment.file.url,
+            'type': attachment.file_type
+        } for attachment in message.attachments.all()]
+        
+        messages_json.append({
+            'content': message.content,
+            'sender_username': message.sender.username,
+            'attachments': attachments,
+            'created_at': message.created_at.isoformat()
+        })
+    
     return render(request, 'core/conversation_detail.html', {
         'conversation': conversation,
         'messages': messages,
+        'messages_json': json.dumps(messages_json),
         'other_user': other_user,
         'all_conversations': all_conversations
     })
@@ -1997,25 +2014,47 @@ def new_conversation(request, username):
 
 @login_required
 def send_message(request):
-    """メッセージを送信するAPI"""
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)
-            conversation_id = data.get('conversation_id')
-            content = data.get('content')
+            recipient_id = request.POST.get('recipient_id')
+            content = request.POST.get('content', '')
             
-            if not content:
-                return JsonResponse({'error': 'メッセージを入力してください'}, status=400)
+            recipient = get_object_or_404(User, id=recipient_id)
             
-            conversation = get_object_or_404(Conversation, id=conversation_id, participants=request.user)
-            recipient = conversation.participants.exclude(id=request.user.id).first()
+            # 会話を取得または作成
+            conversation = Conversation.objects.filter(
+                participants=request.user
+            ).filter(
+                participants=recipient
+            ).first()
             
+            if not conversation:
+                conversation = Conversation.objects.create()
+                conversation.participants.add(request.user, recipient)
+            
+            # メッセージを作成
             message = Message.objects.create(
                 sender=request.user,
                 recipient=recipient,
                 content=content
             )
+
+            # 添付ファイルの処理
+            attachments = []
+            for key in request.FILES:
+                if key.startswith('attachment'):
+                    file = request.FILES[key]
+                    attachment = MessageAttachment.objects.create(
+                        message=message,
+                        file=file
+                    )
+                    attachments.append({
+                        'url': attachment.file.url,
+                        'type': attachment.file_type,
+                        'name': file.name
+                    })
             
+            # 会話の最新メッセージを更新
             conversation.last_message = message
             conversation.save()
             
@@ -2024,6 +2063,7 @@ def send_message(request):
                 'message': {
                     'id': message.id,
                     'content': message.content,
+                    'attachments': attachments,
                     'created_at': message.created_at.isoformat(),
                     'sender_username': message.sender.username,
                     'sender_avatar': message.sender.profile.avatar.url if message.sender.profile.avatar else None
@@ -2031,6 +2071,7 @@ def send_message(request):
             })
             
         except Exception as e:
+            logger.error(f"メッセージ送信エラー: {str(e)}")
             return JsonResponse({'error': str(e)}, status=500)
     
     return JsonResponse({'error': '無効なリクエストです'}, status=400)

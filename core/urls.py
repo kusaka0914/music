@@ -46,12 +46,13 @@ urlpatterns = [
     path('api/artist-analysis/', views.get_artist_analysis, name='artist_analysis'),
     path('api/mood-recommendations/<str:mood_id>/', views.get_mood_recommendations, name='mood_recommendations'),
     path('create-story-modal/', views.create_story_modal, name='create_story_modal'),
+    path('send_message/', views.send_message, name='send_message'),
     
     # メッセージ機能のURL
     path('messages/', views.messages_view, name='messages'),
     path('messages/<int:conversation_id>/', views.conversation_detail, name='conversation_detail'),
     path('messages/new/<str:username>/', views.new_conversation, name='new_conversation'),
-    path('api/messages/send/', views.send_message, name='send_message'),
+    path('api/messages/send/<int:conversation_id>/', views.send_message, name='send_message'),
     path('api/messages/unread-count/', views.get_unread_messages_count, name='get_unread_messages_count'),
     path('api/toggle-follow/<str:username>/', views.toggle_follow, name='toggle_follow'),
     
@@ -62,6 +63,7 @@ urlpatterns = [
     path('api/posts/<int:post_id>/likes/', views.get_post_likes, name='get_post_likes'),
     path('spotify/search/<str:search_type>/', views.spotify_search, name='spotify_search'),
     path('api/posts/<int:post_id>/comments/', views.get_post_comments, name='get_post_comments'),
+    path('api/messages/send/', views.send_message, name='send_message'),
 
     path('popular-artists/', views.popular_artists, name='popular_artists'),
     path('recommended-artists/', views.recommended_artists, name='recommended_artists'),

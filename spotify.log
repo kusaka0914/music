@@ -5641,3 +5641,118 @@ INFO 2025-01-23 04:53:10,470 spotify_utils 746 281473632498080 Spotifyクライ�
 INFO 2025-01-23 04:54:29,743 spotify_utils 746 281473622012320 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
 INFO 2025-01-23 04:54:29,912 spotify_utils 746 281473622012320 アクセストークンの更新に成功しました
 INFO 2025-01-23 04:54:29,913 spotify_utils 746 281473622012320 Spotifyクライアント取得成功
+INFO 2025-01-23 05:18:09,536 spotify_utils 800 281472843968928 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 05:18:09,744 spotify_utils 800 281472843968928 アクセストークンの更新に成功しました
+INFO 2025-01-23 05:18:09,745 spotify_utils 800 281472843968928 Spotifyクライアント取得成功
+ERROR 2025-01-23 05:19:15,970 views 800 281472854454688 メッセージ送信エラー: Message() got an unexpected keyword argument 'conversation'
+INFO 2025-01-23 05:20:55,216 spotify_utils 809 281472927855008 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 05:20:55,414 spotify_utils 809 281472927855008 アクセストークンの更新に成功しました
+INFO 2025-01-23 05:20:55,415 spotify_utils 809 281472927855008 Spotifyクライアント取得成功
+INFO 2025-01-23 05:44:53,937 spotify_utils 834 281472707654048 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 05:44:54,137 spotify_utils 834 281472707654048 アクセストークンの更新に成功しました
+INFO 2025-01-23 05:44:54,138 spotify_utils 834 281472707654048 Spotifyクライアント取得成功
+INFO 2025-01-23 05:46:58,127 spotify_utils 845 281472692973984 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 05:46:58,341 spotify_utils 845 281472692973984 アクセストークンの更新に成功しました
+INFO 2025-01-23 05:46:58,415 spotify_utils 845 281472692973984 Spotifyクライアント取得成功
+INFO 2025-01-23 05:47:07,111 spotify_utils 845 281472692973984 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 05:47:07,284 spotify_utils 845 281472692973984 アクセストークンの更新に成功しました
+INFO 2025-01-23 05:47:07,285 spotify_utils 845 281472692973984 Spotifyクライアント取得成功
+INFO 2025-01-23 05:47:48,889 spotify_utils 845 281472692973984 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 05:47:49,055 spotify_utils 845 281472692973984 アクセストークンの更新に成功しました
+INFO 2025-01-23 05:47:49,056 spotify_utils 845 281472692973984 Spotifyクライアント取得成功
+INFO 2025-01-23 05:49:02,231 spotify_utils 845 281472692973984 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 05:49:02,424 spotify_utils 845 281472692973984 アクセストークンの更新に成功しました
+INFO 2025-01-23 05:49:02,425 spotify_utils 845 281472692973984 Spotifyクライアント取得成功
+INFO 2025-01-23 05:49:43,802 spotify_utils 845 281472672002464 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 05:49:43,984 spotify_utils 845 281472672002464 アクセストークンの更新に成功しました
+INFO 2025-01-23 05:49:43,985 spotify_utils 845 281472672002464 Spotifyクライアント取得成功
+INFO 2025-01-23 05:50:21,696 spotify_utils 845 281472692973984 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 05:50:21,934 spotify_utils 845 281472692973984 アクセストークンの更新に成功しました
+INFO 2025-01-23 05:50:21,934 spotify_utils 845 281472692973984 Spotifyクライアント取得成功
+INFO 2025-01-23 05:51:00,477 spotify_utils 845 281472682488224 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 05:51:00,645 spotify_utils 845 281472682488224 アクセストークンの更新に成功しました
+INFO 2025-01-23 05:51:00,645 spotify_utils 845 281472682488224 Spotifyクライアント取得成功
+INFO 2025-01-23 05:51:21,341 spotify_utils 845 281472672002464 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 05:51:21,542 spotify_utils 845 281472672002464 アクセストークンの更新に成功しました
+INFO 2025-01-23 05:51:21,543 spotify_utils 845 281472672002464 Spotifyクライアント取得成功
+INFO 2025-01-23 05:51:34,630 spotify_utils 845 281472661516704 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 05:51:34,804 spotify_utils 845 281472661516704 アクセストークンの更新に成功しました
+INFO 2025-01-23 05:51:34,806 spotify_utils 845 281472661516704 Spotifyクライアント取得成功
+INFO 2025-01-23 05:52:14,706 spotify_utils 845 281472651030944 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 05:52:14,876 spotify_utils 845 281472651030944 アクセストークンの更新に成功しました
+INFO 2025-01-23 05:52:14,877 spotify_utils 845 281472651030944 Spotifyクライアント取得成功
+INFO 2025-01-23 05:52:49,876 spotify_utils 845 281472651030944 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 05:52:50,044 spotify_utils 845 281472651030944 アクセストークンの更新に成功しました
+INFO 2025-01-23 05:52:50,045 spotify_utils 845 281472651030944 Spotifyクライアント取得成功
+INFO 2025-01-23 06:02:32,941 spotify_utils 869 281473718481312 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 06:02:33,137 spotify_utils 869 281473718481312 アクセストークンの更新に成功しました
+INFO 2025-01-23 06:02:33,138 spotify_utils 869 281473718481312 Spotifyクライアント取得成功
+ERROR 2025-01-23 06:03:17,153 views 869 281473622012320 メッセージ送信エラー: No User matches the given query.
+ERROR 2025-01-23 06:03:19,616 views 869 281473622012320 メッセージ送信エラー: No User matches the given query.
+ERROR 2025-01-23 06:03:21,125 views 869 281473622012320 メッセージ送信エラー: No User matches the given query.
+ERROR 2025-01-23 06:03:21,575 views 869 281473622012320 メッセージ送信エラー: No User matches the given query.
+INFO 2025-01-23 06:03:57,502 spotify_utils 869 281473611526560 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 06:03:57,710 spotify_utils 869 281473611526560 アクセストークンの更新に成功しました
+INFO 2025-01-23 06:03:57,711 spotify_utils 869 281473611526560 Spotifyクライアント取得成功
+INFO 2025-01-23 06:04:41,134 spotify_utils 869 281473611526560 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 06:04:41,307 spotify_utils 869 281473611526560 アクセストークンの更新に成功しました
+INFO 2025-01-23 06:04:41,308 spotify_utils 869 281473611526560 Spotifyクライアント取得成功
+INFO 2025-01-23 06:04:51,210 spotify_utils 869 281473622012320 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 06:04:51,381 spotify_utils 869 281473622012320 アクセストークンの更新に成功しました
+INFO 2025-01-23 06:04:51,381 spotify_utils 869 281473622012320 Spotifyクライアント取得成功
+INFO 2025-01-23 06:06:09,109 spotify_utils 877 281473189999008 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 06:06:09,307 spotify_utils 877 281473189999008 アクセストークンの更新に成功しました
+INFO 2025-01-23 06:06:09,308 spotify_utils 877 281473189999008 Spotifyクライアント取得成功
+INFO 2025-01-23 06:06:13,305 spotify_utils 877 281473189999008 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 06:06:13,475 spotify_utils 877 281473189999008 アクセストークンの更新に成功しました
+INFO 2025-01-23 06:06:13,476 spotify_utils 877 281473189999008 Spotifyクライアント取得成功
+INFO 2025-01-23 06:07:46,641 spotify_utils 877 281473189999008 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 06:07:47,813 spotify_utils 877 281473189999008 アクセストークンの更新に成功しました
+INFO 2025-01-23 06:07:47,814 spotify_utils 877 281473189999008 Spotifyクライアント取得成功
+INFO 2025-01-23 06:08:31,881 spotify_utils 877 281473095627168 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 06:08:32,066 spotify_utils 877 281473095627168 アクセストークンの更新に成功しました
+INFO 2025-01-23 06:08:32,066 spotify_utils 877 281473095627168 Spotifyクライアント取得成功
+INFO 2025-01-23 06:08:58,191 spotify_utils 877 281473095627168 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 06:08:58,362 spotify_utils 877 281473095627168 アクセストークンの更新に成功しました
+INFO 2025-01-23 06:08:58,362 spotify_utils 877 281473095627168 Spotifyクライアント取得成功
+INFO 2025-01-23 06:09:04,361 spotify_utils 877 281473200484768 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 06:09:04,532 spotify_utils 877 281473200484768 アクセストークンの更新に成功しました
+INFO 2025-01-23 06:09:04,532 spotify_utils 877 281473200484768 Spotifyクライアント取得成功
+INFO 2025-01-23 06:09:37,319 spotify_utils 877 281473179513248 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 06:09:37,489 spotify_utils 877 281473179513248 アクセストークンの更新に成功しました
+INFO 2025-01-23 06:09:37,490 spotify_utils 877 281473179513248 Spotifyクライアント取得成功
+INFO 2025-01-23 06:10:07,582 spotify_utils 877 281473179513248 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 06:10:07,768 spotify_utils 877 281473179513248 アクセストークンの更新に成功しました
+INFO 2025-01-23 06:10:07,769 spotify_utils 877 281473179513248 Spotifyクライアント取得成功
+INFO 2025-01-23 06:10:14,246 spotify_utils 877 281473189999008 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 06:10:14,440 spotify_utils 877 281473189999008 アクセストークンの更新に成功しました
+INFO 2025-01-23 06:10:14,440 spotify_utils 877 281473189999008 Spotifyクライアント取得成功
+INFO 2025-01-23 06:10:26,544 spotify_utils 877 281473179513248 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 06:10:26,713 spotify_utils 877 281473179513248 アクセストークンの更新に成功しました
+INFO 2025-01-23 06:10:26,713 spotify_utils 877 281473179513248 Spotifyクライアント取得成功
+INFO 2025-01-23 06:10:58,827 spotify_utils 877 281473200484768 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 06:10:58,996 spotify_utils 877 281473200484768 アクセストークンの更新に成功しました
+INFO 2025-01-23 06:10:58,997 spotify_utils 877 281473200484768 Spotifyクライアント取得成功
+INFO 2025-01-23 06:11:23,529 spotify_utils 877 281473189999008 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 06:11:23,696 spotify_utils 877 281473189999008 アクセストークンの更新に成功しました
+INFO 2025-01-23 06:11:23,696 spotify_utils 877 281473189999008 Spotifyクライアント取得成功
+INFO 2025-01-23 06:11:30,440 spotify_utils 877 281473095627168 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 06:11:30,606 spotify_utils 877 281473095627168 アクセストークンの更新に成功しました
+INFO 2025-01-23 06:11:30,607 spotify_utils 877 281473095627168 Spotifyクライアント取得成功
+INFO 2025-01-23 06:13:16,598 spotify_utils 885 281473267593632 Spotifyクライアント取得開始: user=a, refresh_token=AQCXp9go8D...
+INFO 2025-01-23 06:13:16,793 spotify_utils 885 281473267593632 アクセストークンの更新に成功しました
+INFO 2025-01-23 06:13:16,793 spotify_utils 885 281473267593632 Spotifyクライアント取得成功
+INFO 2025-01-23 06:13:38,943 views 885 281473257107872 人気アーティストの取得を開始
+INFO 2025-01-23 06:13:39,284 views 885 281473257107872 アーティスト取得: Mrs. GREEN APPLE
+INFO 2025-01-23 06:13:39,285 views 885 281473257107872 アーティスト取得: OFFICIAL HIGE DANDISM
+INFO 2025-01-23 06:13:39,285 views 885 281473257107872 アーティスト取得: RADWIMPS
+INFO 2025-01-23 06:13:39,285 views 885 281473257107872 アーティスト取得: YOASOBI
+INFO 2025-01-23 06:13:39,286 views 885 281473257107872 アーティスト取得: Vaundy
+INFO 2025-01-23 06:13:39,286 views 885 281473257107872 アーティスト取得: back number
+INFO 2025-01-23 06:13:39,286 views 885 281473257107872 アーティスト取得: ヨルシカ
+INFO 2025-01-23 06:13:39,286 views 885 281473257107872 アーティスト取得: Kenshi Yonezu
+INFO 2025-01-23 06:13:39,286 views 885 281473257107872 アーティスト取得: Aimyon
+INFO 2025-01-23 06:13:39,287 views 885 281473257107872 アーティスト取得: Fujii Kaze
+INFO 2025-01-23 06:13:39,287 views 885 281473257107872 人気アーティスト取得完了: 10件
+INFO 2025-01-23 06:15:50,609 views 895 281472774762912 User: a, Top Genres: {}
+ERROR 2025-01-23 06:15:50,615 views 895 281472774762912 音楽の相性計算中にエラーが発生: 'Profile' object has no attribute 'get_music_compatibility'

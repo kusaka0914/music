@@ -482,18 +482,40 @@ class Event(models.Model):
             events = events.filter(artists__contains=artist_names)
         return events.order_by('date')
 
+class MessageAttachment(models.Model):
+    message = models.ForeignKey('Message', on_delete=models.CASCADE, related_name='attachments')
+    file = models.FileField(upload_to='message_attachments/')
+    file_type = models.CharField(max_length=10)  # 'image', 'video', 'pdf'
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Attachment for message {self.message.id}'
+
+    def save(self, *args, **kwargs):
+        # ファイルタイプを自動判定
+        file_name = self.file.name.lower()
+        if file_name.endswith(('.jpg', '.jpeg', '.png', '.gif')):
+            self.file_type = 'image'
+        elif file_name.endswith(('.mp4', '.mov', '.avi')):
+            self.file_type = 'video'
+        elif file_name.endswith('.pdf'):
+            self.file_type = 'pdf'
+        else:
+            self.file_type = 'other'
+        super().save(*args, **kwargs)
+
 class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
     recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
-    content = models.TextField()
+    content = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ['-created_at']
+        ordering = ['created_at']
 
     def __str__(self):
-        return f"{self.sender.username} から {self.recipient.username} へのメッセージ"
+        return f'{self.sender.username} -> {self.recipient.username}: {self.content[:50]}'
 
 class Conversation(models.Model):
     participants = models.ManyToManyField(User, related_name='conversations')
