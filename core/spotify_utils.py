@@ -129,4 +129,13 @@ def get_top_tracks(spotify_client, limit=10, time_range='short_term'):
         return tracks
     except Exception as e:
         print(f"Error getting top tracks: {e}")
-        return [] 
+        return []
+
+def get_spotify_oauth():
+    """SpotifyOAuthオブジェクトを取得する"""
+    return SpotifyOAuth(
+        client_id=settings.SPOTIFY_CLIENT_ID,
+        client_secret=settings.SPOTIFY_CLIENT_SECRET,
+        redirect_uri=settings.SPOTIFY_REDIRECT_URI,
+        scope='user-read-recently-played user-top-read'
+    ) 

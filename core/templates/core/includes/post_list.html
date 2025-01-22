@@ -34,8 +34,7 @@
                 <div class="post-actions">
                     <div class="action-group">
                         <button class="like-button {% if user in post.likes.all %}liked{% endif %}" 
-                                data-post-id="{{ post.id }}"
-                                onclick="toggleLike('{{ post.id }}', this)">
+                                data-post-id="{{ post.id }}">
                             <i class="bi {% if user in post.likes.all %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
                         </button>
                         <button class="likes-list-button" onclick="showLikesModal('{{ post.id }}')">
@@ -43,8 +42,7 @@
                         </button>
                     </div>
                     <button class="comment-button" 
-                            data-post-id="{{ post.id }}"
-                            onclick="toggleComments('{{ post.id }}')">
+                            data-post-id="{{ post.id }}">
                         <i class="bi bi-chat"></i>
                         <span class="comment-count">{{ post.comments.count }}</span>
                         <span class="comment-text">コメントを表示</span>
@@ -62,23 +60,26 @@
                                     {% endif %}
                                 </div>
                                 <div class="comment-content">
-                                    <span class="comment-username">{{ comment.user.username }}</span>
-                                    <p class="comment-text">{{ comment.content }}</p>
+                                    <a href="{% url 'core:profile' comment.user.username %}" class="comment-username">
+                                        {{ comment.user.username }}
+                                    </a>
+                                    <p class="comment-text">{{ comment.text }}</p>
                                 </div>
                             </div>
                         {% endfor %}
-                        {% if post.comments.count > 3 %}
-                            <a href="{% url 'core:post_detail' post.id %}" class="view-all-comments">
-                                すべてのコメントを表示 ({{ post.comments.count }})
-                            </a>
-                        {% endif %}
                     </div>
-                    {% if user.is_authenticated %}
-                    <form class="comment-form" data-post-id="{{ post.id }}" onsubmit="submitComment(event, '{{ post.id }}')">
-                        <input type="text" name="comment" placeholder="コメントを追加..." class="comment-input">
-                        <button type="submit"><i class="bi bi-send"></i></button>
-                    </form>
+                    {% if post.comments.count > 3 %}
+                        <a href="{% url 'core:post_detail' post.id %}" class="view-all-comments">
+                            すべてのコメントを表示
+                        </a>
                     {% endif %}
+                    <form class="comment-form" data-post-id="{{ post.id }}">
+                        {% csrf_token %}
+                        <input type="text" class="comment-input" placeholder="コメントを追加...">
+                        <button type="submit">
+                            <i class="bi bi-send"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

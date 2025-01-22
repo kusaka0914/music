@@ -29,7 +29,7 @@
                 </a>
                 <a href="{% url 'core:music_compatibility' %}" class="nav-item {% if request.resolver_match.url_name == 'music_compatibility' %}active{% endif %}">
                     <i class="bi bi-music-note"></i>
-                    <span>音楽の相性</span>
+                    <span>音楽マッチング</span>
                 </a>
                 <a href="{% url 'core:messages' %}" class="nav-item {% if request.resolver_match.url_name == 'messages' %}active{% endif %}">
                     <i class="bi bi-chat"></i>
@@ -226,7 +226,7 @@
         border-radius: 8px;
         padding: 0.5rem;
         margin-top: 0.5rem;
-        min-width: 200px;
+        width: 220px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     }
 

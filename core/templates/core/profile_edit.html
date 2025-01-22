@@ -42,6 +42,18 @@
             </div>
 
             <div class="form-group">
+                <label for="id_nickname">ニックネーム</label>
+                {{ form.nickname }}
+                {% if form.nickname.errors %}
+                    <div class="error-message">
+                        {% for error in form.nickname.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
                 <label for="id_bio">自己紹介</label>
                 {{ form.bio }}
                 <div class="character-count">

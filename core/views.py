@@ -13,7 +13,7 @@ from .models import (
     Conversation, Message
 )
 from .forms import MusicPostForm, MusicStoryForm, CommentForm, MusicTasteForm, ProfileEditForm, MusicStoryForm,UserLoginForm,UserRegisterForm,PlaylistForm
-from .spotify_utils import get_spotify_client, get_recently_played_tracks, get_top_tracks
+from .spotify_utils import get_spotify_client, get_recently_played_tracks, get_top_tracks, get_spotify_oauth
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials, SpotifyOAuth
 import json
@@ -21,6 +21,7 @@ import logging
 from django.contrib.auth import login, logout
 from django.core.paginator import Paginator
 import random
+from django.db import transaction
 
 logger = logging.getLogger(__name__)
 
@@ -378,27 +379,30 @@ def delete_post(request, pk):
 
 @login_required
 def like_post(request, post_id):
-    """投稿のいいね処理"""
     try:
-        post = get_object_or_404(MusicPost, id=post_id)
-        
-        if request.user in post.likes.all():
-            post.likes.remove(request.user)
-            liked = False
-        else:
-            post.likes.add(request.user)
-            liked = True
-        
-        return JsonResponse({
-            'status': 'success',
-            'liked': liked,
-            'like_count': post.likes.count()
-        })
-    except Exception as e:
-        logger.error(f"いいね処理中にエラーが発生: {str(e)}")
+        with transaction.atomic():
+            post = MusicPost.objects.select_for_update().get(id=post_id)
+            if request.user in post.likes.all():
+                post.likes.remove(request.user)
+                liked = False
+            else:
+                post.likes.add(request.user)
+                liked = True
+            
+            return JsonResponse({
+                'status': 'success',
+                'liked': liked,
+                'like_count': post.likes.count()
+            })
+    except MusicPost.DoesNotExist:
         return JsonResponse({
             'status': 'error',
-            'message': 'いいねの処理中にエラーが発生しました'
+            'message': '投稿が見つかりません。'
+        }, status=404)
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': 'エラーが発生しました。'
         }, status=500)
 
 @login_required
@@ -440,6 +444,9 @@ def profile(request, username):
         ).annotate(
             engagement=Count('likes') + Count('playlist_comments')
         ).order_by('-created_at')
+
+        for playlist in playlists:
+            playlist.cover_image = playlist.playlistmusic_set.first().music.album_art
         
         # Spotifyのデータを取得
         recently_played = []
@@ -448,7 +455,15 @@ def profile(request, username):
             try:
                 spotify_client = get_spotify_client(profile_user)
                 if spotify_client:
-                    recently_played = get_recently_played_tracks(spotify_client)
+                    # 重複を除去するために、track_idをキーとして使用
+                    recently_played_all = get_recently_played_tracks(spotify_client)
+                    seen_tracks = set()
+                    recently_played = []
+                    for track in recently_played_all:
+                        track_id = track.get('id')
+                        if track_id not in seen_tracks:
+                            seen_tracks.add(track_id)
+                            recently_played.append(track)
                     top_tracks = get_top_tracks(spotify_client)
             except Exception as e:
                 logger.error(f"Spotifyデータの取得に失敗: {str(e)}")
@@ -1103,41 +1118,35 @@ def spotify_connect(request):
 
 @login_required
 def spotify_callback(request):
-    """Spotifyからのコールバックを処理"""
-    code = request.GET.get('code')
-    if not code:
-        messages.error(request, 'Spotify連携に失敗しました。認証コードが見つかりません。')
-        return redirect('core:profile', username=request.user.username)
-
     try:
-        logger.info(f"Spotifyコールバック処理開始: user={request.user.username}")
-        sp_oauth = SpotifyOAuth(
-            client_id=settings.SPOTIFY_CLIENT_ID,
-            client_secret=settings.SPOTIFY_CLIENT_SECRET,
-            redirect_uri=settings.SPOTIFY_REDIRECT_URI,
-            scope='user-read-recently-played user-top-read'
-        )
-        
+        sp_oauth = get_spotify_oauth()
+        code = request.GET.get('code')
+        if not code:
+            messages.error(request, 'Spotifyの認証に失敗しました。')
+            return redirect('core:home')
+
         # アクセストークンを取得
         token_info = sp_oauth.get_access_token(code, check_cache=False)
-        if not token_info or 'refresh_token' not in token_info:
-            logger.error("リフレッシュトークンの取得に失敗しました")
-            messages.error(request, 'Spotify連携に失敗しました。リフレッシュトークンを取得できませんでした。')
-            return redirect('core:profile', username=request.user.username)
-            
-        # リフレッシュトークンを保存
-        request.user.profile.spotify_refresh_token = token_info['refresh_token']
-        request.user.profile.spotify_connected = True
-        request.user.profile.save()
-        
-        logger.info(f"Spotify連携成功: user={request.user.username}")
-        messages.success(request, 'Spotifyと連携しました！')
-        
+        if not token_info:
+            messages.error(request, 'Spotifyのトークン取得に失敗しました。')
+            return redirect('core:home')
+
+        # プロフィールを取得または作成
+        profile = Profile.objects.get_or_create(user=request.user)[0]
+        profile.spotify_refresh_token = token_info['refresh_token']
+        profile.spotify_connected = True  # この行を追加
+        profile.save()
+
+        # ログ出力を追加
+        logger.info(f"Spotify連携成功: user={request.user.username}, refresh_token={profile.spotify_refresh_token[:10]}...")
+
+        messages.success(request, 'Spotifyと連携しました。')
+        return redirect('core:home')
+
     except Exception as e:
-        logger.error(f"Spotify連携処理でエラーが発生: {str(e)}")
-        messages.error(request, f'Spotify連携に失敗しました: {str(e)}')
-    
-    return redirect('core:profile', username=request.user.username)
+        logger.error(f"Spotify連携エラー: {str(e)}")
+        messages.error(request, f'エラーが発生しました: {str(e)}')
+        return redirect('core:home')
 
 @login_required
 def spotify_disconnect(request):
@@ -1989,15 +1998,21 @@ def toggle_follow(request, username):
 
 @login_required
 def get_post_likes(request, post_id):
-    """投稿にいいねしたユーザーのリストを取得するAPI"""
-    post = get_object_or_404(MusicPost, id=post_id)
-    users = post.likes.all().select_related('profile')
-    
-    user_data = [{
-        'username': user.username,
-        'name': user.get_full_name(),
-        'avatar': user.profile.avatar.url if user.profile.avatar else None,
-        'is_following': request.user.profile.following.filter(user=user).exists() if request.user.is_authenticated else False
-    } for user in users]
-    
-    return JsonResponse({'users': user_data})
+    try:
+        post = get_object_or_404(MusicPost, id=post_id)
+        users = post.likes.all().select_related('profile')
+        users_data = [{
+            'username': user.username,
+            'name': user.get_full_name(),
+            'avatar': user.profile.avatar.url if user.profile.avatar else None
+        } for user in users]
+        
+        return JsonResponse({
+            'status': 'success',
+            'users': users_data
+        })
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': 'エラーが発生しました。'
+        }, status=500)
