@@ -1,0 +1,547 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="gradient-background">
+    <div class="result-container">
+        <div class="spotify-card fade-in" style="max-width: 800px; margin: 2rem auto;">
+            <div class="playlist-header">
+                <div class="playlist-header-text">
+                    <h1 class="spotify-title">プレイリストを編集</h1>
+                </div>
+            </div>
+            
+            <form method="post" class="playlist-form" id="playlistForm">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="title" class="spotify-label">プレイリスト名</label>
+                    <div class="input-wrapper">
+                        <input type="text" 
+                               id="title" 
+                               name="title" 
+                               class="spotify-input" 
+                               placeholder="例：お気に入りの夏曲" 
+                               value="{{ playlist.title }}"
+                               required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description" class="spotify-label">説明</label>
+                    <div class="input-wrapper">
+                        <textarea id="description" 
+                                  name="description" 
+                                  class="spotify-input" 
+                                  placeholder="プレイリストの説明を入力">{{ playlist.description }}</textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="privacy-toggle">
+                        <label class="toggle-label">
+                            <input type="checkbox" 
+                                   id="is_public" 
+                                   name="is_public" 
+                                   {% if playlist.is_public %}checked{% endif %}>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div class="toggle-text">
+                            <span class="public-text">公開</span>
+                            <span class="private-text">非公開</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="spotify-label">曲を追加</label>
+                    <div class="search-section">
+                        <div class="input-wrapper">
+                            <input type="text" 
+                                   id="trackSearch" 
+                                   class="spotify-input" 
+                                   placeholder="曲名を入力して検索">
+                        </div>
+                        <div id="searchResults" class="search-results"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="spotify-label">選択した曲</label>
+                    <div id="selectedTracks" class="selected-tracks"></div>
+                    <input type="hidden" id="track_ids" name="track_ids" value="[]">
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" id="submitButton" class="spotify-button primary" disabled>
+                        更新する
+                    </button>
+                    <a href="{% url 'core:playlist_detail' playlist.pk %}" class="spotify-button secondary">
+                        キャンセル
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('playlistForm');
+    const trackSearch = document.getElementById('trackSearch');
+    const searchResults = document.getElementById('searchResults');
+    const selectedTracks = document.getElementById('selectedTracks');
+    const trackIdsInput = document.getElementById('track_ids');
+    const submitButton = document.getElementById('submitButton');
+    const isPublicToggle = document.getElementById('is_public');
+    let selectedTrackIds = [];
+    let searchTimeout;
+
+    // 既存の曲を読み込む
+    const currentTracks = {{ current_tracks|safe }};
+    currentTracks.forEach(track => {
+        addTrack(track);
+    });
+
+    // 検索入力のイベントハンドラ
+    trackSearch.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        const query = this.value.trim();
+        
+        if (query.length > 0) {
+            searchTimeout = setTimeout(() => {
+                searchTracks(query);
+            }, 500);
+        } else {
+            searchResults.innerHTML = '';
+        }
+    });
+
+    // 曲を検索する関数
+    async function searchTracks(query) {
+        try {
+            const response = await fetch(`/spotify/search/track/?q=${encodeURIComponent(query)}`);
+            const data = await response.json();
+            
+            if (data.error) {
+                searchResults.innerHTML = `
+                    <div class="error-message">
+                        <p>${data.error}</p>
+                        <a href="/spotify/connect/" class="spotify-connect-link">Spotifyと連携する</a>
+                    </div>
+                `;
+                return;
+            }
+
+            if (!data.tracks || data.tracks.length === 0) {
+                searchResults.innerHTML = '<div class="no-results">曲が見つかりませんでした。</div>';
+                return;
+            }
+
+            searchResults.innerHTML = data.tracks.map(track => `
+                <div class="search-result-item" data-track-id="${track.id}">
+                    <img src="${track.imageUrl || '/static/images/default-album.png'}" alt="${track.title}">
+                    <div class="track-info">
+                        <strong>${track.title}</strong>
+                        <span>${track.artist}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            // 検索結果のクリックイベントを設定
+            searchResults.querySelectorAll('.search-result-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const trackId = this.dataset.trackId;
+                    const trackInfo = data.tracks.find(t => t.id === trackId);
+                    
+                    addTrack({
+                        id: trackId,
+                        title: trackInfo.title,
+                        artist: trackInfo.artist,
+                        imageUrl: trackInfo.imageUrl
+                    });
+
+                    searchResults.innerHTML = '';
+                    trackSearch.value = '';
+                });
+            });
+
+        } catch (error) {
+            console.error('検索エラー:', error);
+            searchResults.innerHTML = `
+                <div class="error-message">
+                    <p>検索中にエラーが発生しました。</p>
+                    <p>Spotifyとの連携を確認してください。</p>
+                </div>
+            `;
+        }
+    }
+
+    // 曲を選択リストに追加する関数
+    function addTrack(track) {
+        if (!selectedTrackIds.includes(track.id)) {
+            selectedTrackIds.push(track.id);
+            updateTrackIdsInput();
+            
+            const trackElement = document.createElement('div');
+            trackElement.className = 'selected-track-item';
+            trackElement.dataset.trackId = track.id;
+            trackElement.innerHTML = `
+                <img src="${track.imageUrl || '/static/images/default-album.png'}" alt="${track.title}">
+                <div class="track-info">
+                    <strong>${track.title}</strong>
+                    <span>${track.artist}</span>
+                </div>
+                <button type="button" class="remove-track-btn">
+                    <i class="bi bi-x-circle"></i>
+                </button>
+            `;
+            
+            trackElement.querySelector('.remove-track-btn').addEventListener('click', () => {
+                removeTrack(track.id);
+                trackElement.remove();
+            });
+            
+            selectedTracks.appendChild(trackElement);
+            updateSubmitButton();
+        }
+    }
+
+    // 曲を選択リストから削除する関数
+    function removeTrack(trackId) {
+        selectedTrackIds = selectedTrackIds.filter(id => id !== trackId);
+        updateTrackIdsInput();
+        updateSubmitButton();
+    }
+
+    // track_idsの入力値を更新する関数
+    function updateTrackIdsInput() {
+        trackIdsInput.value = JSON.stringify(selectedTrackIds);
+    }
+
+    // 送信ボタンの状態を更新する関数
+    function updateSubmitButton() {
+        submitButton.disabled = selectedTrackIds.length === 0;
+    }
+
+    // フォーム送信前の処理
+    form.addEventListener('submit', function(e) {
+        if (selectedTrackIds.length === 0) {
+            e.preventDefault();
+            alert('少なくとも1曲は追加してください。');
+        }
+    });
+
+    // 公開/非公開トグルの処理
+    const publicText = document.querySelector('.public-text');
+    const privateText = document.querySelector('.private-text');
+
+    function updateToggleDisplay() {
+        if (isPublicToggle.checked) {
+            publicText.style.opacity = '1';
+            privateText.style.opacity = '0.5';
+        } else {
+            publicText.style.opacity = '0.5';
+            privateText.style.opacity = '1';
+        }
+    }
+
+    isPublicToggle.addEventListener('change', updateToggleDisplay);
+    updateToggleDisplay();
+});
+</script>
+
+<style>
+.spotify-card {
+    border-radius: 8px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.playlist-form {
+    width: 100%;
+    max-width: 800px;
+}
+
+.playlist-header {
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.spotify-title {
+    color: var(--spotify-green);
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.spotify-subtitle {
+    color: var(--spotify-text-secondary);
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.spotify-label {
+    display: block;
+    color: var(--spotify-white);
+    margin-bottom: 0.5rem;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.spotify-input {
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--spotify-light-gray);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: var(--spotify-white);
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+
+.spotify-input:focus {
+    outline: none;
+    border-color: var(--spotify-green);
+}
+
+textarea.spotify-input {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.privacy-toggle {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.toggle-label {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.toggle-label input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--spotify-light-gray);
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+    background-color: var(--spotify-green);
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(26px);
+}
+
+.toggle-text {
+    display: flex;
+    gap: 1rem;
+    color: var(--spotify-white);
+}
+
+.search-section {
+    position: relative;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--spotify-light-gray);
+    border-radius: 4px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.search-result-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    gap: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.search-result-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.search-result-item img {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+}
+
+.track-info {
+    display: flex;
+    flex-direction: column;
+    color: var(--spotify-white);
+}
+
+.track-info span {
+    color: var(--spotify-text-secondary);
+    font-size: 0.9rem;
+}
+
+.selected-tracks {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.selected-track-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    background: var(--spotify-light-gray);
+    border-radius: 4px;
+    gap: 1rem;
+}
+
+.selected-track-item img {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+}
+
+.remove-track-btn {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: var(--spotify-text-secondary);
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: color 0.2s;
+}
+
+.remove-track-btn:hover {
+    color: var(--spotify-white);
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.spotify-button {
+    padding: 0.75rem 2rem;
+    color: #fff;
+    border: none;
+    border-radius: 500px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.spotify-button.primary {
+    background-color: var(--spotify-green);
+    color: #fff;
+}
+
+.spotify-button.primary:hover {
+    background-color: var(--spotify-green);
+    transform: scale(1.02);
+}
+
+.spotify-button.primary:disabled {
+    background-color: var(--spotify-text-secondary);
+    cursor: not-allowed;
+    transform: none;
+}
+
+.spotify-button.secondary {
+    background-color: transparent;
+    color: var(--spotify-white);
+    border: 1px solid var(--spotify-white);
+    text-decoration: none;
+    text-align: center;
+}
+
+.spotify-button.secondary:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.02);
+}
+
+.error-message {
+    color: #ff4444;
+    padding: 0.75rem;
+    text-align: center;
+}
+
+.no-results {
+    color: var(--spotify-text-secondary);
+    padding: 0.75rem;
+    text-align: center;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.spotify-connect-link {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: var(--spotify-green);
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    transition: background-color 0.2s;
+}
+
+.spotify-connect-link:hover {
+    background-color: var(--spotify-green-hover);
+}
+</style>
+{% endblock %} 

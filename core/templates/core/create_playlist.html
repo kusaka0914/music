@@ -213,9 +213,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: space-between;
-    width: 140px;
     height: 28px;
-    background: rgba(0, 0, 0, 0.5);
+    background: var(--spotify-green);
     border-radius: 14px;
     padding: 0 0.5rem;
     cursor: pointer;
@@ -246,11 +245,11 @@
 }
 
 .toggle-text.public {
-    opacity: 0;
+    opacity: 1;
 }
 
 .toggle-text.private {
-    opacity: 1;
+    opacity: 0;
 }
 
 .toggle-input:checked ~ .toggle-text.public {
@@ -487,9 +486,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const trackIdsInput = document.getElementById('trackIds');
     const submitButton = document.getElementById('submitButton');
     const form = document.getElementById('playlistForm');
+    const isPublicToggle = document.getElementById('is_public');
+    const toggleLabel = document.querySelector('.toggle-label');
     
     let selectedTrackIds = [];
     let searchTimeout;
+
+    // 公開設定のトグル処理
+    isPublicToggle.addEventListener('change', function() {
+        const publicText = this.checked ? '公開' : '非公開';
+        toggleLabel.querySelector('.toggle-text.public').style.opacity = this.checked ? '1' : '0';
+        toggleLabel.style.backgroundColor = this.checked ? 'var(--spotify-green)' : '#000';
+        toggleLabel.querySelector('.toggle-text.private').style.opacity = this.checked ? '0' : '1';
+    });
 
     // 検索入力のイベントハンドラ
     searchInput.addEventListener('input', function() {
@@ -507,15 +516,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // 曲を検索する関数
     async function searchTracks(query) {
         try {
-            const response = await fetch(`/spotify/search/?q=${encodeURIComponent(query)}`);
+            const response = await fetch(`/spotify/search/track/?q=${encodeURIComponent(query)}`);
             const data = await response.json();
+            
+            if (data.error) {
+                searchResults.innerHTML = `<p class="error-message">${data.error}<br>Spotifyとの連携が必要です。</p>`;
+                return;
+            }
             
             if (data.tracks) {
                 displaySearchResults(data.tracks);
             }
         } catch (error) {
             console.error('検索エラー:', error);
-            searchResults.innerHTML = '<p class="error-message">検索中にエラーが発生しました。</p>';
+            searchResults.innerHTML = '<p class="error-message">検索中にエラーが発生しました。<br>Spotifyとの連携を確認してください。</p>';
         }
     }
 

@@ -1,0 +1,398 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="post-form-container">
+    <div class="form-header">
+        <h2>投稿を編集</h2>
+    </div>
+    
+    <form method="post" class="post-form">
+        {% csrf_token %}
+        
+        
+
+        <!-- 投稿タイプの選択 -->
+        <div class="form-section post-type-section">
+            <h3>投稿の種類</h3>
+            <div class="post-type-options {{ post.target_type }}-types">
+                {% if post.target_type == 'track' %}
+                <div class="post-type-options track-types">
+                    <label class="post-type-option">
+                        <input type="radio" name="post_type" value="lyrics_analysis">
+                        <div class="post-type-content">
+                            <i class="bi bi-journal-text"></i>
+                            <span>歌詞考察</span>
+                            <p class="post-type-description">歌詞の意味や解釈を共有</p>
+                        </div>
+                    </label>
+                    <label class="post-type-option">
+                        <input type="radio" name="post_type" value="track_impression">
+                        <div class="post-type-content">
+                            <i class="bi bi-chat-heart"></i>
+                            <span>感想共有</span>
+                            <p class="post-type-description">曲の感想や印象を共有</p>
+                        </div>
+                    </label>
+                    <label class="post-type-option">
+                        <input type="radio" name="post_type" value="track_memory">
+                        <div class="post-type-content">
+                            <i class="bi bi-chat-dots"></i>
+                            <span>思い出共有</span>
+                            <p class="post-type-description">曲の思い出を共有</p>
+                        </div>
+                    </label>
+                </div>
+                {% elif post.target_type == 'artist' %}
+                <!-- アーティストの投稿タイプ -->
+                <div class="post-type-options artist-types" style="display: none;">
+                    <label class="post-type-option">
+                        <input type="radio" name="post_type" value="artist_introduction">
+                        <div class="post-type-content">
+                            <i class="bi bi-person-lines-fill"></i>
+                            <span>アーティスト紹介</span>
+                            <p class="post-type-description">歌手の魅力を紹介</p>
+                        </div>
+                    </label>
+                    <label class="post-type-option">
+                        <input type="radio" name="post_type" value="artist_impression">
+                        <div class="post-type-content">
+                            <i class="bi bi-chat-heart"></i>
+                            <span>感想共有</span>
+                            <p class="post-type-description">歌手への想いを共有</p>
+                        </div>
+                    </label>
+                    <label class="post-type-option">
+                        <input type="radio" name="post_type" value="artist_memory">
+                        <div class="post-type-content">
+                            <i class="bi bi-chat-dots"></i>
+                            <span>思い出共有</span>
+                            <p class="post-type-description">歌手の思い出を共有</p>
+                        </div>
+                    </label>
+                </div>
+                {% elif post.target_type == 'album' %}
+                <!-- アルバムの投稿タイプ -->
+                <div class="post-type-options album-types" style="display: none;">
+                    <label class="post-type-option">
+                        <input type="radio" name="post_type" value="album_review">
+                        <div class="post-type-content">
+                            <i class="bi bi-star"></i>
+                            <span>アルバムレビュー</span>
+                            <p class="post-type-description">アルバムの講評</p>
+                        </div>
+                    </label>
+                    <label class="post-type-option">
+                        <input type="radio" name="post_type" value="album_impression">
+                        <div class="post-type-content">
+                            <i class="bi bi-chat-heart"></i>
+                            <span>感想共有</span>
+                            <p class="post-type-description">アルバムの感想を共有</p>
+                        </div>
+                    </label>
+                    <label class="post-type-option">
+                        <input type="radio" name="post_type" value="album_memory">
+                        <div class="post-type-content">
+                            <i class="bi bi-chat-dots"></i>
+                            <span>思い出共有</span>
+                            <p class="post-type-description">アルバムの思い出を共有</p>
+                        </div>
+                    </label>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- コメントセクション -->
+        <div class="form-section comment-section">
+            <div class="textarea-container">
+                <textarea name="description" placeholder="この曲の魅力や感想を書いてみましょう..." maxlength="200">{{ post.description }}</textarea>
+                <div class="character-count">0/200</div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="submit-button">
+                更新する
+            </button>
+            <a href="{% url 'core:home' %}" class="cancel-button">
+                キャンセル
+            </a>
+        </div>
+    </form>
+</div>
+
+<style>
+.post-form-container {
+    max-width: 800px;
+    margin: 3rem auto;
+    padding: 2.5rem;
+    border-radius: 24px;
+    color: #fff;
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.form-header h2 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(45deg, #1DB954, #1ed760);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+}
+
+.form-section {
+    margin-bottom: 2.5rem;
+    border-radius: 16px;
+    transition: all 0.3s ease;
+}
+
+.target-type-options{
+    margin-bottom: 2rem;
+}
+
+.target-type-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 3fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.target-type-option {
+    cursor: pointer;
+}
+
+.target-type-option input[type="radio"] {
+    display: none;
+}
+
+.target-type-content {
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.target-type-option input[type="radio"]:checked + .target-type-content {
+    background: rgba(29, 185, 84, 0.3);
+    transform: translateY(-2px);
+}
+
+.target-type-content i {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #1DB954;
+}
+
+.target-type-content span {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.target-type-flex {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.target-type-description {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+}
+
+
+.form-section h3 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    color: var(--spotify-white);
+}
+
+.selected-item {
+    background: rgba(30, 30, 30, 0.95);
+    border-radius: 12px;
+    padding: 1rem;
+}
+
+.selected-content {
+    display: flex;
+    align-items: center;
+}
+
+.selected-content img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-right: 1rem;
+}
+
+.selected-info {
+    flex-grow: 1;
+}
+
+.selected-info h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+.selected-info p {
+    margin: 0.2rem 0 0;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.post-type-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.post-type-option {
+    cursor: pointer;
+}
+
+.post-type-option input[type="radio"] {
+    display: none;
+}
+
+.post-type-content {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.post-type-content i {
+    font-size: 2rem;
+    color: var(--spotify-green);
+    margin-bottom: 0.5rem;
+}
+
+.post-type-content span {
+    display: block;
+    font-size: 1.1rem;
+    color: var(--spotify-white);
+    margin-bottom: 0.5rem;
+}
+
+.post-type-description {
+    font-size: 0.9rem;
+    color: var(--spotify-gray);
+    margin: 0;
+}
+
+.post-type-option input[type="radio"]:checked + .post-type-content {
+    background: rgba(29, 185, 84, 0.1);
+    border: 2px solid var(--spotify-green);
+}
+
+.textarea-container {
+    position: relative;
+}
+
+textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 1.2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 1.1rem;
+    resize: vertical;
+    transition: all 0.3s ease;
+}
+
+textarea:focus {
+    border-color: #1DB954;
+    background: rgba(255, 255, 255, 0.15);
+    outline: none;
+}
+
+.character-count {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.submit-button {
+    width: 180px;
+    padding: 8px 16px;
+    background: linear-gradient(45deg, #1DB954, #1ed760);
+    border: none;
+    border-radius: 500px;
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    height: 50px;
+}
+
+.submit-button:hover {
+    transform: scale(1.02);
+}
+
+.cancel-button {
+    width: 180px;
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 500px;
+    color: #fff;
+    font-size: 1.1rem;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.3s ease;
+    height: 50px;
+}
+
+.cancel-button:hover {
+    transform: scale(1.02);
+}
+
+@media (max-width: 768px) {
+    .post-form-container {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const textarea = document.querySelector('textarea[name="description"]');
+    const characterCount = document.querySelector('.character-count');
+    
+    function updateCharacterCount() {
+        const count = textarea.value.length;
+        characterCount.textContent = `${count}/200`;
+    }
+    
+    textarea.addEventListener('input', updateCharacterCount);
+    updateCharacterCount();
+});
+</script>
+{% endblock %} 

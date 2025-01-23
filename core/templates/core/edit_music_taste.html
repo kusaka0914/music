@@ -5,7 +5,7 @@
 <div class="spotify-container">
     <form method="post" class="spotify-form">
         {% csrf_token %}
-        <div class="sidebar">
+        <!-- <div class="sidebar">
             <h2 class="spotify-title">音楽の好みを編集</h2>
             <div class="genre-mood-section">
                 <div class="form-group">
@@ -31,7 +31,7 @@
                     {% endfor %}
                 </div>
             </div>
-        </div>
+        </div> -->
         
 
         <div class="main-content">
@@ -39,6 +39,7 @@
             
             <!-- アーティスト検索セクション -->
             <div class="search-section">
+                <h2>アーティスト検索</h2>
                 <div class="search-container">
                     <i class="fas fa-search search-icon"></i>
                     <input type="text" id="artist-search" class="spotify-search" placeholder="アーティストを検索">
@@ -78,6 +79,16 @@
     display: none;
 }
 
+.search-section {
+    margin-top: 20px;
+}
+
+.search-section h2 {
+    font-size: 16px;
+    margin-bottom: 16px;
+    margin-left: 24px;
+}
+
 .spotify-container {
     min-height: 100vh;
     background: #121212;
@@ -102,12 +113,10 @@
 
 .main-content {
     flex: 1;
-    margin-left: 300px;
-    padding: 2rem;
-    background: linear-gradient(to bottom, #535353, #121212);
+    padding: 2rem 80px;
     min-height: 100vh;
     box-sizing: border-box;
-    width: calc(100% - 300px);
+    width: 100%;
 }
 
 .spotify-title {
@@ -162,12 +171,19 @@
 
 .spotify-search {
     width: 100%;
-    padding: 1rem 1rem 1rem 3rem;
+    padding: 1rem 1rem 1rem 24px;
+    max-width: 450px;
     border: none;
     border-radius: 500px;
     background: #242424;
     color: #fff;
     font-size: 1rem;
+}
+
+.selected-artists-section h3 {
+    font-size: 16px;
+    margin-bottom: 16px;
+    margin-left: 24px;
 }
 
 .search-container {
@@ -293,13 +309,14 @@
 }
 
 .recommendation-section {
-    margin-top: 3rem;
+    margin-top: 24px;
 }
 
 .recommendation-section h3 {
     color: #fff;
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
+    font-size: 20px;
+    margin-bottom: 16px;
+    margin-left: 24px;
 }
 
 /* スクロールバーのカスタマイズ */

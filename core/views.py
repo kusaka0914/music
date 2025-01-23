@@ -165,7 +165,7 @@ def home(request):
     # プレイリストのカバー画像を設定
     for playlist in recommended_playlists:
         first_track = playlist.playlistmusic_set.first()
-        if first_track:
+        if first_track and first_track.music:
             playlist.cover_image = first_track.music.album_art
         else:
             playlist.cover_image = None
@@ -296,7 +296,8 @@ def create_post(request):
                     'title': request.POST.get('title'),
                     'artist': request.POST.get('artist'),
                     'spotify_link': f"https://open.spotify.com/track/{spotify_track_id}",
-                    'image': request.POST.get('image')
+                    'image': request.POST.get('image'),
+                    'target_type': 'track'
                 })
             elif 'spotify_artist_id' in request.POST:
                 spotify_artist_id = request.POST.get('spotify_artist_id')
@@ -364,25 +365,46 @@ def post_detail(request, post_id):
     return render(request, 'core/post_detail.html', context)
 
 @login_required
-def edit_post(request, pk):
-    post = get_object_or_404(MusicPost, pk=pk, user=request.user)
+def edit_post(request, post_id):
+    post = get_object_or_404(MusicPost, id=post_id, user=request.user)
+    
     if request.method == 'POST':
-        form = MusicPostForm(request.POST, instance=post)
-        if form.is_valid():
-            form.save()
-            messages.success(request, '投稿が更新されました。')
-            return redirect('core:post_detail', pk=post.pk)
-    else:
-        form = MusicPostForm(instance=post)
-    return render(request, 'core/post_form.html', {'form': form, 'title': '投稿を編集'})
+        try:
+            # フォームデータの取得
+            post_type = request.POST.get('post_type')
+            description = request.POST.get('description')
+            target_type = request.POST.get('target_type')
+            # バリデーション
+            if not all([post_type, description]):
+                messages.error(request, '必須項目が入力されていません。')
+                return redirect('core:edit_post', post_id=post_id)
+
+            # 投稿データの更新
+            post.post_type = post_type
+            post.description = description
+            post.save()
+
+            messages.success(request, '投稿を更新しました。')
+            return redirect('core:home')
+
+        except Exception as e:
+            logger.error(f"投稿更新エラー: {str(e)}")
+            messages.error(request, '投稿の更新中にエラーが発生しました。')
+            return redirect('core:edit_post', post_id=post_id)
+
+    context = {
+        'post': post,
+    }
+    
+    return render(request, 'core/edit_post.html', context)
 
 @login_required
-def delete_post(request, pk):
-    post = get_object_or_404(MusicPost, pk=pk, user=request.user)
+def delete_post(request, post_id):
+    post = get_object_or_404(MusicPost, pk=post_id, user=request.user)
     if request.method == 'POST':
         post.delete()
         messages.success(request, '投稿が削除されました。')
-        return redirect('core:home')
+        return JsonResponse({'status': 'success'})
     return render(request, 'core/post_confirm_delete.html', {'post': post})
 
 @login_required
@@ -455,7 +477,11 @@ def profile(request, username):
         ).order_by('-created_at')
 
         for playlist in playlists:
-            playlist.cover_image = playlist.playlistmusic_set.first().music.album_art
+            first_track = playlist.playlistmusic_set.first()
+            if first_track and first_track.music:
+                playlist.cover_image = first_track.music.album_art
+            else:
+                playlist.cover_image = None
         
         # Spotifyのデータを取得
         recently_played = []
@@ -481,7 +507,8 @@ def profile(request, username):
         compatibility_data = None
         
         # 各ユーザーとの音楽の相性を計算
-        compatibility_data = calculate_music_compatibility(request.user.profile, profile)
+        if request.user != profile_user:
+            compatibility_data = calculate_music_compatibility(request.user.profile, profile)
         
         context = {
             'profile_user': profile_user,
@@ -553,7 +580,10 @@ def create_playlist(request):
             )
 
             # 選択された曲をプレイリストに追加
-            spotify = get_spotify_client()
+            spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(
+                client_id=settings.SPOTIFY_CLIENT_ID,
+                client_secret=settings.SPOTIFY_CLIENT_SECRET
+            ))
             
             for order, track_id in enumerate(track_ids):
                 try:
@@ -617,14 +647,14 @@ def playlist_detail(request, pk):
 
     
     first_track = playlist.playlistmusic_set.first()
-    if first_track:
+    if first_track and first_track.music:
         playlist.cover_image = first_track.music.album_art
     else:
         playlist.cover_image = None
 
     for playlist_music in recommended_playlists:
         first_track = playlist_music.playlistmusic_set.first()
-        if first_track:
+        if first_track and first_track.music:
             playlist_music.cover_image = first_track.music.album_art
         else:
             playlist_music.cover_image = None
@@ -674,15 +704,94 @@ def playlist_detail(request, pk):
 @login_required
 def edit_playlist(request, pk):
     playlist = get_object_or_404(Playlist, pk=pk, user=request.user)
+    
     if request.method == 'POST':
-        form = PlaylistForm(request.POST, instance=playlist)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'プレイリストが更新されました。')
+        try:
+            title = request.POST.get('title')
+            description = request.POST.get('description')
+            is_public = request.POST.get('is_public') == 'on'
+            track_ids_str = request.POST.get('track_ids', '[]')
+            
+            try:
+                track_ids = json.loads(track_ids_str)
+            except json.JSONDecodeError:
+                logger.error(f"track_idsのJSONデコードに失敗: {track_ids_str}")
+                track_ids = []
+
+            if not title:
+                messages.error(request, 'プレイリスト名を入力してください。')
+                return redirect('core:edit_playlist', pk=pk)
+
+            if not track_ids:
+                messages.error(request, '少なくとも1曲は追加してください。')
+                return redirect('core:edit_playlist', pk=pk)
+
+            # プレイリストの基本情報を更新
+            playlist.title = title
+            playlist.description = description
+            playlist.is_public = is_public
+            playlist.save()
+
+            # 既存の曲を全て削除
+            PlaylistMusic.objects.filter(playlist=playlist).delete()
+
+            # 新しい曲を追加
+            spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(
+                client_id=settings.SPOTIFY_CLIENT_ID,
+                client_secret=settings.SPOTIFY_CLIENT_SECRET
+            ))
+            
+            for order, track_id in enumerate(track_ids):
+                try:
+                    music = Music.objects.filter(spotify_id=track_id).first()
+                    if not music:
+                        track_info = spotify.track(track_id)
+                        music = Music.objects.create(
+                            title=track_info['name'],
+                            artist=track_info['artists'][0]['name'],
+                            spotify_id=track_id,
+                            album_art=track_info['album']['images'][0]['url'] if track_info['album']['images'] else None,
+                            preview_url=track_info.get('preview_url'),
+                            duration_ms=track_info.get('duration_ms', 0)
+                        )
+
+                    PlaylistMusic.objects.create(
+                        playlist=playlist,
+                        music=music,
+                        order=order
+                    )
+
+                except Exception as e:
+                    logger.error(f"楽曲の追加中にエラー: {str(e)}")
+                    continue
+
+            messages.success(request, 'プレイリストを更新しました。')
             return redirect('core:playlist_detail', pk=playlist.pk)
-    else:
-        form = PlaylistForm(instance=playlist)
-    return render(request, 'core/playlist_form.html', {'form': form, 'title': 'プレイリストを編集'})
+
+        except Exception as e:
+            logger.error(f"プレイリスト更新エラー: {str(e)}")
+            messages.error(request, 'プレイリストの更新中にエラーが発生しました。')
+            return redirect('core:edit_playlist', pk=pk)
+
+    # プレイリストの曲を取得
+    playlist_tracks = PlaylistMusic.objects.filter(
+        playlist=playlist
+    ).select_related('music').order_by('order')
+
+    # 現在の曲のリストを作成
+    current_tracks = [{
+        'id': track.music.spotify_id,
+        'title': track.music.title,
+        'artist': track.music.artist,
+        'imageUrl': track.music.album_art
+    } for track in playlist_tracks]
+
+    context = {
+        'playlist': playlist,
+        'current_tracks': json.dumps(current_tracks)
+    }
+    
+    return render(request, 'core/edit_playlist.html', context)
 
 @login_required
 def delete_playlist(request, pk):
@@ -846,7 +955,7 @@ def search(request):
 
             for playlist in playlists:
                 first_track = playlist.playlistmusic_set.first()
-                if first_track:
+                if first_track and first_track.music:
                     playlist.cover_image = first_track.music.album_art
                 else:
                     playlist.cover_image = None
@@ -1529,14 +1638,16 @@ def spotify_search(request, search_type):
         return JsonResponse({'error': '検索クエリが必要です'}, status=400)
 
     try:
-        sp_oauth = get_spotify_oauth()
-        sp = spotipy.Spotify(auth_manager=sp_oauth)
+        spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(
+            client_id=settings.SPOTIFY_CLIENT_ID,
+            client_secret=settings.SPOTIFY_CLIENT_SECRET
+        ))
 
         results = {}
         
         if search_type == 'track':
             # 曲検索
-            track_results = sp.search(q=query, type='track', limit=10, market='JP')
+            track_results = spotify.search(q=query, type='track', limit=10, market='JP')
             results['tracks'] = [{
                 'id': track['id'],
                 'title': track['name'],
@@ -1547,11 +1658,11 @@ def spotify_search(request, search_type):
 
         elif search_type == 'artist':
             # アーティスト検索
-            artist_results = sp.search(q=query, type='artist', limit=10, market='JP')
+            artist_results = spotify.search(q=query, type='artist', limit=10, market='JP')
             results['artists'] = []
             for artist in artist_results['artists']['items']:
                 # アーティストのトップトラックを取得
-                top_tracks = sp.artist_top_tracks(artist['id'], country='JP')
+                top_tracks = spotify.artist_top_tracks(artist['id'], country='JP')
                 preview_track = next((track for track in top_tracks['tracks'] if track['preview_url']), None)
                 
                 results['artists'].append({
@@ -1570,11 +1681,11 @@ def spotify_search(request, search_type):
 
         elif search_type == 'album':
             # アルバム検索
-            album_results = sp.search(q=query, type='album', limit=10, market='JP')
+            album_results = spotify.search(q=query, type='album', limit=10, market='JP')
             results['albums'] = []
             for album in album_results['albums']['items']:
                 # アルバムの詳細情報を取得
-                album_info = sp.album(album['id'])
+                album_info = spotify.album(album['id'])
                 # プレビュー可能な最初のトラックを探す
                 preview_track = next((track for track in album_info['tracks']['items'] if track.get('preview_url')), None)
                 

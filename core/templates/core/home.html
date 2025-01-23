@@ -8,10 +8,10 @@
         <!-- メインコンテンツ -->
         <main class="main-content">
             <!-- ストーリーセクション -->
-            <div class="stories-section">
+            <!-- <div class="stories-section">
                 <div class="stories-container">
                     {% if user.is_authenticated %}
-                    <!-- ストーリー追加ボタン -->
+                    
                     <div class="story-item add-story" id="addStoryButton">
                         <div class="story-add-button">
                             <i class="bi bi-plus-lg"></i>
@@ -20,7 +20,7 @@
                     </div>
                     {% endif %}
                     
-                    <!-- ストーリーアイテム -->
+                    
                     {% for user_data in stories_by_user %}
                         {% if user_data.user.username %}
                         <div class="story-item" data-first-story-id="{{ user_data.stories.0.id }}">
@@ -36,7 +36,7 @@
                         {% endif %}
                     {% endfor %}
                 </div>
-            </div>
+            </div> -->
 
             <div class="content-header">
                 <div class="feed-filters">

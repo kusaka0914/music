@@ -50,6 +50,23 @@
                             <div class="post-meta">
                                 <span class="post-type">{{ post.get_post_type_display }}</span>
                                 <span class="post-time">{{ post.created_at|timesince }}前</span>
+                                {% if post.user == user %}
+                                <div class="post-actions-dropdown">
+                                    <button class="post-actions-btn">
+                                        <i class="bi bi-three-dots"></i>
+                                    </button>
+                                    <div class="post-actions-menu">
+                                        <a href="{% url 'core:edit_post' post.id %}" class="post-action-item">
+                                            <i class="bi bi-pencil"></i>
+                                            編集
+                                        </a>
+                                        <button class="post-action-item delete-post" data-post-id="{{ post.id }}">
+                                            <i class="bi bi-trash"></i>
+                                            削除
+                                        </button>
+                                    </div>
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -229,6 +246,63 @@
     color: #1ed760;
     text-decoration: underline;
 }
+
+.post-actions-dropdown {
+    position: relative;
+    margin-left: 8px;
+}
+
+.post-actions-btn {
+    background: none;
+    border: none;
+    color: var(--spotify-gray);
+    padding: 4px 8px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.post-actions-btn:hover {
+    color: var(--spotify-white);
+}
+
+.post-actions-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--spotify-dark-gray);
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    display: none;
+    z-index: 1000;
+    min-width: 120px;
+}
+
+.post-actions-dropdown:hover .post-actions-menu {
+    display: block;
+}
+
+.post-action-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    color: var(--spotify-white);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+}
+
+.post-action-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.post-action-item i {
+    font-size: 1rem;
+}
 </style>
 
 <script>
@@ -333,4 +407,33 @@ function loadMoreComments(button) {
             console.error('Error:', error);
         });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    // 削除ボタンのイベントリスナーを追加
+    document.querySelectorAll('.delete-post').forEach(button => {
+        button.addEventListener('click', function() {
+            const postId = this.dataset.postId;
+            if (confirm('この投稿を削除してもよろしいですか？')) {
+                fetch(`/post/${postId}/delete/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        location.reload();
+                    } else {
+                        // alert('投稿の削除に失敗しました。');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // alert('投稿の削除に失敗しました。');
+                });
+            }
+        });
+    });
+});
 </script> 
