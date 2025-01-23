@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.utils import timezone
-from django.db.models import Q, Count, Case, When, F, Model as models, Exists, OuterRef, IntegerField
+from django.db.models import Q, Count, Case, When, F, Model as models, Exists, OuterRef, IntegerField, Max, Min
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -464,51 +464,67 @@ def profile(request, username):
         profile = profile_user.profile
         posts = MusicPost.objects.filter(user=profile_user).order_by('-created_at')
         
-        # フォロー中とフォロワーのユーザーリストを取得
-        following_users = User.objects.filter(profile__in=profile_user.profile.following.all())
-        follower_users = User.objects.filter(profile__following=profile_user.profile)
+        # フォロー中とフォロワーのユーザーを取得し、相性スコアを計算
+        following_users = []
+        for following_profile in profile.following.all():
+            compatibility_score = request.user.profile.get_music_compatibility_score(following_profile.user)
+            following_users.append({
+                'user': following_profile.user,
+                'compatibility_score': compatibility_score
+            })
         
-        # プレイリストを取得
-        playlists = Playlist.objects.filter(
-            user=profile_user,
-            is_public=True
-        ).annotate(
-            engagement=Count('likes') + Count('playlist_comments')
-        ).order_by('-created_at')
-
-        for playlist in playlists:
-            first_track = playlist.playlistmusic_set.first()
-            if first_track and first_track.music:
-                playlist.cover_image = first_track.music.album_art
-            else:
-                playlist.cover_image = None
+        follower_users = []
+        for follower_profile in profile.followers.all():
+            compatibility_score = request.user.profile.get_music_compatibility_score(follower_profile.user)
+            follower_users.append({
+                'user': follower_profile.user,
+                'compatibility_score': compatibility_score
+            })
         
-        # Spotifyのデータを取得
-        recently_played = []
-        top_tracks = []
-        if profile_user.profile.spotify_connected:
-            try:
-                spotify_client = get_spotify_client(profile_user)
-                if spotify_client:
-                    # 重複を除去するために、track_idをキーとして使用
-                    recently_played_all = get_recently_played_tracks(spotify_client)
-                    seen_tracks = set()
-                    recently_played = []
-                    for track in recently_played_all:
-                        track_id = track.get('id')
-                        if track_id not in seen_tracks:
-                            seen_tracks.add(track_id)
-                            recently_played.append(track)
-                    top_tracks = get_top_tracks(spotify_client)
-            except Exception as e:
-                logger.error(f"Spotifyデータの取得に失敗: {str(e)}")
+        # プレイリストとその他の情報を取得
+        playlists = Playlist.objects.filter(user=profile_user, is_public=True)
         
         # 音楽の相性スコアを計算（既存のユーザーの場合）
         compatibility_data = None
-        
-        # 各ユーザーとの音楽の相性を計算
         if request.user != profile_user:
-            compatibility_data = calculate_music_compatibility(request.user.profile, profile)
+            # 共通のアーティストを取得（画像情報付き）
+            common_artists = []
+            if profile.favorite_artists and request.user.profile.favorite_artists:
+                # アーティスト情報をIDまたは名前でマッピング
+                user1_artists = {}
+                for artist in request.user.profile.favorite_artists:
+                    key = artist.get('id') or artist.get('name')
+                    if key:
+                        user1_artists[key] = artist
+
+                user2_artists = {}
+                for artist in profile.favorite_artists:
+                    key = artist.get('id') or artist.get('name')
+                    if key:
+                        user2_artists[key] = artist
+                
+                # 共通のアーティストを見つける
+                common_keys = set(user1_artists.keys()) & set(user2_artists.keys())
+                
+                # 共通のアーティスト情報を構築
+                for key in common_keys:
+                    artist_info = user1_artists[key]
+                    common_artists.append({
+                        'name': artist_info.get('name', ''),
+                        'image': artist_info.get('image'),
+                        'id': artist_info.get('id', '')
+                    })
+            
+            # 相性スコアを計算
+            score = calculate_music_compatibility(request.user.profile, profile)['score']
+            
+            compatibility_data = {
+                'score': score,
+                'common_artists': common_artists
+            }
+        
+        # フォロー状態を確認
+        is_following = request.user.profile.following.filter(id=profile.id).exists() if request.user.is_authenticated else False
         
         context = {
             'profile_user': profile_user,
@@ -516,9 +532,8 @@ def profile(request, username):
             'following_users': following_users,
             'follower_users': follower_users,
             'playlists': playlists,
-            'recently_played': recently_played,
-            'top_tracks': top_tracks,
             'compatibility_data': compatibility_data,
+            'is_following': is_following,
         }
         return render(request, 'core/profile.html', context)
     except User.DoesNotExist:
@@ -816,14 +831,56 @@ def add_to_playlist(request, post_pk, playlist_pk):
 
 @login_required
 def notifications(request):
-    notifications = request.user.notifications.all()
-    unread_count = notifications.filter(is_read=False).count()
+    # 通知を種類ごとにグループ化して最新のものだけを取得
+    notifications = (
+        request.user.notifications.filter(
+            recipient=request.user,
+            sender__isnull=False  # 送信者が存在する通知のみ
+        ).exclude(  # 必要なフィールドが空の通知を除外
+            Q(notification_type='like_post') & Q(post__isnull=True) |
+            Q(notification_type='comment_post') & Q(post__isnull=True) |
+            Q(notification_type='like_playlist') & Q(playlist__isnull=True)
+        ).values('sender', 'notification_type', 'post', 'playlist')
+        .annotate(
+            latest_id=Max('id'),
+            created_at=Max('created_at'),
+            is_read=Min('is_read')
+        )
+        .order_by('-created_at')
+    )
     
-    # 全ての通知を既読にする
-    notifications.filter(is_read=False).update(is_read=True)
+    # 通知の詳細情報を取得
+    detailed_notifications = []
+    for notif in notifications:
+        try:
+            notification = Notification.objects.select_related(
+                'sender', 'sender__profile',  # sender__profileを追加
+                'post', 'playlist', 'comment'
+            ).get(id=notif['latest_id'])
+            
+            # フォロー状態を確認（sender__profileを使用）
+            if notification.sender and notification.sender != request.user:
+                notification.is_following = notification.sender.profile in request.user.profile.following.all()
+            else:
+                notification.is_following = False
+            
+            # 通知の種類に応じて必要なフィールドが存在することを確認
+            if (notification.notification_type == 'like_post' and notification.post) or \
+               (notification.notification_type == 'comment_post' and notification.post) or \
+               (notification.notification_type == 'like_playlist' and notification.playlist) or \
+               notification.notification_type == 'follow':
+                detailed_notifications.append(notification)
+        except Exception as e:
+            logger.error(f"通知の取得エラー: {str(e)}")
+            continue
+    
+    # 未読の通知を既読に更新
+    request.user.notifications.filter(is_read=False).update(is_read=True)
+    
+    unread_count = sum(1 for n in notifications if not n['is_read'])
     
     return render(request, 'core/notifications.html', {
-        'notifications': notifications,
+        'notifications': detailed_notifications,
         'unread_count': unread_count
     })
 

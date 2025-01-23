@@ -49,7 +49,7 @@
 
             <!-- 選択済みアーティスト -->
             <div class="selected-artists-section">
-                <h3>選択したアーティスト</h3>
+                <h3>好きなアーティスト</h3>
                 <div id="selected-artists" class="selected-artists-grid"></div>
                 {{ form.favorite_artists }}
             </div>
@@ -84,7 +84,7 @@
 }
 
 .search-section h2 {
-    font-size: 16px;
+    font-size: 20px;
     margin-bottom: 16px;
     margin-left: 24px;
 }
@@ -181,7 +181,7 @@
 }
 
 .selected-artists-section h3 {
-    font-size: 16px;
+    font-size: 20px;
     margin-bottom: 16px;
     margin-left: 24px;
 }
@@ -652,7 +652,21 @@ document.getElementById('artist-search').addEventListener('input', function(e) {
                 const suggestions = document.getElementById('artist-suggestions');
                 suggestions.innerHTML = '';
                 
-                data.artists.forEach(artist => {
+                // 選択済みアーティストのリストを取得
+                const selectedArtists = Array.from(document.getElementById('selected-artists').children)
+                    .map(chip => chip.querySelector('.artist-name').textContent);
+                
+                // 選択済みアーティストを除外
+                const filteredArtists = data.artists.filter(artist => 
+                    !selectedArtists.includes(artist.name)
+                );
+                
+                if (filteredArtists.length === 0) {
+                    suggestions.innerHTML = '<div class="suggestion-item no-results">該当するアーティストが見つかりませんでした</div>';
+                    return;
+                }
+                
+                filteredArtists.forEach(artist => {
                     const item = document.createElement('div');
                     item.className = 'suggestion-item';
                     item.innerHTML = `
@@ -664,6 +678,16 @@ document.getElementById('artist-search').addEventListener('input', function(e) {
                         addArtistChip(artist.name, artist.image);
                         document.getElementById('artist-search').value = '';
                         suggestions.innerHTML = '';
+                        
+                        // 対応するアーティストカードのボタンを更新
+                        document.querySelectorAll('.artist-card').forEach(card => {
+                            if (card.querySelector('h4').textContent === artist.name) {
+                                const button = card.querySelector('.spotify-button');
+                                button.textContent = '追加済み';
+                                button.classList.add('added');
+                                button.disabled = true;
+                            }
+                        });
                     });
                     
                     suggestions.appendChild(item);

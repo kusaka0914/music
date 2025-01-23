@@ -8,26 +8,28 @@
 <div class="spotify-container">
     <div class="profile-header">
         <div class="profile-info">
+            <div class="profile-avatar-container">
             {% if profile_user.profile.avatar %}
                 <img src="{{ profile_user.profile.avatar.url }}" alt="{{ profile_user.username }}" class="profile-avatar">
             {% else %}
                 <img src="{% static 'images/default-avatar.svg' %}" alt="{{ profile_user.username }}" class="profile-avatar">
             {% endif %}
-            <div class="profile-details">
-                <div class="profile-stats">
-                    <div class="stat">
-                        <span class="count">{{ profile_user.musicpost_set.count }}</span>
-                        <span class="label">投稿</span>
-                    </div>
-                    <div class="stat" data-bs-toggle="modal" data-bs-target="#followersModal" style="cursor: pointer;">
-                        <span class="count followers-count">{{ follower_users.count }}</span>
-                        <span class="label">フォロワー</span>
-                    </div>
-                    <div class="stat" data-bs-toggle="modal" data-bs-target="#followingModal" style="cursor: pointer;">
-                        <span class="count following-count">{{ following_users.count }}</span>
-                        <span class="label">フォロー中</span>
-                    </div>
+            <div class="profile-stats">
+                <div class="stat first-stat">
+                    <span class="count">{{ profile_user.musicpost_set.count }}</span>
+                    <span class="label">投稿</span>
                 </div>
+                <div class="stat second-stat" data-bs-toggle="modal" data-bs-target="#followersModal" style="cursor: pointer;">
+                    <span class="count followers-count">{{ follower_users|length }}</span>
+                    <span class="label">フォロワー</span>
+                </div>
+                <div class="stat third-stat" data-bs-toggle="modal" data-bs-target="#followingModal" style="cursor: pointer;">
+                    <span class="count following-count">{{ following_users|length }}</span>
+                    <span class="label">フォロー中</span>
+                </div>
+            </div>
+            </div>
+            <div class="profile-details">
                 <div class="profile-top">
                     <h1>{{ profile_user.username }}</h1>
                     
@@ -83,39 +85,36 @@
 
     <div class="profile-content">
         <!-- 音楽の相性セクション -->
-        {% if compatibility_data %}
-        <div class="music-compatibility">
-            <h3 class="music-compatibility-header">
-                <i></i> 音楽の相性: {{ compatibility_data.score }}%
-            </h3>
-            
-            <!-- 共通の曲 -->
-            {% if compatibility_data.common_tracks %}
-            <div class="mb-3">
-                <h4 class="music-compatibility-subheader">
-                    <i class="bi bi-disc"></i> 共通の好きな曲
-                </h4>
-                <ul class="music-compatibility-list">
-                    {% for track in compatibility_data.common_tracks %}
-                    <li class="music-compatibility-item">
-                        {{ track.name }} - {{ track.artist }}
-                    </li>
-                    {% endfor %}
-                </ul>
+        {% if compatibility_data and compatibility_data.score > 0 %}
+        <div class="music-compatibility-section">
+            <div class="compatibility-header">
+                <h3>あなたと{{ profile_user.username }}さんの音楽の相性</h3>
+                <div class="compatibility-score">
+                    <div class="score-circle" style="--score: {{ compatibility_data.score }}">
+                        <span class="score-number">{{ compatibility_data.score }}%</span>
+                    </div>
+                </div>
             </div>
-            {% endif %}
             
-            <!-- 共通のアーティスト -->
             {% if compatibility_data.common_artists %}
-            <div class="mb-3">
-                <h4 class="music-compatibility-subheader">
-                    <i class="bi bi-person-video2"></i> 共通のアーティスト
-                </h4>
-                <ul class="music-compatibility-list">
+            <div class="common-artists">
+                <h4>共通のアーティスト</h4>
+                <div class="artist-grid">
                     {% for artist in compatibility_data.common_artists %}
-                    <li class="music-compatibility-item">{{ artist }}</li>
+                    <div class="artist-card">
+                        {% if artist.image %}
+                        <div class="artist-image" style="background-image: url('{{ artist.image }}')"></div>
+                        {% else %}
+                        <div class="artist-image default-image">
+                            <i class="bi bi-person"></i>
+                        </div>
+                        {% endif %}
+                        <div class="artist-info">
+                            <span class="artist-name">{{ artist.name }}</span>
+                        </div>
+                    </div>
                     {% endfor %}
-                </ul>
+                </div>
             </div>
             {% endif %}
         </div>
@@ -174,7 +173,13 @@
                 {% for artist in profile_user.profile.favorite_artists %}
                     <div class="artist-card">
                         <div class="artist-image">
-                            <img src="{{ artist.image|default:'/static/images/default-artist.png' }}" alt="{{ artist.name }}">
+                            {% if artist.image %}
+                            <div class="artist-image" style="background-image: url('{{ artist.image }}')"></div>
+                            {% else %}
+                                <div class="artist-image default-image">
+                                    <i class="bi bi-person"></i>
+                                </div>
+                            {% endif %}
                         </div>
                         <div class="artist-info">
                             <h3>{{ artist.name }}</h3>
@@ -397,7 +402,7 @@
     </div>
 </div>
 
-<!-- フォロー中モーダル -->
+<!-- フォロー中のユーザー一覧 -->
 <div class="modal fade" id="followingModal" tabindex="-1" aria-labelledby="followingModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content dark-modal">
@@ -411,29 +416,33 @@
             </div>
             <div class="modal-body">
                 <div class="user-list">
-                    {% for user_following in following_users %}
-                        <div class="user-item">
-                            <div class="user-info">
-                                <a href="{% url 'core:profile' user_following.username %}" class="user-avatar">
-                                    {% if user_following.profile.avatar %}
-                                        <img src="{{ user_following.profile.avatar.url }}" alt="{{ user_following.username }}">
+                    {% for user_data in following_users %}
+                    <div class="recommended-user-container">
+                        <a href="{% url 'core:profile' user_data.user.username %}">
+                            <div class="recommended-user">
+                                <div class="user-info-recommended">
+                                    {% if user_data.user.profile.avatar %}
+                                        <img src="{{ user_data.user.profile.avatar.url }}" alt="{{ user_data.user.username }}">
                                     {% else %}
-                                        <img src="{% static 'images/default-avatar.svg' %}" alt="{{ user_following.username }}">
+                                        <img src="{% static 'images/default-avatar.svg' %}" alt="{{ user_data.user.username }}">
                                     {% endif %}
-                                </a>
-                                <div class="user-details">
-                                    <a href="{% url 'core:profile' user_following.username %}" class="username">
-                                        {{ user_following.username }}
-                                    </a>
+                                    <div class="user-flex">
+                                        <span class="user-name">{{ user_data.user.username }}</span>
+                                        {% if user_data.user.profile.nickname %}
+                                            <span class="user-nickname">{{ user_data.user.profile.nickname }}</span>
+                                        {% endif %}
+                                        <span class="compatibility">音楽の相性: {{ user_data.compatibility_score|default:"0" }}%</span>
+                                    </div>
                                 </div>
                             </div>
-                            {% if user.is_authenticated and user != user_following %}
-                                <button class="follow-button following"
-                                        data-username="{{ user_following.username }}">
-                                    フォロー中
-                                </button>
-                            {% endif %}
-                        </div>
+                        </a>
+                        {% if user.is_authenticated and user != user_data.user %}
+                            <button class="follow-button following"
+                                    data-username="{{ user_data.user.username }}">
+                                フォロー中
+                            </button>
+                        {% endif %}
+                    </div>
                     {% empty %}
                         <div class="no-users">
                             <p>フォローしているユーザーはいません</p>
@@ -445,7 +454,7 @@
     </div>
 </div>
 
-<!-- フォロワーモーダル -->
+<!-- フォロワー一覧 -->
 <div class="modal fade" id="followersModal" tabindex="-1" aria-labelledby="followersModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content dark-modal">
@@ -459,33 +468,37 @@
             </div>
             <div class="modal-body">
                 <div class="user-list">
-                    {% for user_follower in follower_users %}
-                        <div class="user-item">
-                            <div class="user-info">
-                                <a href="{% url 'core:profile' user_follower.username %}" class="user-avatar">
-                                    {% if user_follower.profile.avatar %}
-                                        <img src="{{ user_follower.profile.avatar.url }}" alt="{{ user_follower.username }}">
+                    {% for user_data in follower_users %}
+                    <div class="recommended-user-container">
+                        <a href="{% url 'core:profile' user_data.user.username %}">
+                            <div class="recommended-user">
+                                <div class="user-info-recommended">
+                                    {% if user_data.user.profile.avatar %}
+                                        <img src="{{ user_data.user.profile.avatar.url }}" alt="{{ user_data.user.username }}">
                                     {% else %}
-                                        <img src="{% static 'images/default-avatar.svg' %}" alt="{{ user_follower.username }}">
+                                        <img src="{% static 'images/default-avatar.svg' %}" alt="{{ user_data.user.username }}">
                                     {% endif %}
-                                </a>
-                                <div class="user-details">
-                                    <a href="{% url 'core:profile' user_follower.username %}" class="username">
-                                        {{ user_follower.username }}
-                                    </a>
+                                    <div class="user-flex">
+                                        <span class="user-name">{{ user_data.user.username }}</span>
+                                        {% if user_data.user.profile.nickname %}
+                                            <span class="user-nickname">{{ user_data.user.profile.nickname }}</span>
+                                        {% endif %}
+                                        <span class="compatibility">音楽の相性: {{ user_data.compatibility_score|default:"0" }}%</span>
+                                    </div>
                                 </div>
                             </div>
-                            {% if user.is_authenticated and user != user_follower %}
-                                <button class="follow-button {% if user_follower in user.profile.following.all %}following{% endif %}"
-                                        data-username="{{ user_follower.username }}">
-                                    {% if user_follower in user.profile.following.all %}
-                                        フォロー中
-                                    {% else %}
-                                        フォローする
-                                    {% endif %}
-                                </button>
+                        </a>
+                        {% if user.is_authenticated and user != user_data.user %}
+                        <button class="follow-button {% if user_data.user.profile in user.profile.following.all %}following{% endif %}"
+                                data-username="{{ user_data.user.username }}">
+                            {% if user_data.user.profile in user.profile.following.all %}
+                                フォロー中
+                            {% else %}
+                                フォロー
                             {% endif %}
-                        </div>
+                        </button>
+                        {% endif %}
+                    </div>
                     {% empty %}
                         <div class="no-users">
                             <p>フォロワーはいません</p>
@@ -521,6 +534,14 @@
     margin-bottom: 2rem;
     margin-top: 24px;
     border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.recommended-user-container {
+    background: rgba(255, 255, 255, 0.05);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .profile-info {
@@ -568,24 +589,165 @@
     overflow-wrap: break-word;
 }
 
+.profile-avatar-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.stat {
+    width: 72px;
+}
+
+.first-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.second-stat, .third-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
 .profile-stats {
     display: flex;
-    gap: 2rem;
-    margin-bottom: 1.5rem;
+    gap: 8px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    
 }
 
 .stat {
     display: flex;
     flex-direction: column;
-    align-items: center;
 }
 
-.music-compatibility {
-    background: rgba(0, 0, 0, 0.3);
+.music-compatibility-section {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
     padding: 2rem;
     border-radius: 8px;
-    margin-bottom: 2rem;
     border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.compatibility-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.compatibility-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #fff;
+    margin: 0;
+}
+
+.compatibility-score {
+    display: flex;
+    align-items: center;
+    margin-left: 24px;
+}
+
+.score-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: conic-gradient(
+        var(--spotify-green) 0deg,
+        var(--spotify-green) calc(var(--score) * 3.6deg),
+        rgba(255, 255, 255, 0.1) calc(var(--score) * 3.6deg),
+        rgba(255, 255, 255, 0.1) 360deg
+    );
+    position: relative;
+}
+
+.score-circle::before {
+    content: '';
+    position: absolute;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #121212;
+}
+
+.score-number {
+    position: relative;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    z-index: 1;
+}
+
+.common-artists {
+    margin-top: 24px;
+}
+
+.common-artists h4 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 16px;
+}
+
+.artist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.artist-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s ease;
+}
+
+.artist-card:hover {
+    transform: translateY(-4px);
+}
+
+.artist-image {
+    width: 100%;
+    padding-bottom: 100%;
+    background-size: cover;
+    background-position: center;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.default-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.default-image i {
+    font-size: 2rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.artist-info {
+    padding: 12px;
+}
+
+.artist-name {
+    display: block;
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 500;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .website {
@@ -635,6 +797,7 @@
     justify-content: center;
     align-items: center;
     border-radius: 20px;
+    margin-top: 24px;
     border: 1px solid var(--spotify-green);
     color: var(--spotify-green);
 }
@@ -964,7 +1127,7 @@
     transition: color 0.3s ease;
 }
 
-.artist-card:hover .artist-info h3 {
+.artist-card:hover .artist-info h3, .artist-card:hover .artist-name {
     color: #1db954;
 }
 
@@ -1350,21 +1513,18 @@
 
 .compatibility-score {
     text-align: center;
-    margin-bottom: 20px;
 }
 
 .score-circle {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #1DB954, #1ed760);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 24px;
     font-weight: bold;
     color: white;
-    margin: 0 auto 10px;
 }
 
 .genre-tags, .artist-list {
@@ -1429,12 +1589,13 @@
 }
 
 .recommended-user {
-    background: #181818;
+    
     border-radius: 8px;
     padding: 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
     transition: background-color 0.3s;
 }
 
@@ -1445,7 +1606,6 @@
 .user-info {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 15px;
 }
 
@@ -1472,6 +1632,7 @@
     align-items: center;
     gap: 5px;
     font-size: 14px;
+    color: var(--spotify-green);
 }
 
 .compatibility-score {
@@ -1485,29 +1646,24 @@
 }
 
 .follow-button {
-    background: #1DB954;
-    color: white;
-    border: none;
     padding: 8px 16px;
     border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.3s;
-}
-
-.follow-button:hover {
-    background: #1ed760;
-    transform: scale(1.02);
+    transition: all 0.3s ease;
+    background: transparent;
+    border: 1px solid #1DB954;
+    color: #1DB954;
 }
 
 .follow-button.following {
-    background: transparent;
-    border: 1px solid #b3b3b3;
-    color: #b3b3b3;
+    background: #1DB954;
+    color: white;
 }
 
-.follow-button.following:hover {
-    border-color: #fff;
-    color: #fff;
+.follow-button:hover {
+    opacity: 0.8;
 }
 
 .more-interests {
@@ -1894,16 +2050,8 @@
     color: white;
 }
 
-.follow-button:hover {
-    background-color: #0b5ed7;
-}
-
 .follow-button.following {
     background-color: #6c757d;
-}
-
-.follow-button.following:hover {
-    background-color: #dc3545;
 }
 
 .no-users {
@@ -2027,10 +2175,6 @@
     cursor: pointer;
 }
 
-.follow-button:hover {
-    background-color: #404040;
-}
-
 .no-users {
     text-align: center;
     padding: 16px;
@@ -2064,6 +2208,103 @@
 
 .message-button i {
     font-size: 1.1rem;
+}
+
+.recommended-user-container {
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.recommended-user-container a {
+    text-decoration: none;
+    
+}
+
+.recommended-user {
+    
+    border-radius: 12px;
+    padding: 16px;
+    position: relative;
+    transition: all 0.3s ease;
+    
+}
+
+.recommended-user:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.user-info-recommended {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-info-recommended .user-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.user-info-recommended .user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-details {
+    flex-grow: 1;
+}
+
+.user-details .username {
+    display: block;
+    color: #fff;
+    font-weight: 500;
+    text-decoration: none;
+    margin-bottom: 4px;
+}
+
+.user-details .nickname {
+    display: block;
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+.compatibility-badge {
+    background: rgba(29, 185, 84, 0.1);
+    color: #1DB954;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.compatibility-badge i {
+    font-size: 14px;
+}
+
+.follow-button {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: transparent;
+    border: 1px solid #1DB954;
+    color: #1DB954;
+}
+
+.follow-button.following {
+    background: #1DB954;
+    color: white;
+}
+
+.follow-button:hover {
+    opacity: 0.8;
 }
 </style>
 
@@ -2132,56 +2373,6 @@ function showComments(postId, button) {
         commentText.textContent = 'コメントを表示';
     }
 }
-
-document.addEventListener('DOMContentLoaded', function() {
-    const commentForms = document.querySelectorAll('.comment-form');
-    
-    commentForms.forEach(form => {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const postId = this.getAttribute('data-post-id');
-            const input = this.querySelector('input');
-            const content = input.value.trim();
-            
-            if (!content) return;
-            
-            fetch(`/post/${postId}/comment/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                },
-                body: JSON.stringify({ content: content })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    const commentsList = this.closest('.comments-section').querySelector('.comments-list');
-                    const newComment = document.createElement('div');
-                    newComment.className = 'comment';
-                    newComment.innerHTML = `
-                        <div class="comment-user">
-                            <img src="${data.comment.avatar_url}" alt="${data.comment.username}">
-                        </div>
-                        <div class="comment-content">
-                            <span class="comment-username">${data.comment.username}</span>
-                            <p class="comment-text">${data.comment.content}</p>
-                        </div>
-                    `;
-                    commentsList.appendChild(newComment);
-                    
-                    const countElement = this.closest('.post-card').querySelector('.comment-count');
-                    countElement.textContent = parseInt(countElement.textContent) + 1;
-                    
-                    input.value = '';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        });
-    });
-});
 
 // DOMContentLoadedイベントでフォローボタンにイベントリスナーを追加
 document.addEventListener('DOMContentLoaded', function() {

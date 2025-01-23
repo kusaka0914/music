@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+{% csrf_token %}
 <div class="main-container">
     <div class="notifications-container">
         <h2 class="notifications-title">通知</h2>
@@ -50,9 +51,9 @@
                             <span class="notification-time">{{ notification.created_at|timesince }}前</span>
                         </div>
                     </a>
-                    {% if notification.notification_type == 'follow' %}
-                    <button class="follow-button" onclick="followUser('{{ notification.sender.username }}', this)">
-                        {% if notification.sender in user.following.all %}
+                    {% if notification.notification_type == 'follow' and notification.sender != user %}
+                    <button class="follow-button {% if notification.is_following %}following{% endif %}" data-username="{{ notification.sender.username }}">
+                        {% if notification.is_following %}
                             フォロー中
                         {% else %}
                             フォローする
@@ -98,7 +99,6 @@
 
 .notification-item-container {
     display: flex;
-    padding: 16px;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -116,7 +116,8 @@
     text-decoration: none;
     color: #fff;
     transition: all 0.2s;
-    width: 80%;
+    width: 8ERROR 2025-01-23 03:11:28,540 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+    ERROR 2025-01-23 03:11:28,540 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'0%;
 }
 
 .notification-item-container:hover {
@@ -189,29 +190,31 @@
 }
 
 .follow-button {
-    display: inline-block;
-    margin-left: 8px;
-    padding: 6px 16px;
-    background: #1DB954;
-    color: #fff;
-    border: none;
+    padding: 8px 16px;
     border-radius: 20px;
-    font-size: 0.875rem;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s;
+    margin-right: 16px;
+    transition: all 0.3s ease;
+    background: transparent;
+    border: 1px solid #1DB954;
+    color: #1DB954;
 }
 
 .follow-button:hover {
     background: #1ed760;
     transform: scale(1.02);
+    color: #fff;
 }
 
 .follow-button.following {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--spotify-green);
+    color: #fff;
 }
 
 .follow-button.following:hover {
-    background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.02);
 }
 
 .no-notifications {
@@ -234,4 +237,36 @@
     margin: 0;
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+    // フォローボタンのイベントリスナーを設定
+    document.querySelectorAll('.follow-button').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const username = this.dataset.username;
+            fetch(`/api/toggle-follow/${username}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'followed') {
+                    this.classList.add('following');
+                    this.textContent = 'フォロー中';
+                } else if (data.status === 'unfollowed') {
+                    this.classList.remove('following');
+                    this.textContent = 'フォローする';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+});
+</script>
 {% endblock %} 
