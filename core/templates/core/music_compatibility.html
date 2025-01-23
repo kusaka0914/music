@@ -2,1184 +2,279 @@
 {% load static %}
 
 {% block content %}
-<div class="spotify-container">
-    <div class="compatibility-header">
-        <h1>音楽マッチング</h1>
-        <p class="subtitle">あなたと音楽の趣味が合うユーザーを見つけましょう</p>
-    </div>
-
-    <!-- フィルターセクション -->
-    <!-- <div class="filter-section">
-        <div class="filter-group">
-            <label>ジャンルでフィルター</label>
-            <select class="filter-select" id="genreFilter">
-                <option value="">すべてのジャンル</option>
-                {% for genre in all_genres %}
-                    <option value="{{ genre }}">{{ genre }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="filter-group">
-            <label>相性スコア</label>
-            <div class="range-slider">
-                <input type="range" id="scoreFilter" min="0" max="100" value="0">
-                <span class="range-value">0%</span>
-            </div>
-        </div>
-        <div class="filter-group">
-            <label>表示オプション</label>
-            <div class="checkbox-group">
-                <label class="checkbox-label">
-                    <input type="checkbox" id="activeOnly">
-                    アクティブユーザーのみ
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" id="withPlaylist">
-                    プレイリストありのみ
-                </label>
-            </div>
-        </div>
-    </div> -->
-
-    <!-- 相性スコアの概要 -->
+<div class="music-matching-container">
+    <!-- 平均相性セクション -->
     <div class="compatibility-overview">
-        <div class="overview-card">
-            <div class="score-circle">
-                <div class="score-value">{{ average_compatibility|default:0 }}%</div>
-                <div class="score-label">平均相性</div>
+        <h2>音楽の相性分析</h2>
+        <div class="compatibility-stats">
+            <div class="stat-card">
+                <div class="stat-circle" style="--percentage: {{ average_compatibility.overall_average }}">
+                    <span class="stat-number">{{ average_compatibility.overall_average }}%</span>
+                </div>
+                <span class="stat-label">全体平均</span>
             </div>
-            <div class="overview-stats">
-                <div class="stat-item">
-                    <i class="bi bi-people-fill"></i>
-                    <span>{{ total_matches }} 人とマッチ</span>
+            <div class="stat-card">
+                <div class="stat-circle" style="--percentage: {{ average_compatibility.following_average }}">
+                    <span class="stat-number">{{ average_compatibility.following_average }}%</span>
                 </div>
-                <div class="stat-item">
-                    <i class="bi bi-music-note"></i>
-                    <span>{{ common_genres|length }} ジャンル共有</span>
+                <span class="stat-label">フォロー中のユーザーとの平均</span>
+            </div>
+        </div>
+        
+        <!-- 相性分布グラフ -->
+        <div class="distribution-chart">
+            <h3>相性スコアの分布</h3>
+            <div class="chart-bars">
+                {% for range, count in average_compatibility.score_distribution.items %}
+                <div class="chart-bar">
+                    <div class="bar" style="height: {{ count }}%"></div>
+                    <span class="range-label">{{ range }}%</span>
                 </div>
+                {% endfor %}
             </div>
         </div>
     </div>
 
-    <!-- プレイリストの相性 -->
-    <!-- <div class="compatibility-section">
-        <h2>おすすめプレイリスト</h2>
-        <div class="playlist-grid">
-            {% for playlist in recommended_playlists %}
-                <div class="playlist-card">
-                    <div class="playlist-cover">
-                        {% if playlist.cover_image %}
-                            <img src="{{ playlist.cover_image.url }}" alt="{{ playlist.title }}">
-                        {% else %}
-                            <div class="playlist-cover-placeholder">
-                                <i class="bi bi-music-note-list"></i>
-                            </div>
-                        {% endif %}
-                        <div class="playlist-overlay">
-                            <button class="play-button">
-                                <i class="bi bi-play-fill"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="playlist-info">
-                        <h3>{{ playlist.title }}</h3>
-                        <p class="playlist-creator">by {{ playlist.user.username }}</p>
-                        <div class="playlist-stats">
-                            <span><i class="bi bi-music-note"></i> {{ playlist.songs_count }} 曲</span>
-                            <span><i class="bi bi-heart"></i> {{ playlist.likes_count }}</span>
-                        </div>
-                        <div class="compatibility-badge">
-                            <i class="bi bi-lightning-charge-fill"></i>
-                            <span>{{ playlist.compatibility_score }}% マッチ</span>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    </div> -->
-
-    <!-- 相性の高いユーザー一覧 -->
-    <div class="compatibility-section">
-        <h2>相性の高いユーザー</h2>
+    <!-- 相性の良いユーザー -->
+    <div class="compatible-users-section">
+        <h2>おすすめのユーザー</h2>
         <div class="users-grid">
-            {% for match in matches %}
-                <div class="user-card">
-                    <div class="user-header">
-                        <a href="{% url 'core:profile' match.user.username %}" class="user-avatar">
-                            {% if match.user.profile.avatar %}
-                                <img src="{{ match.user.profile.avatar.url }}" alt="{{ match.user.username }}">
-                            {% else %}
-                                <img src="{% static 'images/default-avatar.svg' %}" alt="{{ match.user.username }}">
-                            {% endif %}
-                        </a>
-                        <div class="user-info">
-                            <a href="{% url 'core:profile' match.user.username %}" class="username">{{ match.user.username }}</a>
-                            <div class="compatibility-badge">
-                                <i class="bi bi-lightning-charge-fill"></i>
-                                <span>{{ match.compatibility_score }}% マッチ</span>
-                        </div>
-                        </div>
-                        {% if match.user not in user.profile.following.all %}
-                            <button class="follow-button" data-username="{{ match.user.username }}">
-                                フォローする
-                            </button>
-                        {% endif %}
-                    </div>
-
-                    <div class="common-interests">
-                        {% if match.common_genres %}
-                            <div class="interest-section">
-                                <h4>共通のジャンル</h4>
-                                <div class="tags">
-                                    {% for genre in match.common_genres|slice:":3" %}
-                                        <span class="tag">{{ genre }}</span>
-                            {% endfor %}
-                                    {% if match.common_genres|length > 3 %}
-                                        <span class="tag more">+{{ match.common_genres|length|add:"-3" }}</span>
-                                    {% endif %}
-                        </div>
-                    </div>
+            {% for user_data in compatible_users %}
+            <div class="user-card">
+                <div class="user-info">
+                    {% if user_data.user.profile.avatar %}
+                        <img src="{{ user_data.user.profile.avatar.url }}" alt="{{ user_data.user.username }}" class="user-avatar">
+                    {% else %}
+                        <img src="{% static 'images/default-avatar.svg' %}" alt="{{ user_data.user.username }}" class="user-avatar">
                     {% endif %}
-
-                        {% if match.common_artists %}
-                            <div class="interest-section">
-                                <h4>共通のアーティスト</h4>
-                                <div class="tags">
-                                    {% for artist in match.common_artists|slice:":3" %}
-                                        <span class="tag">{{ artist }}</span>
-                            {% endfor %}
-                                    {% if match.common_artists|length > 3 %}
-                                        <span class="tag more">+{{ match.common_artists|length|add:"-3" }}</span>
-                                    {% endif %}
+                    <div class="user-details">
+                        <h3>{{ user_data.user.username }}</h3>
+                        <div class="compatibility-badge">
+                            <i class="bi bi-music-note"></i>
+                            <span>{{ user_data.score }}% マッチ</span>
                         </div>
-                    </div>
-                    {% endif %}
-
-                        {% if match.recent_activity %}
-                            <div class="recent-activity">
-                                <h4>最近の活動</h4>
-                                <div class="activity-preview">
-                                    {% for activity in match.recent_activity|slice:":1" %}
-                                        <div class="activity-item">
-                                            <i class="bi bi-music-note"></i>
-                                            <span>{{ activity.description }}</span>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        {% endif %}
-
-                        <!-- 時間帯別の音楽傾向 -->
-                        {% if match.listening_habits %}
-                            <div class="listening-habits">
-                                <h4>よく聴く時間帯</h4>
-                                <div class="time-distribution">
-                                    {% for time_slot in match.listening_habits %}
-                                        <div class="time-slot" style="height: {{ time_slot.percentage }}%">
-                                            <span class="time-label">{{ time_slot.hour }}時</span>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        {% endif %}
                     </div>
                 </div>
+                <div class="common-artists">
+                    <h4>共通のアーティスト</h4>
+                    <div class="artist-tags">
+                        {% for artist in user_data.common_artists %}
+                        <span class="artist-tag">{{ artist.name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <a href="{% url 'core:profile' user_data.user.username %}" class="view-profile-btn">プロフィールを見る</a>
+            </div>
             {% empty %}
-                <div class="no-matches">
-                    <i class="bi bi-emoji-neutral"></i>
-                    <p>まだマッチするユーザーが見つかっていません</p>
-                    <a href="{% url 'core:edit_music_taste' %}" class="update-button">
-                        音楽の好みを更新する
-                    </a>
-                </div>
+            <p class="no-results">相性の良いユーザーが見つかりませんでした</p>
             {% endfor %}
         </div>
     </div>
 
-    <!-- ジャンル別の相性分布 -->
-    <!-- <div class="compatibility-section">
-        <h2>ジャンル別の相性分布</h2>
-        <div class="genre-distribution">
-            {% for genre in genre_distribution %}
-                <div class="genre-item">
-                    <div class="genre-header">
-                        <span class="genre-name">{{ genre.name }}</span>
-                        <span class="genre-count">{{ genre.user_count }}人</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress" style="width: {{ genre.percentage }}%"></div>
-                    </div>
-                </div>
+    <!-- 今日のおすすめ曲 -->
+    <div class="recommended-tracks-section">
+        <h2>今日のおすすめ</h2>
+        <div class="tracks-grid">
+            {% for track in recommended_tracks %}
+            <div class="track-card">
+                <iframe src="https://open.spotify.com/embed/track/{{ track.id }}?utm_source=generator" 
+                        width="100%" 
+                        height="152" 
+                        frameborder="0" 
+                        allowfullscreen="" 
+                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                        loading="lazy">
+                </iframe>
+            </div>
+            {% empty %}
+            <p class="no-results">おすすめの曲が見つかりませんでした</p>
             {% endfor %}
         </div>
-    </div> -->
-
-    <!-- おすすめセクション -->
-    <div class="recommendations-section">
-        <!-- 今日のおすすめ -->
-        <div class="recommendation-group">
-            <h2>今日のおすすめ</h2>
-            <div class="recommendation-cards">
-                {% for artist in daily_recommendations %}
-                    <div class="recommendation-card">
-                        <div class="recommendation-cover">
-                            {% if artist.image %}
-                                <img src="{{ artist.image.url }}" alt="{{ artist.name }}">
-                            {% else %}
-                                <div class="recommendation-cover-placeholder">
-                                    <i class="bi bi-person"></i>
-                                </div>
-                            {% endif %}
-                            <div class="recommendation-overlay">
-                                <a href="{{ artist.spotify_url }}" target="_blank" class="spotify-link">
-                                    <i class="bi bi-spotify"></i>
-                                    Spotifyで聴く
-                                </a>
-                            </div>
-                        </div>
-                        <div class="recommendation-info">
-                            <h3>{{ artist.name }}</h3>
-                            <div class="recommendation-tags">
-                                {% for genre in artist.genres|slice:":3" %}
-                                    <span class="tag">{{ genre }}</span>
-                                {% endfor %}
-                            </div>
-                            <div class="match-reason">
-                                <i class="bi bi-lightning-charge-fill"></i>
-                                <span>{{ artist.match_reason }}</span>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <!-- 時間帯別おすすめ -->
-        <div class="recommendation-group">
-            <h2>
-                <i class="bi bi-clock"></i>
-                この時間帯におすすめ
-            </h2>
-            <div class="recommendation-cards">
-                {% for track in time_based_recommendations %}
-                    <div class="recommendation-card">
-                        <div class="recommendation-cover">
-                            {% if track.album_cover %}
-                                <img src="{{ track.album_cover.url }}" alt="{{ track.title }}">
-                            {% else %}
-                                <div class="recommendation-cover-placeholder">
-                                    <i class="bi bi-music-note"></i>
-                                </div>
-                            {% endif %}
-                            <div class="recommendation-overlay">
-                                <button class="preview-button" data-preview-url="{{ track.preview_url }}">
-                                    <i class="bi bi-play-fill"></i>
-                        </button>
-                            </div>
-                        </div>
-                        <div class="recommendation-info">
-                            <h3>{{ track.title }}</h3>
-                            <p class="artist-name">{{ track.artist }}</p>
-                            <div class="track-stats">
-                                <span><i class="bi bi-music-note"></i> {{ track.genre }}</span>
-                                <span><i class="bi bi-activity"></i> {{ track.mood }}</span>
-                            </div>
-                        </div>
-        </div>
-        {% endfor %}
-    </div>
-</div>
-
-        <!-- ムード別おすすめ -->
-        <div class="recommendation-group">
-            <h2>
-                <i class="bi bi-emoji-smile"></i>
-                ムード別おすすめ
-            </h2>
-            <div class="mood-tabs">
-                {% for mood in moods %}
-                    <button class="mood-tab {% if forloop.first %}active{% endif %}" data-mood="{{ mood.id }}">
-                        <i class="bi {{ mood.icon }}"></i>
-                        {{ mood.name }}
-                    </button>
-                {% endfor %}
-            </div>
-            <div class="recommendation-cards">
-                {% for playlist in mood_recommendations %}
-                    <div class="recommendation-card" data-mood="{{ playlist.mood_id }}">
-                        <div class="recommendation-cover">
-                            {% if playlist.cover_image %}
-                                <img src="{{ playlist.cover_image.url }}" alt="{{ playlist.title }}">
-                        {% else %}
-                                <div class="recommendation-cover-placeholder">
-                                    <i class="bi bi-music-note-list"></i>
-                                </div>
-                            {% endif %}
-                            <div class="recommendation-overlay">
-                                <button class="play-button" data-playlist-id="{{ playlist.id }}">
-                                    <i class="bi bi-play-fill"></i>
-                        </button>
-                            </div>
-                        </div>
-                        <div class="recommendation-info">
-                            <h3>{{ playlist.title }}</h3>
-                            <p class="playlist-description">{{ playlist.description }}</p>
-                            <div class="playlist-stats">
-                                <span><i class="bi bi-music-note"></i> {{ playlist.tracks_count }} 曲</span>
-                                <span><i class="bi bi-clock"></i> {{ playlist.duration }}</span>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
     </div>
 
-    <!-- アーティスト詳細分析 -->
-    <!-- <div class="compatibility-section">
-        <h2>
-            <i class="bi bi-graph-up"></i>
-            アーティスト詳細分析
-        </h2>
-        <div class="analysis-container">
-            
-            <div class="analysis-card">
-                <h3>ジャンル分布</h3>
-                <div class="chart-container">
-                    <canvas id="genreChart"></canvas>
+    <!-- ジャンル分析 -->
+    <div class="genre-analysis-section">
+        <h2>あなたの好みのジャンル</h2>
+        <div class="genre-chart">
+            {% for genre, count in genre_analysis.top_genres.items %}
+            <div class="genre-bar">
+                <div class="bar" style="width: {{ count }}0%">
+                    <span class="genre-name">{{ genre }}</span>
+                    <span class="genre-count">{{ count }}</span>
                 </div>
             </div>
-
-            
-            <div class="analysis-card">
-                <h3>アーティスト相関</h3>
-                <div class="chart-container">
-                    <canvas id="artistCorrelationChart"></canvas>
-                </div>
-            </div>
-
-            
-            <div class="analysis-card full-width">
-                <h3>リスニングトレンド</h3>
-                <div class="trend-filters">
-                    <button class="trend-filter active" data-period="week">週間</button>
-                    <button class="trend-filter" data-period="month">月間</button>
-                    <button class="trend-filter" data-period="year">年間</button>
-                </div>
-                <div class="chart-container">
-                    <canvas id="trendChart"></canvas>
-                </div>
-            </div>
+            {% endfor %}
         </div>
-    </div> -->
+    </div>
 </div>
 
 <style>
-.spotify-container {
-    margin: 0 64px;
-    padding: 2rem 1rem;
-    color: #fff;
-}
-
-.compatibility-header {
-    text-align: center;
-    margin-bottom: 3rem;
-    margin-top: 30px;
-}
-
-.compatibility-header h1 {
-    font-size: 2.5rem;
-    color: var(--spotify-green);
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-}
-
-.subtitle {
-    color: #b3b3b3;
-    font-size: 1.1rem;
+.music-matching-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    color: white;
 }
 
 .compatibility-overview {
-    margin-bottom: 3rem;
-}
-
-.overview-card {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.3);
     border-radius: 12px;
     padding: 2rem;
-    display: flex;
-    align-items: center;
-    gap: 3rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.score-circle {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #1DB954, #1ed760);
+.compatibility-stats {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+.stat-card {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    color: #fff;
+    text-align: center;
 }
 
-.score-value {
-    font-size: 2.5rem;
-    font-weight: bold;
-}
-
-.score-label {
-    font-size: 0.9rem;
-    opacity: 0.9;
-}
-
-.overview-stats {
-    display: flex;
-    gap: 2rem;
-}
-
-.stat-item {
+.stat-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 1.1rem;
+    justify-content: center;
+    background: conic-gradient(
+        var(--spotify-green) 0deg,
+        var(--spotify-green) calc(var(--percentage) * 3.6deg),
+        rgba(255, 255, 255, 0.1) calc(var(--percentage) * 3.6deg),
+        rgba(255, 255, 255, 0.1) 360deg
+    );
+    position: relative;
+    margin-bottom: 1rem;
 }
 
-.stat-item i {
-    color: #1DB954;
-    font-size: 1.3rem;
+.stat-circle::before {
+    content: '';
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: #121212;
 }
 
-.compatibility-section {
-    margin-bottom: 3rem;
-}
-
-.compatibility-section h2 {
+.stat-number {
+    position: relative;
+    z-index: 1;
     font-size: 1.5rem;
-    margin-bottom: 1.5rem;
+    font-weight: bold;
+    color: white;
+}
+
+.stat-label {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.distribution-chart {
+    margin-top: 2rem;
+}
+
+.chart-bars {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 200px;
+    margin-top: 1rem;
+}
+
+.chart-bar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.bar {
+    width: 40px;
+    background: var(--spotify-green);
+    border-radius: 4px 4px 0 0;
+    transition: height 0.3s ease;
+}
+
+.range-label {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.compatible-users-section,
+.recommended-tracks-section,
+.genre-analysis-section {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .users-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
+    margin-top: 1.5rem;
 }
 
 .user-card {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
     padding: 1.5rem;
-    transition: transform 0.3s ease;
+    transition: transform 0.2s ease;
 }
 
 .user-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-4px);
 }
 
-.user-header {
+.user-info {
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .user-avatar {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    overflow: hidden;
-}
-
-.user-avatar img {
-    width: 100%;
-    height: 100%;
     object-fit: cover;
 }
 
-.user-info {
-    flex: 1;
-}
-
-.username {
-    color: #fff;
-    text-decoration: none;
-    font-weight: 600;
+.user-details h3 {
+    margin: 0;
     font-size: 1.1rem;
-    display: block;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.5rem;
 }
 
 .compatibility-badge {
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
-    background: rgba(29, 185, 84, 0.2);
-    color: #1DB954;
-    padding: 0.3rem 0.8rem;
-    border-radius: 500px;
-    font-size: 0.9rem;
-}
-
-.follow-button {
-    background: #1DB954;
-    color: #fff;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 500px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.follow-button:hover {
-    background: #1ed760;
-    transform: scale(1.02);
-}
-
-.common-interests {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.interest-section h4 {
-    font-size: 0.9rem;
-    color: #b3b3b3;
-    margin-bottom: 0.5rem;
-}
-
-.tags {
-    display: flex;
-    flex-wrap: wrap;
     gap: 0.5rem;
+    background: rgba(29, 185, 84, 0.1);
+    color: var(--spotify-green);
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
 }
 
-.tag {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 0.3rem 0.8rem;
-    border-radius: 500px;
-    font-size: 0.8rem;
-}
-
-.tag.more {
-    background: rgba(255, 255, 255, 0.05);
-    color: #b3b3b3;
-}
-
-.recent-activity {
+.common-artists {
     margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.activity-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #b3b3b3;
+.common-artists h4 {
     font-size: 0.9rem;
-}
-
-.no-matches {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 3rem;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-}
-
-.no-matches i {
-    font-size: 3rem;
-    color: #b3b3b3;
-    margin-bottom: 1rem;
-}
-
-.update-button {
-    display: inline-block;
-    background: #1DB954;
-    color: #fff;
-    text-decoration: none;
-    padding: 0.8rem 1.5rem;
-    border-radius: 500px;
-    margin-top: 1rem;
-    transition: all 0.3s ease;
-}
-
-.update-button:hover {
-    background: #1ed760;
-    transform: scale(1.02);
-}
-
-.genre-distribution {
-    display: grid;
-    gap: 1rem;
-}
-
-.genre-item {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 1rem;
-    border-radius: 8px;
-}
-
-.genre-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-}
-
-.genre-name {
-    font-weight: 500;
-}
-
-.genre-count {
-    color: #b3b3b3;
-    font-size: 0.9rem;
-}
-
-.progress-bar {
-    height: 6px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
-    overflow: hidden;
-}
-
-.progress {
-    height: 100%;
-    background: linear-gradient(to right, #1DB954, #1ed760);
-    border-radius: 3px;
-    transition: width 0.3s ease;
-}
-
-/* フィルターセクションのスタイル */
-.filter-section {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-    display: flex;
-    gap: 2rem;
-    flex-wrap: wrap;
-}
-
-.filter-group {
-    flex: 1;
-    min-width: 200px;
-}
-
-.filter-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: #b3b3b3;
-    font-size: 0.9rem;
-}
-
-.filter-select {
-    width: 100%;
-    padding: 0.5rem;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 4px;
-    color: #fff;
-}
-
-.range-slider {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.range-slider input {
-    flex: 1;
-}
-
-.range-value {
-    min-width: 3rem;
-    text-align: right;
-}
-
-.checkbox-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-}
-
-/* プレイリストセクションのスタイル */
-.playlist-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-.playlist-card {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    overflow: hidden;
-    transition: transform 0.3s ease;
-}
-
-.playlist-card:hover {
-    transform: translateY(-5px);
-}
-
-.playlist-cover {
-    position: relative;
-    aspect-ratio: 1;
-    background: #282828;
-}
-
-.playlist-cover img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.playlist-cover-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3rem;
-    color: #b3b3b3;
-}
-
-.playlist-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.playlist-card:hover .playlist-overlay {
-    opacity: 1;
-}
-
-.play-button {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: #1DB954;
-    border: none;
-    color: #fff;
-    font-size: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-.play-button:hover {
-    transform: scale(1.1);
-}
-
-.playlist-info {
-    padding: 1rem;
-}
-
-.playlist-info h3 {
-    margin: 0;
-    font-size: 1.1rem;
-    margin-bottom: 0.3rem;
-}
-
-.playlist-creator {
-    color: #b3b3b3;
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
-}
-
-.playlist-stats {
-    display: flex;
-    gap: 1rem;
-    color: #b3b3b3;
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
-}
-
-/* 時間帯別の音楽傾向のスタイル */
-.listening-habits {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.time-distribution {
-    display: flex;
-    align-items: flex-end;
-    height: 100px;
-    gap: 2px;
-    margin-top: 0.5rem;
-}
-
-.time-slot {
-    flex: 1;
-    background: rgba(29, 185, 84, 0.2);
-    position: relative;
-    min-height: 10%;
-    transition: height 0.3s ease;
-}
-
-.time-label {
-    position: absolute;
-    bottom: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 0.7rem;
-    color: #b3b3b3;
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-}
-
-/* レスポンシブ対応 */
-@media (max-width: 768px) {
-    .filter-section {
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .filter-group {
-        width: 100%;
-    }
-
-    .playlist-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* おすすめセクションのスタイル */
-.recommendations-section {
-    margin-bottom: 3rem;
-}
-
-.recommendation-group {
-    margin-bottom: 2rem;
-}
-
-.recommendation-group h2 {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.recommendation-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1.5rem;
-}
-
-.recommendation-card {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    overflow: hidden;
-    transition: transform 0.3s ease;
-}
-
-.recommendation-card:hover {
-    transform: translateY(-5px);
-}
-
-.recommendation-cover {
-    position: relative;
-    aspect-ratio: 1;
-    background: #282828;
-}
-
-.recommendation-cover img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.recommendation-cover-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3rem;
-    color: #b3b3b3;
-}
-
-.recommendation-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.recommendation-card:hover .recommendation-overlay {
-    opacity: 1;
-}
-
-.spotify-link {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: #1DB954;
-    color: #fff;
-    text-decoration: none;
-    padding: 0.8rem 1.2rem;
-    border-radius: 500px;
-    font-size: 0.9rem;
-    transition: transform 0.3s ease;
-}
-
-.spotify-link:hover {
-    transform: scale(1.05);
-}
-
-.recommendation-info {
-    padding: 1rem;
-}
-
-.recommendation-info h3 {
-    margin: 0;
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.artist-name {
-    color: #b3b3b3;
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
-}
-
-.recommendation-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.3rem;
-    margin-bottom: 0.5rem;
-}
-
-.match-reason {
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-    color: #1DB954;
-    font-size: 0.9rem;
-}
-
-.track-stats {
-    display: flex;
-    gap: 1rem;
-    color: #b3b3b3;
-    font-size: 0.8rem;
-}
-
-.mood-tabs {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
-    overflow-x: auto;
-    padding-bottom: 0.5rem;
-}
-
-.mood-tab {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    color: #fff;
-    padding: 0.5rem 1rem;
-    border-radius: 500px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    white-space: nowrap;
-}
-
-.mood-tab:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.mood-tab.active {
-    background: #1DB954;
-}
-
-.playlist-description {
-    color: #b3b3b3;
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-@media (max-width: 768px) {
-    .recommendation-cards {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    }
-
-    .mood-tabs {
-        padding-bottom: 0.8rem;
-    }
-}
-
-/* 分析セクションのスタイル */
-.analysis-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-.analysis-card {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 1.5rem;
-}
-
-.analysis-card.full-width {
-    grid-column: 1 / -1;
-}
-
-.analysis-card h3 {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-}
-
-.chart-container {
-    position: relative;
-    height: 300px;
-}
-
-.trend-filters {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-}
-
-.trend-filter {
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    color: #fff;
-    padding: 0.5rem 1rem;
-    border-radius: 500px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.trend-filter:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.trend-filter.active {
-    background: #1DB954;
-}
-
-/* イベントセクションのスタイル */
-.event-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-}
-
-.event-card {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    overflow: hidden;
-    transition: transform 0.3s ease;
-}
-
-.event-card:hover {
-    transform: translateY(-5px);
-}
-
-.event-image {
-    position: relative;
-    height: 200px;
-    background: #282828;
-}
-
-.event-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.event-image-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3rem;
-    color: #b3b3b3;
-}
-
-.event-date {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: rgba(0, 0, 0, 0.8);
-    padding: 0.5rem;
-    border-radius: 8px;
-    text-align: center;
-}
-
-.date-day {
-    display: block;
-    font-size: 1.5rem;
-    font-weight: bold;
-}
-
-.date-month {
-    display: block;
-    font-size: 0.9rem;
-    color: #b3b3b3;
-}
-
-.event-info {
-    padding: 1.5rem;
-}
-
-.event-info h3 {
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
-}
-
-.event-venue {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #b3b3b3;
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-}
-
-.event-artists h4 {
-    font-size: 0.9rem;
-    color: #b3b3b3;
+    color: rgba(255, 255, 255, 0.7);
     margin-bottom: 0.5rem;
 }
 
@@ -1187,401 +282,86 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+}
+
+.artist-tag {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+}
+
+.view-profile-btn {
+    display: inline-block;
+    background: var(--spotify-green);
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+}
+
+.view-profile-btn:hover {
+    background: #1ed760;
+}
+
+.tracks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.track-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.genre-chart {
+    margin-top: 1.5rem;
+}
+
+.genre-bar {
     margin-bottom: 1rem;
 }
 
-.event-match {
+.genre-bar .bar {
+    background: var(--spotify-green);
+    height: 30px;
+    border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-}
-
-.match-score {
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-    color: #1DB954;
+    padding: 0 1rem;
+    color: white;
     font-size: 0.9rem;
 }
 
-.ticket-button {
-    background: #1DB954;
-    color: #fff;
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-    border-radius: 500px;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
+.genre-count {
+    font-weight: bold;
 }
 
-.ticket-button:hover {
-    background: #1ed760;
-    transform: scale(1.02);
+.no-results {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 2rem;
 }
 
 @media (max-width: 768px) {
-    .analysis-container {
+    .compatibility-stats {
+        flex-direction: column;
+    }
+
+    .users-grid {
         grid-template-columns: 1fr;
     }
 
-    .event-grid {
+    .tracks-grid {
         grid-template-columns: 1fr;
     }
 }
 </style>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-// フィルター機能の改善
-const filterUsers = () => {
-    const genre = document.getElementById('genreFilter').value;
-    const minScore = parseInt(document.getElementById('scoreFilter').value);
-    const activeOnly = document.getElementById('activeOnly').checked;
-    const withPlaylist = document.getElementById('withPlaylist').checked;
-
-    document.querySelectorAll('.user-card').forEach(card => {
-        let show = true;
-
-        // ジャンルフィルター
-        if (genre) {
-            const genres = Array.from(card.querySelectorAll('.tag')).map(tag => tag.textContent.trim());
-            if (!genres.includes(genre)) {
-                show = false;
-            }
-        }
-
-        // スコアフィルター
-        const scoreText = card.querySelector('.compatibility-badge span').textContent;
-        const score = parseInt(scoreText.replace(/[^0-9]/g, ''));
-        if (score < minScore) {
-            show = false;
-        }
-
-        // アクティブユーザーフィルター
-        if (activeOnly && !card.querySelector('.recent-activity')) {
-            show = false;
-        }
-
-        // プレイリストフィルター
-        if (withPlaylist && !card.dataset.hasPlaylist) {
-            show = false;
-        }
-
-        card.style.display = show ? 'block' : 'none';
-    });
-
-    updateFilterSummary();
-};
-
-// フィルター結果のサマリー表示
-const updateFilterSummary = () => {
-    const visibleCards = document.querySelectorAll('.user-card[style="display: block"]').length;
-    const totalCards = document.querySelectorAll('.user-card').length;
-    
-    const summaryElement = document.querySelector('.filter-summary') || 
-        (() => {
-            const el = document.createElement('div');
-            el.className = 'filter-summary';
-            document.querySelector('.filter-section').appendChild(el);
-            return el;
-        })();
-
-    summaryElement.textContent = `${visibleCards}/${totalCards} 人のユーザーを表示中`;
-};
-
-// フィルターイベントリスナー
-document.getElementById('genreFilter').addEventListener('change', filterUsers);
-document.getElementById('scoreFilter').addEventListener('input', (e) => {
-    e.target.nextElementSibling.textContent = `${e.target.value}%`;
-    filterUsers();
-});
-document.getElementById('activeOnly').addEventListener('change', filterUsers);
-document.getElementById('withPlaylist').addEventListener('change', filterUsers);
-
-// プレイリスト再生機能の実装
-class MusicPlayer {
-    constructor() {
-        this.audio = new Audio();
-        this.currentPlaylistId = null;
-        this.isPlaying = false;
-    }
-
-    playPlaylist(playlistId) {
-        if (this.currentPlaylistId === playlistId && this.isPlaying) {
-            this.pause();
-        } else {
-            this.fetchAndPlay(playlistId);
-        }
-    }
-
-    async fetchAndPlay(playlistId) {
-        try {
-            const response = await fetch(`/api/playlist/${playlistId}/tracks/`);
-            const data = await response.json();
-            
-            if (data.tracks && data.tracks.length > 0) {
-                this.currentPlaylistId = playlistId;
-                this.loadAndPlayTracks(data.tracks);
-                this.updatePlayButton(playlistId, true);
-            }
-        } catch (error) {
-            console.error('プレイリストの再生に失敗しました:', error);
-        }
-    }
-
-    loadAndPlayTracks(tracks) {
-        this.audio.src = tracks[0].preview_url;
-        this.audio.play();
-        this.isPlaying = true;
-
-        this.audio.onended = () => {
-            // 次の曲を再生するロジック
-        };
-    }
-
-    pause() {
-        this.audio.pause();
-        this.isPlaying = false;
-        this.updatePlayButton(this.currentPlaylistId, false);
-    }
-
-    updatePlayButton(playlistId, isPlaying) {
-        const button = document.querySelector(`.play-button[data-playlist-id="${playlistId}"] i`);
-        if (button) {
-            button.className = `bi bi-${isPlaying ? 'pause' : 'play'}-fill`;
-        }
-    }
-}
-
-const player = new MusicPlayer();
-
-document.querySelectorAll('.play-button').forEach(button => {
-    button.addEventListener('click', function() {
-        const playlistId = this.dataset.playlistId;
-        player.playPlaylist(playlistId);
-    });
-});
-
-// チャートの初期化と更新
-const initializeCharts = async () => {
-    try {
-        // アーティスト分析データの取得
-        const response = await fetch('/api/artist-analysis/');
-        const data = await response.json();
-        
-        if (response.ok) {
-            // ジャンル分布チャート
-            const genreChart = new Chart(document.getElementById('genreChart').getContext('2d'), {
-                type: 'doughnut',
-                data: {
-                    labels: data.genre_data.labels,
-                    datasets: [{
-                        data: data.genre_data.data,
-                        backgroundColor: [
-                            '#1DB954', '#1ed760', '#1fdf6f', '#20e77e', '#21ef8d'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                            labels: { color: '#fff' }
-                        }
-                    }
-                }
-            });
-
-            // アーティスト相関チャート
-            const artistChart = new Chart(document.getElementById('artistCorrelationChart').getContext('2d'), {
-                type: 'bubble',
-                data: {
-                    datasets: [{
-                        data: data.artist_correlation,
-                        backgroundColor: 'rgba(29, 185, 84, 0.5)',
-                        borderColor: '#1DB954'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: '人気度',
-                                color: '#fff'
-                            },
-                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                            ticks: { color: '#fff' }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'フォロワー数（万）',
-                                color: '#fff'
-                            },
-                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                            ticks: { color: '#fff' }
-                        }
-                    },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: (context) => {
-                                    const data = context.raw;
-                                    return [
-                                        `アーティスト: ${data.label}`,
-                                        `人気度: ${data.x}`,
-                                        `フォロワー数: ${(data.y * 10000).toLocaleString()}人`
-                                    ];
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
-            // トレンドチャート
-            const trendChart = new Chart(document.getElementById('trendChart').getContext('2d'), {
-                type: 'line',
-                data: {
-                    labels: data.trend_data.labels,
-                    datasets: [{
-                        label: 'リスニング数',
-                        data: data.trend_data.data,
-                        borderColor: '#1DB954',
-                        backgroundColor: 'rgba(29, 185, 84, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                            ticks: { color: '#fff' }
-                        },
-                        y: {
-                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                            ticks: { color: '#fff' }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            labels: { color: '#fff' }
-                        }
-                    }
-                }
-            });
-        }
-    } catch (error) {
-        console.error('チャートの初期化エラー:', error);
-    }
-};
-
-// ムード別おすすめの取得と表示
-const loadMoodRecommendations = async (moodId) => {
-    try {
-        const response = await fetch(`/api/mood-recommendations/${moodId}/`);
-        const data = await response.json();
-        
-        if (response.ok) {
-            const container = document.querySelector('.recommendation-cards');
-            container.innerHTML = data.tracks.map(track => `
-                <div class="recommendation-card" data-mood="${track.mood_id}">
-                    <div class="recommendation-cover">
-                        ${track.album_cover ? 
-                            `<img src="${track.album_cover}" alt="${track.title}">` :
-                            `<div class="recommendation-cover-placeholder">
-                                <i class="bi bi-music-note"></i>
-                            </div>`
-                        }
-                        <div class="recommendation-overlay">
-                            ${track.preview_url ?
-                                `<button class="preview-button" data-preview-url="${track.preview_url}">
-                                    <i class="bi bi-play-fill"></i>
-                                </button>` :
-                                `<span class="no-preview">プレビューなし</span>`
-                            }
-                        </div>
-                    </div>
-                    <div class="recommendation-info">
-                        <h3>${track.title}</h3>
-                        <p class="artist-name">${track.artist}</p>
-                        <div class="track-stats">
-                            <span><i class="bi bi-clock"></i> ${Math.floor(track.duration / 60)}:${String(track.duration % 60).padStart(2, '0')}</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-            
-            // プレビューボタンのイベントリスナーを設定
-            setupPreviewButtons();
-        }
-    } catch (error) {
-        console.error('ムード別おすすめの取得エラー:', error);
-    }
-};
-
-// プレビューボタンの設定
-const setupPreviewButtons = () => {
-    let currentAudio = null;
-    
-    document.querySelectorAll('.preview-button').forEach(button => {
-        button.addEventListener('click', function() {
-            const previewUrl = this.dataset.previewUrl;
-            const icon = this.querySelector('i');
-            
-            if (currentAudio && currentAudio.src === previewUrl) {
-                if (currentAudio.paused) {
-                    currentAudio.play();
-                    icon.className = 'bi bi-pause-fill';
-        } else {
-                    currentAudio.pause();
-                    icon.className = 'bi bi-play-fill';
-                }
-            } else {
-                if (currentAudio) {
-                    currentAudio.pause();
-                    document.querySelectorAll('.preview-button i').forEach(i => i.className = 'bi bi-play-fill');
-                }
-                
-                currentAudio = new Audio(previewUrl);
-                currentAudio.play();
-                icon.className = 'bi bi-pause-fill';
-                
-                currentAudio.onended = () => {
-                    icon.className = 'bi bi-play-fill';
-                };
-            }
-        });
-    });
-};
-
-// ページ読み込み時の初期化
-document.addEventListener('DOMContentLoaded', () => {
-    initializeCharts();
-    
-    // ムードタブのイベントリスナー
-    document.querySelectorAll('.mood-tab').forEach(tab => {
-        tab.addEventListener('click', function() {
-            document.querySelectorAll('.mood-tab').forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
-            loadMoodRecommendations(this.dataset.mood);
-        });
-    });
-    
-    // 最初のムードのおすすめを読み込む
-    const firstMoodTab = document.querySelector('.mood-tab');
-    if (firstMoodTab) {
-        firstMoodTab.classList.add('active');
-        loadMoodRecommendations(firstMoodTab.dataset.mood);
-    }
-});
-</script>
 {% endblock %} 

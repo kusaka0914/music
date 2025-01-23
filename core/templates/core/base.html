@@ -17,7 +17,7 @@
         <div class="header-container">
             <div class="header-left">
                 <a href="{% url 'core:home' %}" class="logo">
-                    <span>Jamly</span>
+                    <span>Harmony</span>
                 </a>
             </div>
 
@@ -30,10 +30,10 @@
                     <i class="bi bi-search"></i>
                     <span>検索</span>
                 </a>
-                <a href="{% url 'core:music_compatibility' %}" class="nav-item {% if request.resolver_match.url_name == 'music_compatibility' %}active{% endif %}">
+                <!-- <a href="{% url 'core:music_compatibility' %}" class="nav-item {% if request.resolver_match.url_name == 'music_compatibility' %}active{% endif %}">
                     <i class="bi bi-music-note"></i>
                     <span>音楽マッチング</span>
-                </a>
+                </a> -->
                 <a href="{% url 'core:messages' %}" class="nav-item {% if request.resolver_match.url_name == 'messages' %}active{% endif %}">
                     <i class="bi bi-chat"></i>
                     <span>メッセージ</span>

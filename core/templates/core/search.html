@@ -21,19 +21,24 @@
                 <div class="search-form-group">
                     <label for="search-type" class="search-label">検索対象</label>
                     <select id="search-type" name="type" class="search-select">
-                <option value="all" {% if search_type == 'all' %}selected{% endif %}>すべて</option>
-                <option value="posts" {% if search_type == 'posts' %}selected{% endif %}>投稿</option>
-                <option value="users" {% if search_type == 'users' %}selected{% endif %}>ユーザー</option>
-                <option value="playlists" {% if search_type == 'playlists' %}selected{% endif %}>プレイリスト</option>
-            </select>
+                        <option value="all" {% if search_type == 'all' %}selected{% endif %}>すべて</option>
+                        <option value="posts" {% if search_type == 'posts' %}selected{% endif %}>投稿</option>
+                        <option value="users" {% if search_type == 'users' %}selected{% endif %}>ユーザー</option>
+                        <option value="playlists" {% if search_type == 'playlists' %}selected{% endif %}>プレイリスト</option>
+                    </select>
                 </div>
-                <button type="submit" class="search-button">
-                検索
-            </button>
-        </form>
-    </div>
+                <div class="search-buttons">
+                    <button type="submit" class="search-button">
+                        検索
+                    </button>
+                    <button type="submit" name="show_all" value="true" class="search-button view-all-button">
+                        一覧を見る
+                    </button>
+                </div>
+            </form>
+        </div>
 
-    {% if query %}
+    {% if query or show_all %}
         <!-- 検索結果 -->
             {% if search_type == 'all' or search_type == 'posts' %}
             <!-- 投稿の検索結果 -->
@@ -195,11 +200,11 @@
                                             data-following="{% if user.is_following %}true{% else %}false{% endif %}">
                                             {% if user.is_following %}フォロー中{% else %}フォローする{% endif %}
                                         </button>
-                    {% endif %}
-                </div>
-            {% endif %}
-                        {% endfor %}
-                    </div>
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
                     {% else %}
                         <p class="no-results">ユーザーが見つかりませんでした。</p>
                     {% endif %}
@@ -211,7 +216,7 @@
                 <div class="section">
                     <div class="section-header">
                         <h2 class="section-title">プレイリスト</h2>
-                </div>
+                    </div>
                     {% if playlists %}
                         <div class="playlists-grid">
                             {% for playlist in playlists %}
@@ -219,11 +224,11 @@
                                     <div class="playlist-cover">
                                         {% if playlist.cover_image %}
                                             <img src="{{ playlist.cover_image }}" alt="{{ playlist.title }}">
-            {% else %}
+                                        {% else %}
                                             <div class="playlist-cover-placeholder">
                                                 <i class="bi bi-music-note-list"></i>
                                             </div>
-            {% endif %}
+                                        {% endif %}
                                     </div>
                                     <div class="playlist-info">
                                         <h3 class="playlist-title">{{ playlist.title }}</h3>
@@ -241,16 +246,16 @@
                                     </div>
                                     <a href="{% url 'core:playlist_detail' playlist.id %}" class="playlist-link"></a>
                                 </div>
-                    {% endfor %}
-                </div>
-            {% else %}
+                            {% endfor %}
+                        </div>
+                    {% else %}
                         <p class="no-results">プレイリストが見つかりませんでした。</p>
-            {% endif %}
+                    {% endif %}
                 </div>
             {% endif %}
-        {% else %}
-            <p class="no-results">検索キーワードを入力してください。</p>
-        {% endif %}
+    {% else %}
+        <p class="no-results">検索キーワードを入力するか、一覧を見るボタンを押してください。</p>
+    {% endif %}
     </div>
 </div>
 
@@ -309,19 +314,36 @@
     font-weight: 500;
 }
 
+.search-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
 .search-button {
-    background: #22c55e;
-    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 40px;
+    height: 48px;
     border: none;
-    border-radius: 9999px;
-    padding: 0.75rem 1.5rem;
-    font-weight: 500;
+    background: var(--spotify-green);
+    color: white;
+    font-weight: 600;
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
 .search-button:hover {
-    background: #16a34a;
+    background: #1ed760;
+    transform: scale(1.02);
+}
+
+.view-all-button {
+    background: var(--spotify-green);
+}
+
+.view-all-button:hover {
+    background: #1ed760;
+    transform: scale(1.02);
 }
 
 .search-input-wrapper {

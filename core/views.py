@@ -197,18 +197,17 @@ def register_view(request):
         form = UserRegisterForm()
     return render(request, 'core/register.html', {'form': form})
 
-def calculate_music_compatibility(user1, user2):
+def calculate_music_compatibility(profile1, profile2):
     """ユーザー間の音楽の相性スコアを計算"""
     try:
         score = 0
         common_artists = []
-        common_tracks = []
         
         # お気に入りアーティストを比較
-        user1_artists = [artist['name'] for artist in user1.favorite_artists]
-        user2_artists = [artist['name'] for artist in user2.favorite_artists]
+        profile1_artists = [artist['name'] for artist in profile1.favorite_artists] if profile1.favorite_artists else []
+        profile2_artists = [artist['name'] for artist in profile2.favorite_artists] if profile2.favorite_artists else []
     
-        common_artists = [artist for artist in user1_artists if artist in user2_artists]
+        common_artists = [artist for artist in profile1_artists if artist in profile2_artists]
         score += len(common_artists) * 15  # 共通のアーティストごとに15ポイント
         
         # スコアを0-100の範囲に正規化
@@ -228,9 +227,12 @@ def calculate_music_compatibility(user1, user2):
 def get_common_artists(user1, user2):
     """二人のユーザー間の共通のアーティストを取得"""
     try:
-        taste1, _ = MusicTaste.objects.get_or_create(user=user1)
-        taste2, _ = MusicTaste.objects.get_or_create(user=user2)
-        return list(set(taste1.top_artists.keys()) & set(taste2.top_artists.keys()))
+        # user1とuser2はProfileオブジェクトとして扱う
+        user1_artists = [artist['name'] for artist in user1.favorite_artists] if user1.favorite_artists else []
+        user2_artists = [artist['name'] for artist in user2.favorite_artists] if user2.favorite_artists else []
+        
+        # 共通のアーティストを返す
+        return list(set(user1_artists) & set(user2_artists))
     except Exception as e:
         logger.error(f"共通アーティスト取得エラー: {str(e)}")
         return []
@@ -912,14 +914,15 @@ def following_posts(request):
 
 def search(request):
     query = request.GET.get('q', '')
-    search_type = request.GET.get('type', 'all')  # 検索タイプ（all, posts, users, playlists）
+    search_type = request.GET.get('type', 'all')
+    show_all = request.GET.get('show_all', False)  # 一覧表示モードのフラグ
     
-    if query:
+    # 一覧表示モードまたは検索クエリがある場合
+    if show_all or query:
         if search_type == 'users':
             # ユーザー検索
             users = User.objects.filter(
-                Q(username__icontains=query) |
-                Q(profile__bio__icontains=query)
+                Q(username__icontains=query) if query else Q()
             ).select_related('profile').distinct()
 
             # ログインユーザーの場合、各ユーザーとの相性スコアとフォロー状態を計算
@@ -937,14 +940,14 @@ def search(request):
             context = {
                 'query': query,
                 'search_type': search_type,
-                'users': users
+                'users': users,
+                'show_all': show_all
             }
             
         elif search_type == 'playlists':
             # プレイリスト検索
             playlists = Playlist.objects.filter(
-                Q(title__icontains=query) |
-                Q(description__icontains=query),
+                Q(title__icontains=query) | Q(description__icontains=query) if query else Q(),
                 is_public=True
             ).select_related('user', 'user__profile').annotate(
                 track_count=Count('playlistmusic'),
@@ -954,16 +957,15 @@ def search(request):
             context = {
                 'query': query,
                 'search_type': search_type,
-                'playlists': playlists
+                'playlists': playlists,
+                'show_all': show_all
             }
             
         elif search_type == 'posts':
             # 投稿検索
             posts = MusicPost.objects.filter(
-                Q(title__icontains=query) |
-                Q(artist__icontains=query) |
-                Q(description__icontains=query) |
-                Q(mood__icontains=query)
+                Q(title__icontains=query) | Q(artist__icontains=query) |
+                Q(description__icontains=query) | Q(mood__icontains=query) if query else Q()
             ).select_related('user', 'user__profile').prefetch_related(
                 'likes', 'comments'
             ).order_by('-created_at')
@@ -971,23 +973,22 @@ def search(request):
             context = {
                 'query': query,
                 'search_type': search_type,
-                'posts': posts
+                'posts': posts,
+                'show_all': show_all
             }
             
         else:  # all
             # 全体検索
             posts = MusicPost.objects.filter(
-                Q(title__icontains=query) |
-                Q(artist__icontains=query) |
-                Q(description__icontains=query)
+                Q(title__icontains=query) | Q(artist__icontains=query) |
+                Q(description__icontains=query) if query else Q()
             ).select_related('user', 'user__profile').prefetch_related(
                 'likes', 'comments'
-            ).order_by('-created_at')[:5]
+            ).order_by('-created_at')
             
             users = User.objects.filter(
-                Q(username__icontains=query) |
-                Q(profile__bio__icontains=query)
-            ).select_related('profile').distinct()[:5]
+                Q(username__icontains=query) | Q(profile__bio__icontains=query) if query else Q()
+            ).select_related('profile').distinct()
             
             # ログインユーザーの場合、各ユーザーとの相性スコアとフォロー状態を計算
             if request.user.is_authenticated:
@@ -1002,13 +1003,12 @@ def search(request):
                 users = users_with_compatibility
             
             playlists = Playlist.objects.filter(
-                Q(title__icontains=query) |
-                Q(description__icontains=query),
+                Q(title__icontains=query) | Q(description__icontains=query) if query else Q(),
                 is_public=True
             ).select_related('user', 'user__profile').annotate(
                 track_count=Count('playlistmusic'),
                 likes_count=Count('likes')
-            ).order_by('-created_at')[:5]
+            ).order_by('-created_at')
 
             for playlist in playlists:
                 first_track = playlist.playlistmusic_set.first()
@@ -1022,12 +1022,14 @@ def search(request):
                 'search_type': search_type,
                 'posts': posts,
                 'users': users,
-                'playlists': playlists
+                'playlists': playlists,
+                'show_all': show_all
             }
     else:
         context = {
             'query': '',
-            'search_type': search_type
+            'search_type': search_type,
+            'show_all': show_all
         }
     
     return render(request, 'core/search.html', context)
@@ -1195,35 +1197,164 @@ def search_artists(request):
 
 @login_required
 def music_compatibility(request):
-    try:
-        # ユーザーの音楽の好みを取得
-        my_music_taste, _ = MusicTaste.objects.get_or_create(user=request.user)
-        
-        # デバッグ用：top_genresの内容をログに出力
-        logger.info(f"User: {request.user.username}, Top Genres: {my_music_taste.top_genres}")
+    if not request.user.is_authenticated:
+        return redirect('core:login')
     
-        # 自分以外のユーザーを取得
-        other_users = User.objects.exclude(id=request.user.id)
+    # 1. 相性の良いユーザーを取得
+    compatible_users = get_compatible_users(request.user)
+    
+    # 2. 今日のおすすめ曲を取得
+    recommended_tracks = get_recommended_tracks(request.user)
+    
+    # 3. 平均相性を計算
+    average_compatibility = calculate_average_compatibility(request.user)
+    
+    # 4. ジャンル分析
+    genre_analysis = analyze_user_genres(request.user)
+    
+    context = {
+        'compatible_users': compatible_users,
+        'recommended_tracks': recommended_tracks,
+        'average_compatibility': average_compatibility,
+        'genre_analysis': genre_analysis,
+    }
+    
+    return render(request, 'core/music_compatibility.html', context)
+
+def get_compatible_users(user, limit=5):
+    """相性の良いユーザーを取得"""
+    try:
+        # 自分以外のプロフィールを取得
+        all_profiles = Profile.objects.exclude(user=user)
+        compatible_users = []
         
-        # 音楽の相性を計算
-        compatibility_scores = []
-        for other_user in other_users:
-            other_music_taste, _ = MusicTaste.objects.get_or_create(user=other_user)
-            score = request.user.profile.get_music_compatibility(other_user.profile)
-            compatibility_scores.append({
-                'user': other_user,
-                'score': score,
-                'common_genres': set(my_music_taste.top_genres.keys()) & set(other_music_taste.top_genres.keys())
-            })
+        for profile in all_profiles:
+            # 共通のアーティストを検出（user.profileとprofileを比較）
+            common_artists = get_common_artists(user.profile, profile)
+            # ジャンルの類似性を計算
+            genre_similarity = calculate_genre_similarity(user.profile, profile)
+            # 総合スコアを計算（アーティストとジャンルの重み付け）
+            compatibility_score = (len(common_artists) * 0.6 + genre_similarity * 0.4) * 100
+            
+            if compatibility_score > 0:
+                compatible_users.append({
+                    'user': profile.user,
+                    'profile': profile,  # プロフィール情報を追加
+                    'score': int(compatibility_score),
+                    'common_artists': common_artists[:3]  # Top 3 common artists
+                })
         
-        return render(request, 'core/music_compatibility.html', {
-            'compatibility_scores': compatibility_scores
-        })
+        # スコアで降順ソート
+        compatible_users.sort(key=lambda x: x['score'], reverse=True)
+        return compatible_users[:limit]
     except Exception as e:
-        logger.error(f"音楽の相性計算中にエラーが発生: {str(e)}")
-        return render(request, 'core/music_compatibility.html', {
-            'error': '音楽の相性の計算中にエラーが発生しました。'
-        })
+        logger.error(f"互換性のあるユーザーの取得に失敗: {str(e)}")
+        return []
+
+def get_recommended_tracks(user):
+    """今日のおすすめ曲を取得"""
+    try:
+        recommended_tracks = []
+        
+        # 1. お気に入りアーティストの曲を取得
+        if user.profile.favorite_artists:
+            for artist in user.profile.favorite_artists[:3]:  # 上位3アーティスト
+                artist_id = artist.get('id')
+                if artist_id:
+                    tracks = get_artist_top_tracks(artist_id)
+                    recommended_tracks.extend(tracks)
+        
+        # 2. よく聴くジャンルの曲を追加
+        if user.profile.favorite_genres:
+            genre_tracks = get_tracks_by_genres(user.profile.favorite_genres)
+            recommended_tracks.extend(genre_tracks)
+        
+        # 重複を除去してランダムに選択
+        unique_tracks = []
+        track_ids = set()
+        
+        for track in recommended_tracks:
+            if track['id'] not in track_ids:
+                track_ids.add(track['id'])
+                unique_tracks.append(track)
+        
+        # ランダムに並び替えて上位10曲を返す
+        random.shuffle(unique_tracks)
+        return unique_tracks[:10]
+        
+    except Exception as e:
+        logger.error(f"おすすめ曲の取得に失敗: {str(e)}")
+        return []
+
+def calculate_average_compatibility(user):
+    """平均相性を計算"""
+    all_profiles = Profile.objects.exclude(user=user)
+    total_score = 0
+    count = 0
+    
+    following_scores = []
+    all_scores = []
+    
+    for profile in all_profiles:
+        # calculate_music_compatibilityを使用してスコアを計算
+        compatibility = calculate_music_compatibility(user.profile, profile)
+        score = compatibility['score']
+        all_scores.append(score)
+        
+        if profile in user.profile.following.all():
+            following_scores.append(score)
+            
+        total_score += score
+        count += 1
+    
+    return {
+        'overall_average': int(total_score / count) if count > 0 else 0,
+        'following_average': int(sum(following_scores) / len(following_scores)) if following_scores else 0,
+        'score_distribution': analyze_score_distribution(all_scores),
+    }
+
+def analyze_user_genres(user):
+    """ユーザーのジャンル分析を実行"""
+    genres = {}
+    
+    # お気に入りアーティストからジャンルを収集
+    if user.profile.favorite_artists:
+        for artist in user.profile.favorite_artists:
+            if 'genres' in artist:
+                for genre in artist['genres']:
+                    genres[genre] = genres.get(genre, 0) + 1
+    
+    # ジャンルを出現頻度でソート
+    sorted_genres = sorted(genres.items(), key=lambda x: x[1], reverse=True)
+    
+    return {
+        'top_genres': dict(sorted_genres[:5]),
+        'genre_count': len(genres),
+    }
+
+def analyze_score_distribution(scores):
+    """相性スコアの分布を分析"""
+    ranges = {
+        '0-20': 0,
+        '21-40': 0,
+        '41-60': 0,
+        '61-80': 0,
+        '81-100': 0
+    }
+    
+    for score in scores:
+        if score <= 20:
+            ranges['0-20'] += 1
+        elif score <= 40:
+            ranges['21-40'] += 1
+        elif score <= 60:
+            ranges['41-60'] += 1
+        elif score <= 80:
+            ranges['61-80'] += 1
+        else:
+            ranges['81-100'] += 1
+            
+    return ranges
 
 @login_required
 def popular_artists(request):
@@ -2336,3 +2467,94 @@ def get_post_comments(request, post_id):
         'status': 'error',
         'message': '無効なリクエストメソッドです。'
     }, status=405)
+
+def calculate_genre_similarity(user1, user2):
+    """二人のユーザー間のジャンルの類似性を計算"""
+    try:
+        # ユーザー1のジャンルを取得
+        user1_genres = set(user1.favorite_genres if user1.favorite_genres else [])
+        
+        # ユーザー2のジャンルを取得
+        user2_genres = set(user2.favorite_genres if user2.favorite_genres else [])
+        
+        # 共通のジャンル数を計算
+        common_genres = user1_genres & user2_genres
+        
+        # 全ジャンル数を計算
+        all_genres = user1_genres | user2_genres
+        
+        # Jaccard類似度を計算（0から1の範囲）
+        if len(all_genres) > 0:
+            similarity = len(common_genres) / len(all_genres)
+        else:
+            similarity = 0
+            
+        return similarity
+        
+    except Exception as e:
+        logger.error(f"ジャンル類似性計算エラー: {str(e)}")
+        return 0
+
+def get_tracks_by_genres(genres, limit=5):
+    """ジャンルに基づいて曲を取得"""
+    try:
+        spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(
+            client_id=settings.SPOTIFY_CLIENT_ID,
+            client_secret=settings.SPOTIFY_CLIENT_SECRET
+        ))
+        
+        tracks = []
+        # 上位3ジャンルまでで検索
+        for genre in genres[:3]:
+            try:
+                results = spotify.search(
+                    q=f'genre:{genre}',
+                    type='track',
+                    market='JP',
+                    limit=limit
+                )
+                
+                for track in results['tracks']['items']:
+                    track_info = {
+                        'id': track['id'],
+                        'name': track['name'],
+                        'artist': track['artists'][0]['name'],
+                        'image': track['album']['images'][0]['url'] if track['album']['images'] else None,
+                        'preview_url': track['preview_url']
+                    }
+                    if track_info not in tracks:  # 重複を避ける
+                        tracks.append(track_info)
+            except Exception as e:
+                logger.error(f"ジャンル {genre} の曲検索に失敗: {str(e)}")
+                continue
+        
+        return tracks
+    except Exception as e:
+        logger.error(f"ジャンルに基づく曲の取得に失敗: {str(e)}")
+        return []
+
+def get_artist_top_tracks(artist_id):
+    """アーティストのトップトラックを取得"""
+    try:
+        spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(
+            client_id=settings.SPOTIFY_CLIENT_ID,
+            client_secret=settings.SPOTIFY_CLIENT_SECRET
+        ))
+        
+        results = spotify.artist_top_tracks(artist_id, country='JP')
+        tracks = []
+        
+        for track in results['tracks'][:5]:  # 上位5曲を取得
+            track_info = {
+                'id': track['id'],
+                'name': track['name'],
+                'artist': track['artists'][0]['name'],
+                'image': track['album']['images'][0]['url'] if track['album']['images'] else None,
+                'preview_url': track['preview_url']
+            }
+            tracks.append(track_info)
+            
+        return tracks
+    except Exception as e:
+        logger.error(f"アーティストのトップトラック取得に失敗: {str(e)}")
+        return []

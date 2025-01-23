@@ -201,6 +201,12 @@ class Profile(models.Model):
             logger.error(f"おすすめユーザーの取得に失敗: {str(e)}")
             return []
 
+    def get_top_genres(self):
+        """ユーザーのトップジャンルを取得"""
+        if not self.favorite_genres:
+            return []
+        return self.favorite_genres
+
 class MusicPost(models.Model):
     TARGET_TYPE_CHOICES = [
         ('track', '曲について'),

@@ -6535,3 +6535,138 @@ INFO 2025-01-23 14:19:07,122 views 80 281473095627168 User: a, Top Genres: {}
 ERROR 2025-01-23 14:19:07,126 views 80 281473095627168 音楽の相性計算中にエラーが発生: 'Profile' object has no attribute 'get_music_compatibility'
 INFO 2025-01-23 14:19:18,732 views 80 281473095627168 User: a, Top Genres: {}
 ERROR 2025-01-23 14:19:18,737 views 80 281473095627168 音楽の相性計算中にエラーが発生: 'Profile' object has no attribute 'get_music_compatibility'
+INFO 2025-01-23 14:19:53,084 views 80 281473194193312 User: a, Top Genres: {}
+ERROR 2025-01-23 14:19:53,088 views 80 281473194193312 音楽の相性計算中にエラーが発生: 'Profile' object has no attribute 'get_music_compatibility'
+INFO 2025-01-23 14:21:19,270 views 80 281473095627168 User: a, Top Genres: {}
+ERROR 2025-01-23 14:21:19,273 views 80 281473095627168 音楽の相性計算中にエラーが発生: 'Profile' object has no attribute 'get_music_compatibility'
+ERROR 2025-01-23 14:25:59,740 views 90 281472873329056 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:27:13,165 views 94 281473244524960 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:27:13,165 views 94 281473244524960 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:27:13,165 views 94 281473244524960 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:27:13,166 views 94 281473244524960 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:27:13,166 views 94 281473244524960 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:28:12,073 views 98 281473273885088 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:28:12,074 views 98 281473273885088 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:28:12,075 views 98 281473273885088 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:28:12,076 views 98 281473273885088 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:28:12,088 views 98 281473273885088 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:29:56,252 views 102 281473347285408 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:29:56,253 views 102 281473347285408 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:29:56,254 views 102 281473347285408 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:29:56,254 views 102 281473347285408 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:29:56,255 views 102 281473347285408 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:29:56,900 views 102 281473347285408 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:29:56,900 views 102 281473347285408 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:29:56,901 views 102 281473347285408 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:29:56,901 views 102 281473347285408 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:29:56,902 views 102 281473347285408 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:31:44,174 views 106 281472934146464 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:31:44,174 views 106 281472934146464 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:31:44,175 views 106 281472934146464 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:31:44,175 views 106 281472934146464 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:31:44,175 views 106 281472934146464 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:31:44,177 models 106 281472934146464 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:31:44,178 models 106 281472934146464 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:31:44,178 models 106 281472934146464 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:31:44,179 models 106 281472934146464 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:31:44,180 models 106 281472934146464 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:31:53,755 views 106 281472934146464 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:31:53,756 views 106 281472934146464 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:31:53,756 views 106 281472934146464 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:31:53,756 views 106 281472934146464 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:31:53,757 views 106 281472934146464 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:31:53,759 models 106 281472934146464 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:31:53,760 models 106 281472934146464 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:31:53,762 models 106 281472934146464 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:31:53,764 models 106 281472934146464 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:31:53,765 models 106 281472934146464 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:32:02,491 views 110 281472894300576 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:32:02,491 views 110 281472894300576 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:32:02,492 views 110 281472894300576 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:32:02,494 views 110 281472894300576 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:32:02,534 views 110 281472894300576 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:32:02,546 models 110 281472894300576 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:32:02,584 models 110 281472894300576 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:32:02,607 models 110 281472894300576 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:32:02,611 models 110 281472894300576 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:32:02,631 models 110 281472894300576 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:33:43,446 views 114 281473066267040 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:33:43,447 views 114 281473066267040 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:33:43,447 views 114 281473066267040 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:33:43,448 views 114 281473066267040 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:33:43,448 views 114 281473066267040 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:33:43,450 models 114 281473066267040 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:33:43,451 models 114 281473066267040 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:33:43,454 models 114 281473066267040 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:33:43,455 models 114 281473066267040 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:33:43,457 models 114 281473066267040 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:34:17,871 views 118 281473248719264 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:34:17,872 views 118 281473248719264 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:34:17,873 views 118 281473248719264 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:34:17,873 views 118 281473248719264 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:34:17,873 views 118 281473248719264 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:34:17,875 models 118 281473248719264 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:34:17,877 models 118 281473248719264 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:34:17,879 models 118 281473248719264 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:34:17,880 models 118 281473248719264 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:34:17,881 models 118 281473248719264 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:34:19,498 views 118 281473248719264 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:34:19,498 views 118 281473248719264 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:34:19,499 views 118 281473248719264 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:34:19,500 views 118 281473248719264 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:34:19,500 views 118 281473248719264 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:34:19,515 models 118 281473248719264 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:34:19,517 models 118 281473248719264 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:34:19,518 models 118 281473248719264 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:34:19,520 models 118 281473248719264 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:34:19,530 models 118 281473248719264 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:35:21,123 views 118 281473248719264 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:35:21,123 views 118 281473248719264 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:35:21,124 views 118 281473248719264 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:35:21,124 views 118 281473248719264 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:35:21,124 views 118 281473248719264 共通アーティスト取得エラー: Cannot query "aのプロフィール": Must be "User" instance.
+ERROR 2025-01-23 14:35:21,126 models 118 281473248719264 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:35:21,129 models 118 281473248719264 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:35:21,130 models 118 281473248719264 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:35:21,132 models 118 281473248719264 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:35:21,133 models 118 281473248719264 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:36:25,245 models 123 281473653469600 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:36:25,247 models 123 281473653469600 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:36:25,248 models 123 281473653469600 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:36:25,250 models 123 281473653469600 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:36:25,250 models 123 281473653469600 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:36:43,718 models 123 281473653469600 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:36:43,721 models 123 281473653469600 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:36:43,722 models 123 281473653469600 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:36:43,722 models 123 281473653469600 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:36:43,724 models 123 281473653469600 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:37:29,410 models 127 281472755888544 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:37:29,412 models 127 281472755888544 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:37:29,413 models 127 281472755888544 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:37:29,413 models 127 281472755888544 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:37:29,414 models 127 281472755888544 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:37:30,271 models 127 281472745402784 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:37:30,272 models 127 281472745402784 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:37:30,274 models 127 281472745402784 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:37:30,275 models 127 281472745402784 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:37:30,276 models 127 281472745402784 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:39:17,105 models 132 281473351479712 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:39:17,105 models 132 281473351479712 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:39:17,106 models 132 281473351479712 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:39:17,107 models 132 281473351479712 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:39:17,107 models 132 281473351479712 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:39:19,472 models 132 281473351479712 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:39:19,473 models 132 281473351479712 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:39:19,475 models 132 281473351479712 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:39:19,476 models 132 281473351479712 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:39:19,477 models 132 281473351479712 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:41:30,480 models 136 281473200484768 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:41:30,482 models 136 281473200484768 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:41:30,483 models 136 281473200484768 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:41:30,484 models 136 281473200484768 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:41:30,485 models 136 281473200484768 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:41:32,648 models 136 281473189999008 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:41:32,650 models 136 281473189999008 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:41:32,651 models 136 281473189999008 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:41:32,652 models 136 281473189999008 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
+ERROR 2025-01-23 14:41:32,653 models 136 281473189999008 音楽の相性スコアの計算に失敗: 'Profile' object has no attribute 'profile'
