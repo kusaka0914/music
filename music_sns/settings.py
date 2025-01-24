@@ -119,7 +119,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
@@ -140,7 +140,6 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
 # 静的ファイルの設定
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
@@ -151,7 +150,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Spotify API設定
 SPOTIFY_CLIENT_ID = 'a685bbc2aaba44a48cfc003d32756e01'
 SPOTIFY_CLIENT_SECRET = 'ef88fbeaec7f4ed19f53187dcd6ca3bc'
-SPOTIFY_REDIRECT_URI = 'http://127.0.0.1:8000/spotify/callback/'
+SPOTIFY_REDIRECT_URI = 'https://music-ax6.pages.dev/spotify/callback/'
 
 
 # ログ設定
