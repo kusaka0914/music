@@ -7,37 +7,6 @@
     <div class="main-layout">
         <!-- メインコンテンツ -->
         <main class="main-content">
-            <!-- ストーリーセクション -->
-            <!-- <div class="stories-section">
-                <div class="stories-container">
-                    {% if user.is_authenticated %}
-                    
-                    <div class="story-item add-story" id="addStoryButton">
-                        <div class="story-add-button">
-                            <i class="bi bi-plus-lg"></i>
-                        </div>
-                        <span>ストーリーを追加</span>
-                    </div>
-                    {% endif %}
-                    
-                    
-                    {% for user_data in stories_by_user %}
-                        {% if user_data.user.username %}
-                        <div class="story-item" data-first-story-id="{{ user_data.stories.0.id }}">
-                            <div class="story-avatar {% if user_data.has_unviewed %}not-viewed{% endif %}">
-                                {% if user_data.user.avatar_url %}
-                                    <img src="{{ user_data.user.avatar_url }}" alt="{{ user_data.user.username }}">
-                                {% else %}
-                                    <img src="{% static 'images/default-avatar.svg' %}" alt="{{ user_data.user.username }}">
-                                {% endif %}
-                            </div>
-                            <span class="story-username">{{ user_data.user.username }}</span>
-                        </div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </div> -->
-
             <div class="content-header">
                 <div class="feed-filters">
                     <button class="filter-button active" data-filter="all">すべて</button>
@@ -50,7 +19,23 @@
                 </a>
             </div>
 
-            <div class="posts-section">
+            <!-- モバイル用タブ -->
+            <div class="mobile-tabs">
+                <button class="tab-button active" data-tab="posts">
+                    <i class="bi bi-collection"></i>
+                    投稿一覧
+                </button>
+                <button class="tab-button" data-tab="trending">
+                    <i class="bi bi-graph-up"></i>
+                    トレンド
+                </button>
+                <button class="tab-button" data-tab="playlists">
+                    <i class="bi bi-music-note-list"></i>
+                    プレイリスト
+                </button>
+            </div>
+
+            <div class="posts-section tab-content active" data-content="posts">
                 <div class="section-header">
                     <h2>投稿一覧</h2>
                     <div class="header-controls">
@@ -65,6 +50,72 @@
                 </div>
                 <div class="posts-container">
                     {% include 'core/includes/post_list.html' %}
+                </div>
+            </div>
+
+            <!-- モバイル用トレンド投稿セクション -->
+            <div class="trending-section tab-content" data-content="trending">
+                <h3>トレンド投稿</h3>
+                <div class="trending-posts">
+                    {% for post in trending_posts %}
+                        <div class="trending-item">
+                            <span class="trending-number">#{{ forloop.counter }}</span>
+                            <a href="?featured={{ post.id }}" class="trending-content">
+                                <div class="trending-info">
+                                    <h4>{{ post.user.username }}</h4>
+                                    <p class="trending-description">{{ post.description }}</p>
+                                    <div class="trending-stats">
+                                        <span><i class="bi bi-heart-fill"></i> {{ post.likes.count }}</span>
+                                        <span><i class="bi bi-chat-fill"></i> {{ post.comments.count }}</span>
+                                    </div>
+                                </div>
+                                {% if post.image %}
+                                    <div class="trending-image">
+                                        <img src="{{ post.image }}" alt="{{ post.user.username }}">
+                                    </div>
+                                {% endif %}
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- モバイル用プレイリストセクション -->
+            <div class="recommended-playlists tab-content" data-content="playlists">
+                <h2 class="section-title">おすすめのプレイリスト</h2>
+                <div class="playlists-grid">
+                    {% for playlist in recommended_playlists %}
+                        <div class="playlist-card">
+                            <div class="playlist-cover">
+                                {% if playlist.cover_image %}
+                                    <img src="{{ playlist.cover_image }}" alt="{{ playlist.title }}">
+                                {% else %}
+                                    <div class="playlist-cover-placeholder">
+                                        <i class="bi bi-music-note-list"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="playlist-info">
+                                <h3 class="playlist-title">{{ playlist.title }}</h3>
+                                <p class="playlist-creator">作成者: {{ playlist.user.username }}</p>
+                                <div class="playlist-stats">
+                                    <span class="playlist-tracks">
+                                        <i class="bi bi-music-note"></i>
+                                        {{ playlist.track_count }}曲
+                                    </span>
+                                    <span class="playlist-likes">
+                                        <i class="bi bi-heart"></i>
+                                        {{ playlist.likes_count }}
+                                    </span>
+                                </div>
+                            </div>
+                            <a href="{% url 'core:playlist_detail' playlist.id %}" class="playlist-link"></a>
+                        </div>
+                    {% empty %}
+                        <div class="no-playlists">
+                            <p>プレイリストがありません</p>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         </main>
@@ -173,6 +224,8 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
     </div>
 </div>
 
@@ -348,9 +401,17 @@
     .main-layout {
         grid-template-columns: 1fr 350px;
     }
+
+    .spotify-container {
+        margin: 0 32px;
+    }
+
+    .header-container {
+        margin: 0 32px;
+    }
     
     .sidebar-right {
-        width: 350px;
+        /* width: 350px; */
     }
 }
 
@@ -454,7 +515,7 @@
 
 .spotify-player {
     padding: 1rem;
-    background: linear-gradient(to bottom, rgba(29, 185, 84, 0.1), transparent);
+    /* background: linear-gradient(to bottom, rgba(29, 185, 84, 0.1), transparent); */
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -500,7 +561,7 @@
 }
 
 .post-title {
-    font-size: 1.4rem;
+    font-size: 1.4vw;
     margin: 0 0 0.5rem;
     font-weight: 600;
     color: #fff;
@@ -508,14 +569,14 @@
 }
 
 .post-artist {
+    font-size: 1.1vw;
     color: rgba(255, 255, 255, 0.8);
     margin: 0 0 1rem;
-    font-size: 1.1rem;
 }
 
 .post-description {
+    font-size: 1vw;
     color: rgba(255, 255, 255, 0.7);
-    font-size: 18px;
     margin-bottom: 1.5rem;
     line-height: 1.6;
     white-space: pre-wrap;
@@ -699,7 +760,7 @@
 }
 
 .trending-section h3, .recommended-users h3 {
-    font-size: 18px;
+    font-size: 1.2vw;
     margin-bottom: 1rem;
 }
 
@@ -742,14 +803,14 @@
 }
 
 .trending-info h4 {
-    font-size: 1rem;
+    font-size: 1vw;
     margin: 0 0 0.3rem;
     color: #fff;
     font-weight: 600;
 }
 
 .trending-info p {
-    font-size: 0.9rem;
+    font-size: 0.9vw;
     color: #b3b3b3;
     margin: 0 0 0.5rem;
     display: -webkit-box;
@@ -765,7 +826,7 @@
 .trending-stats {
     display: flex;
     gap: 1rem;
-    font-size: 0.8rem;
+    font-size: 0.8vw;
     color: #b3b3b3;
 }
 
@@ -847,12 +908,12 @@
 }
 
 .compatibility {
+    font-size: 0.8vw;
     color: #1DB954;
-    font-size: 0.8rem;
 }
 
 .recommended-users-section h3{
-    font-size: 18px;
+    font-size: 1.2vw;
 }
 
 .follow-button {
@@ -1426,7 +1487,7 @@
 }
 
 .section-title {
-    font-size: 18px;
+    font-size: 1.2vw;
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
@@ -1481,7 +1542,7 @@
 }
 
 .playlist-title {
-    font-size: 1rem;
+    font-size: 1vw;
     margin: 0 0 0.5rem;
     color: #fff;
     white-space: nowrap;
@@ -1490,7 +1551,7 @@
 }
 
 .playlist-creator {
-    font-size: 0.875rem;
+    font-size: 0.9vw;
     color: #b3b3b3;
     margin: 0 0 0.5rem;
 }
@@ -1498,7 +1559,7 @@
 .playlist-stats {
     display: flex;
     gap: 1rem;
-    font-size: 0.875rem;
+    font-size: 0.8vw;
     color: #b3b3b3;
 }
 
@@ -1593,6 +1654,158 @@
 .sort-select:focus {
     outline: none;
     border-color: #1DB954;
+}
+
+/* モバイル用タブ */
+.mobile-tabs {
+    display: none;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 0.5rem;
+    margin-bottom: 1.5rem;
+    gap: 0.5rem;
+}
+
+.tab-button {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #b3b3b3;
+    padding: 0.8rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tab-button i {
+    font-size: 1.2rem;
+}
+
+.tab-button.active {
+    background: rgba(29, 185, 84, 0.2);
+    color: #1DB954;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 992px) {
+    .main-layout {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .main-content {
+        width: 100%;
+    }
+
+    .mobile-tabs {
+        display: flex;
+    }
+
+    .sidebar-right {
+        display: none;
+    }
+
+    .trending-section.tab-content,
+    .recommended-playlists.tab-content {
+        display: none;
+        margin: 0;
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 12px;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    .content-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .feed-filters {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .create-post-button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .result-container {
+        margin: 0 1rem;
+    }
+
+    .post-card {
+        margin-bottom: 1rem;
+    }
+
+    .playlists-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+
+    .trending-item {
+        padding: 0.8rem;
+    }
+
+    .trending-info h4 {
+        font-size: 1.8vw;
+    }
+
+    .trending-info p {
+        font-size: 1.6vw;
+    }
+}
+
+@media (max-width: 576px) {
+    .spotify-player {
+        padding: 8px;
+    }
+
+    .spotify-container {
+        margin: 0 8px;
+        padding: 0 8px;
+    }
+
+    .feed-filters {
+        flex-wrap: wrap;
+    }
+
+    .filter-button {
+        flex: 1;
+        min-width: 100px;
+        text-align: center;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-controls {
+        width: 100%;
+    }
+
+    .sort-select {
+        width: 100%;
+    }
 }
 </style>
 
@@ -1947,6 +2160,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
     searchForm.addEventListener('submit', function(e) {
         e.preventDefault();
+    });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // タブ切り替え機能
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // アクティブなタブボタンを更新
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            // タブコンテンツを切り替え
+            const tabName = button.dataset.tab;
+            tabContents.forEach(content => {
+                if (content.dataset.content === tabName) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+        });
     });
 });
 </script>

@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-1rivkxrr&)rbe+)c+k+5m%stpt9a)52@23cc3720ldxucpw9hm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['music-ax6.pages.dev', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -140,6 +140,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SPOTIFY_CLIENT_ID = 'a685bbc2aaba44a48cfc003d32756e01'
 SPOTIFY_CLIENT_SECRET = 'ef88fbeaec7f4ed19f53187dcd6ca3bc'
 SPOTIFY_REDIRECT_URI = 'http://127.0.0.1:8000/spotify/callback/'
+
 
 # ログ設定
 LOGGING = {

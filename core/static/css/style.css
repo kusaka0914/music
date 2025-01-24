@@ -746,10 +746,6 @@ main {
         display: none;
     }
     
-    main {
-        padding: 1rem;
-    }
-    
     .container {
         padding: 0 1rem;
     }
