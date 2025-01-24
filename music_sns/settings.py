@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,12 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-1rivkxrr&)rbe+)c+k+5m%stpt9a)52@23cc3720ldxucpw9hm'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-1rivkxrr&)rbe+)c+k+5m%stpt9a)52@23cc3720ldxucpw9hm')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['music-ax6.pages.dev', 'localhost', '127.0.0.1', 'harmony-app-sns.site']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -78,11 +79,17 @@ WSGI_APPLICATION = 'music_sns.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'default': dj_database_url.config(
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
+}
+
+if DEBUG:
+    DATABASES['default'] = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-}
 
 
 # Password validation
@@ -148,9 +155,9 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Spotify API設定
-SPOTIFY_CLIENT_ID = 'a685bbc2aaba44a48cfc003d32756e01'
-SPOTIFY_CLIENT_SECRET = 'ef88fbeaec7f4ed19f53187dcd6ca3bc'
-SPOTIFY_REDIRECT_URI = 'https://music-ax6.pages.dev/spotify/callback/'
+SPOTIFY_CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID', 'a685bbc2aaba44a48cfc003d32756e01')
+SPOTIFY_CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET', 'ef88fbeaec7f4ed19f53187dcd6ca3bc')
+SPOTIFY_REDIRECT_URI = os.environ.get('SPOTIFY_REDIRECT_URI', 'https://your-app-name.herokuapp.com/spotify/callback/')
 
 
 # ログ設定
@@ -186,3 +193,7 @@ LOGGING = {
         },
     },
 }
+
+if not DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
