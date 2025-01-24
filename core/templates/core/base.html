@@ -70,11 +70,7 @@
                     </div>
                     <div class="nav-item dropdown">                        
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            {% if user.profile.avatar %}
-                                <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" class="avatar-img">
-                            {% else %}
-                                <img src="{% static 'images/default-avatar.svg' %}" alt="{{ user.username }}" class="avatar-img">
-                            {% endif %}
+                            <img src="{{ user.profile.get_avatar_url }}" alt="{{ user.username }}" class="avatar-img">
                         </a>
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu">
                             <a href="{% url 'core:profile' user.username %}" class="dropdown-item">

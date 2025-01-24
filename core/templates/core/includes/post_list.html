@@ -39,8 +39,8 @@
                 <div class="post-header">
                     <div class="user-info">
                         <a href="{% url 'core:profile' post.user.username %}" class="user-link">
-                            {% if post.user.profile.avatar %}
-                                <img src="{{ post.user.profile.avatar.url }}" alt="{{ post.user.username }}" class="user-avatar">
+                            {% if post.user.profile.get_avatar_url %}
+                                <img src="{{ post.user.profile.get_avatar_url }}" alt="{{ post.user.username }}" class="user-avatar">
                             {% else %}
                                 <img src="{% static 'core/images/default_avatar.png' %}" alt="{{ post.user.username }}" class="user-avatar">
                             {% endif %}
@@ -96,8 +96,8 @@
                         {% for comment in post.comments.all|slice:":3" %}
                             <div class="comment">
                                 <div class="comment-user">
-                                    {% if comment.user.profile.avatar %}
-                                        <img src="{{ comment.user.profile.avatar.url }}" alt="{{ comment.user.username }}">
+                                    {% if comment.user.profile.get_avatar_url %}
+                                        <img src="{{ comment.user.profile.get_avatar_url }}" alt="{{ comment.user.username }}">
                                     {% else %}
                                         <img src="{% static 'images/default-avatar.svg' %}" alt="{{ comment.user.username }}">
                                     {% endif %}

@@ -141,6 +141,9 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# デフォルトアバター設定
+DEFAULT_AVATAR_URL = '/static/images/default-avatar.svg'
+
 # ログイン関連の設定
 LOGIN_URL = 'core:login'
 LOGIN_REDIRECT_URL = 'core:home'

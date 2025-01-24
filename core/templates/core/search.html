@@ -87,11 +87,7 @@
                                         <div class="post-content">
                                             <div class="post-header">
                                                 <a href="{% url 'core:profile' post.user.username %}" class="post-user">
-                                                    {% if post.user.profile.avatar %}
-                                                        <img src="{{ post.user.profile.avatar.url }}" alt="{{ post.user.username }}">
-                                                    {% else %}
-                                                        <img src="{% static 'images/default-avatar.svg' %}" alt="{{ post.user.username }}">
-                                                    {% endif %}
+                                                    <img src="{{ post.user.profile.get_avatar_url }}" alt="{{ post.user.username }}">
                                                     <span>{{ post.user.username }}</span>
                                                 </a>
                                                 <div class="post-meta">
@@ -126,11 +122,7 @@
                                                     {% for comment in post.comments.all|slice:":3" %}
                                                         <div class="comment">
                                                             <div class="comment-user">
-                                                                {% if comment.user.profile.avatar %}
-                                                                    <img src="{{ comment.user.profile.avatar.url }}" alt="{{ comment.user.username }}">
-                                                                {% else %}
-                                                                    <img src="{% static 'images/default-avatar.svg' %}" alt="{{ comment.user.username }}">
-                                                                {% endif %}
+                                                                <img src="{{ comment.user.profile.get_avatar_url }}" alt="{{ comment.user.username }}">
                                                             </div>
                                                             <div class="comment-content">
                                                                 <span class="comment-username">{{ comment.user.username }}</span>
@@ -177,11 +169,7 @@
                                     <a href="{% url 'core:profile' user.username %}">
                                         <div class="recommended-user">
                                             <div class="user-info-recommended">
-                                                {% if user.profile.avatar %}
-                                                    <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}">
-                                                {% else %}
-                                                    <img src="{% static 'images/default-avatar.svg' %}" alt="{{ user.username }}">
-                                                {% endif %}
+                                                <img src="{{ user.profile.get_avatar_url }}" alt="{{ user.username }}">
                                                 <div class="user-flex">
                                                     <span class="user-name">{{ user.username }}</span>
                                                     {% if user.profile.nickname %}

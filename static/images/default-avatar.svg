@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="200" height="200" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="100" cy="100" r="100" fill="#282828"/>
-    <circle cx="100" cy="80" r="40" fill="#b3b3b3"/>
-    <path d="M100 130 C40 130 20 180 20 200 L180 200 C180 180 160 130 100 130Z" fill="#b3b3b3"/>
+    <!-- 背景円 -->
+    <circle cx="100" cy="100" r="100" fill="#f0f0f0"/>
+    <!-- 頭部 -->
+    <circle cx="100" cy="85" r="35" fill="#bdc3c7"/>
+    <!-- 胴体 -->
+    <path d="M100 130 C40 130 40 190 40 190 L160 190 C160 190 160 130 100 130" fill="#bdc3c7"/>
+    <!-- 音符装飾 -->
+    <g transform="translate(85, 60) scale(0.8)" fill="#95a5a6">
+        <path d="M30 0 L30 40 C30 46 20 50 15 45 C10 40 12 30 20 28 L30 25 L30 0" />
+        <circle cx="15" cy="45" r="5"/>
+    </g>
 </svg> 

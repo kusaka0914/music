@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from datetime import timedelta
 from django.utils import timezone
 from django.db.models import Q
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +18,7 @@ from django.dispatch import receiver
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(upload_to='avatars/', default='default.jpg', null=True, blank=True)
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     bio = models.TextField(max_length=500, blank=True)
     website = models.URLField(max_length=200, blank=True)
     favorite_genres = models.JSONField(default=list, blank=True)
@@ -28,6 +29,12 @@ class Profile(models.Model):
     spotify_refresh_token = models.CharField(max_length=255, null=True, blank=True)
     spotify_connected = models.BooleanField(default=False)
     music_taste = models.JSONField(default=dict, null=True, blank=True)
+
+    def get_avatar_url(self):
+        """アバターのURLを返す。アバターが設定されていない場合はデフォルト画像のURLを返す"""
+        if self.avatar and hasattr(self.avatar, 'url'):
+            return self.avatar.url
+        return settings.DEFAULT_AVATAR_URL
 
     def __str__(self):
         return f"{self.user.username}のプロフィール"

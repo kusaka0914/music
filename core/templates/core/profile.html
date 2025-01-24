@@ -367,7 +367,7 @@
                             {% for rec in recommended_users %}
                                 <div class="recommended-user">
                                     <div class="user-info">
-                                        <img src="{{ rec.user.profile.avatar.url|default:'/static/images/default-avatar.png' }}" alt="{{ rec.user.username }}" class="user-avatar">
+                                        <img src="{{ rec.user.profile.get_avatar_url }}" alt="{{ rec.user.username }}" class="user-avatar">
                                         <div class="user-details">
                                             <a href="{% url 'core:profile' rec.user.username %}" class="user-name">{{ rec.user.username }}</a>
                                             <div class="compatibility">
@@ -421,11 +421,7 @@
                         <a href="{% url 'core:profile' user_data.user.username %}">
                             <div class="recommended-user">
                                 <div class="user-info-recommended">
-                                    {% if user_data.user.profile.avatar %}
-                                        <img src="{{ user_data.user.profile.avatar.url }}" alt="{{ user_data.user.username }}">
-                                    {% else %}
-                                        <img src="{% static 'images/default-avatar.svg' %}" alt="{{ user_data.user.username }}">
-                                    {% endif %}
+                                    <img src="{{ user_data.user.profile.get_avatar_url }}" alt="{{ user_data.user.username }}">
                                     <div class="user-flex">
                                         <span class="user-name">{{ user_data.user.username }}</span>
                                         {% if user_data.user.profile.nickname %}
@@ -473,11 +469,7 @@
                         <a href="{% url 'core:profile' user_data.user.username %}">
                             <div class="recommended-user">
                                 <div class="user-info-recommended">
-                                    {% if user_data.user.profile.avatar %}
-                                        <img src="{{ user_data.user.profile.avatar.url }}" alt="{{ user_data.user.username }}">
-                                    {% else %}
-                                        <img src="{% static 'images/default-avatar.svg' %}" alt="{{ user_data.user.username }}">
-                                    {% endif %}
+                                    <img src="{{ user_data.user.profile.get_avatar_url }}" alt="{{ user_data.user.username }}">
                                     <div class="user-flex">
                                         <span class="user-name">{{ user_data.user.username }}</span>
                                         {% if user_data.user.profile.nickname %}
