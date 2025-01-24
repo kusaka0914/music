@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.utils import timezone
-from django.db.models import Q, Count, Case, When, F, Model as models, Exists, OuterRef, IntegerField, Max, Min
+from django.db.models import Q, Count, Case, When, F, Model as models, Exists, OuterRef, IntegerField, Max, Min, BooleanField
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -846,7 +846,11 @@ def notifications(request):
         .annotate(
             latest_id=Max('id'),
             created_at=Max('created_at'),
-            is_read=Min('is_read')
+            is_read=Case(
+                When(is_read=True, then=True),
+                default=False,
+                output_field=BooleanField()
+            )
         )
         .order_by('-created_at')
     )
