@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-1rivkxrr&)rbe+)c+k+5m%stpt9a)52@23cc3720ldxucpw9hm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['music-ax6.pages.dev', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['music-ax6.pages.dev', 'localhost', '127.0.0.1', 'harmony-app-sns.site']
 
 
 # Application definition

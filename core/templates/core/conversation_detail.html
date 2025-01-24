@@ -97,9 +97,6 @@
 </div>
 
 <style>
-    body {
-        overflow: hidden;
-    }
 .messages-container {
     display: flex;
     height: calc(100vh - 64px); 
@@ -626,6 +623,20 @@
 
 .message-attachment.image:hover {
     opacity: 0.9;
+}
+
+@media (max-width: 576px) {
+    .messages-sidebar{
+        display: none;
+    }
+
+    .messages-list {
+        overflow-y: scroll;
+    }
+
+    body{
+        font-size: 14px;
+    }
 }
 </style>
 
