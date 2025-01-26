@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-1rivkxrr&)rbe+)c+k+5m%stpt9a)52@23cc3720ldxucpw9hm')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['harmony-sns-a8158d6a0a2f.herokuapp.com', 'localhost', '127.0.0.1', '0.0.0.0']
 
@@ -138,10 +138,21 @@ STATICFILES_DIRS = [
 # Enable WhiteNoise's GZip compression
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 AUTH_PASSWORD_VALIDATORS = []
+
+# Cloudinaryの設定
+if not DEBUG:
+    INSTALLED_APPS += ['cloudinary_storage', 'cloudinary']
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+        'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+        'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET')
+    }
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # デフォルトアバター設定
 DEFAULT_AVATAR_URL = '/static/images/default-avatar.svg'
@@ -166,7 +177,7 @@ SPOTIFY_CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID', 'a685bbc2aaba44a48cfc003
 SPOTIFY_CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET', 'ef88fbeaec7f4ed19f53187dcd6ca3bc')
 SPOTIFY_REDIRECT_URI = os.environ.get(
     'SPOTIFY_REDIRECT_URI',
-    'http://127.0.0.1:8000/spotify/callback/' if DEBUG else 'https://harmony-sns-a8158d6a0a2f.herokuapp.com/spotify/callback/'
+    'https://harmony-sns-a8158d6a0a2f.herokuapp.com/spotify/callback/' if not DEBUG else 'http://127.0.0.1:8000/spotify/callback/'
 )
 
 # ログ設定
