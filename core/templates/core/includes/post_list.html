@@ -2,14 +2,14 @@
 
 {% for post in posts %}
     {% if post.user and post.user.username %}
-        <div class="post-card">
+        <div class="post-card" data-post-id="{{ post.id }}">
             {% if post.spotify_link %}
                 <div class="spotify-player">
                     {% if 'track' in post.spotify_link %}
                         <iframe 
                             src="https://open.spotify.com/embed/track/{{ post.spotify_link|slice:'31:' }}?utm_source=generator" 
                             width="100%" 
-                            height="auto"
+                            height="152"
                             frameborder="0" 
                             allowtransparency="true" 
                             allow="encrypted-media">

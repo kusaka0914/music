@@ -55,6 +55,7 @@
 
             <!-- モバイル用トレンド投稿セクション -->
             <div class="trending-section tab-content" data-content="trending">
+                {% if trending_posts %}
                 <h3>トレンド投稿</h3>
                 <div class="trending-posts">
                     {% for post in trending_posts %}
@@ -78,6 +79,9 @@
                         </div>
                     {% endfor %}
                 </div>
+                {% else %}
+                    <p>トレンド投稿がありません</p>
+                {% endif %}
             </div>
 
             <!-- モバイル用プレイリストセクション -->
@@ -125,6 +129,7 @@
             <div class="trending-section">
                 <h3>トレンド投稿</h3>
                 <div class="trending-posts">
+                {% if trending_posts %}
                     {% for post in trending_posts %}
                         <div class="trending-item">
                             <span class="trending-number">#{{ forloop.counter }}</span>
@@ -146,6 +151,9 @@
                         </div>
                     {% endfor %}
                 </div>
+                {% else %}
+                    <p>トレンド投稿がありません</p>
+                {% endif %}
             </div>
 
             <!-- おすすめユーザー -->
@@ -760,6 +768,7 @@
 
 .trending-section h3, .recommended-users h3 {
     margin-bottom: 1rem;
+    font-size: 20px;
 }
 
 .trending-item {
@@ -1484,7 +1493,7 @@
 }
 
 .section-title {
-    font-size: 14px;
+    font-size: 20px;
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
@@ -1891,6 +1900,10 @@
         gap: 16px;
     }
 
+    .section-title {
+        font-size: 14px;
+    }
+
     .trending-section h3, .recommended-users h3 {
         font-size: 14px;
     }
@@ -2190,40 +2203,6 @@ function showLikesModal(postId) {
 </script>
 
 <script>
-function toggleLike(postId, button) {
-    fetch(`/post/${postId}/like/`, {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'success') {
-            const icon = button.querySelector('i');
-            const countSpan = button.parentElement.querySelector('.like-count');
-            
-            if (data.liked) {
-                button.classList.add('liked');
-                icon.classList.remove('bi-heart');
-                icon.classList.add('bi-heart-fill');
-            } else {
-                button.classList.remove('liked');
-                icon.classList.remove('bi-heart-fill');
-                icon.classList.add('bi-heart');
-            }
-            
-            countSpan.textContent = `${data.like_count}人がいいね`;
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
-</script>
-
-<script>
 document.addEventListener('DOMContentLoaded', function() {
     const searchForm = document.getElementById('searchForm');
     const searchInput = document.getElementById('searchInput');
@@ -2289,4 +2268,100 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-{% endblock %} 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 削除ボタンのイベントリスナーを設定
+    function setupDeleteButtons() {
+        document.querySelectorAll('.delete-post').forEach(button => {
+            button.addEventListener('click', function() {
+                const postId = this.dataset.postId;
+                if (confirm('この投稿を削除してもよろしいですか？')) {
+                    deletePost(postId);
+                }
+            });
+        });
+    }
+
+    // 投稿を削除する関数
+    function deletePost(postId) {
+        fetch(`/post/${postId}/delete/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // 投稿要素を削除
+                const postElement = document.querySelector(`.post-card[data-post-id="${postId}"]`);
+                if (postElement) {
+                    postElement.remove();
+                }
+            } else {
+                alert('投稿の削除に失敗しました。');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('投稿の削除中にエラーが発生しました。');
+        });
+    }
+
+    // 初期表示時に削除ボタンのイベントリスナーを設定
+    setupDeleteButtons();
+
+    // フィルタリング後にも削除ボタンのイベントリスナーを設定
+    const filterButtons = document.querySelectorAll('.filter-button');
+    const sortSelect = document.getElementById('postSort');
+    const postsContainer = document.querySelector('.posts-container');
+    let currentFilter = 'all';
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            currentFilter = this.dataset.filter;
+            fetchPosts();
+        });
+    });
+
+    sortSelect.addEventListener('change', function() {
+        fetchPosts();
+    });
+
+    function fetchPosts() {
+        const sort = sortSelect.value;
+        const loadingHtml = '<div class="loading"><i class="bi bi-arrow-repeat spinning"></i></div>';
+        postsContainer.innerHTML = loadingHtml;
+
+        fetch(`/filter_posts/?filter=${currentFilter}&sort=${sort}`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                postsContainer.innerHTML = data.html;
+                // フィルタリング後にいいねボタンと削除ボタンのイベントリスナーを再設定
+                setupLikeButtons();
+                setupDeleteButtons();
+            } else {
+                throw new Error(data.message || '投稿の読み込みに失敗しました。');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            postsContainer.innerHTML = `<div class="error">${error.message || '投稿の読み込みに失敗しました。'}</div>`;
+        });
+    }
+
+    // 初期表示時にフィルタリングを実行
+    fetchPosts();
+});
+</script>
+
+{% endblock %}

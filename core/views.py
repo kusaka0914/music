@@ -412,29 +412,32 @@ def delete_post(request, post_id):
 @login_required
 def like_post(request, post_id):
     try:
-        with transaction.atomic():
-            post = MusicPost.objects.select_for_update().get(id=post_id)
-            if request.user in post.likes.all():
-                post.likes.remove(request.user)
-                liked = False
-            else:
-                post.likes.add(request.user)
-                liked = True
-            
-            return JsonResponse({
-                'status': 'success',
-                'liked': liked,
-                'like_count': post.likes.count()
-            })
+        post = MusicPost.objects.get(id=post_id)
+        user = request.user
+        
+        if user in post.likes.all():
+            post.likes.remove(user)
+            liked = False
+        else:
+            post.likes.add(user)
+            liked = True
+        
+        post.save()
+        
+        return JsonResponse({
+            'status': 'success',
+            'liked': liked,
+            'like_count': post.likes.count()
+        })
     except MusicPost.DoesNotExist:
         return JsonResponse({
             'status': 'error',
-            'message': '投稿が見つかりません。'
+            'message': '投稿が見つかりませんでした。'
         }, status=404)
     except Exception as e:
         return JsonResponse({
             'status': 'error',
-            'message': 'エラーが発生しました。'
+            'message': str(e)
         }, status=500)
 
 @login_required
@@ -485,6 +488,15 @@ def profile(request, username):
         
         # プレイリストとその他の情報を取得
         playlists = Playlist.objects.filter(user=profile_user, is_public=True)
+
+        for playlist in playlists:
+            first_track = playlist.playlistmusic_set.first()
+            if first_track and first_track.music:
+                playlist.cover_image = first_track.music.album_art
+            else:
+                playlist.cover_image = None
+
+        playlist.track_count = playlist.playlistmusic_set.count()
         
         # 音楽の相性スコアを計算（既存のユーザーの場合）
         compatibility_data = None
