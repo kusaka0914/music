@@ -633,22 +633,6 @@ textarea:focus {
     background: rgba(29, 185, 84, 0.7);
 }
 
-/* レスポンシブ対応 */
-@media (max-width: 768px) {
-    .post-form-container {
-        margin: 1rem;
-        padding: 1.5rem;
-    }
-
-    .form-section {
-        padding: 1.5rem;
-    }
-
-    .scene-options {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    }
-}
-
 /* アニメーション */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
@@ -673,14 +657,14 @@ textarea:focus {
 }
 
 .post-type-options {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    display: flex;
     gap: 1rem;
 }
 
 .post-type-option {
     cursor: pointer;
     position: relative;
+    flex: 1;
 }
 
 .post-type-option input[type="radio"] {
@@ -731,14 +715,14 @@ textarea:focus {
 }
 
 .target-type-options {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 3fr));
+    display: flex;
     gap: 1rem;
     margin-top: 1rem;
 }
 
 .target-type-option {
     cursor: pointer;
+    flex: 1;
 }
 
 .target-type-option input[type="radio"] {
@@ -747,6 +731,7 @@ textarea:focus {
 
 .target-type-content {
     padding: 1.5rem;
+    height: 100%;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 12px;
     transition: all 0.3s ease;
@@ -767,7 +752,6 @@ textarea:focus {
     display: block;
     font-size: 1.1rem;
     font-weight: 600;
-    margin-bottom: 0.5rem;
 }
 
 .target-type-description {
@@ -850,6 +834,107 @@ textarea:focus {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 576px) {
+    .post-form-container {
+        margin: 0;
+        padding: 16px;
+    }
+
+    .form-section {
+        padding: 0;
+    }
+
+    .scene-options {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .target-type-section {
+        padding: 0;
+    }
+
+    .post-type-description {
+        font-size: 10px;
+        text-align: center;
+    }
+
+    .post-type-content span {
+        font-size: 12px;
+    }
+
+    .post-type-content {
+        padding: 10px;
+        height: 100%;
+    }
+
+    textarea {
+        font-size: 14px;
+    }
+
+    .form-section {
+        margin-bottom: 24px;
+    }
+
+    .character-count {
+        font-size: 12px;
+    }
+
+    .post-type-section h3 {
+        font-size: 16px;
+    }
+
+    .search-box input {
+        font-size: 14px;
+    }
+
+    .target-type-description {
+        font-size: 10px;
+        text-align: center;
+    }
+
+    .target-type-flex {
+        flex-direction: column;
+    }
+
+    .target-type-content span {
+        font-size: 12px; 
+    }
+
+    .target-type-content {
+        padding: 8px;
+    }
+
+    .target-type-content i {
+        margin-bottom: 0;
+    }
+
+    .target-type-section h3{
+        font-size: 16px;
+    }
+
+    .subtitle {
+        font-size: 14px;
+        margin-bottom: 0
+    }
+
+    .form-header {
+        margin-bottom:32px;
+    }
+
+    .form-header h2 {
+        font-size: 20px;
+    }
+
+    main{
+        margin-top: 80px;
+        padding-top: 0;
+    }
+
+    .submit-button {
+        font-size: 14px;
+    }
 }
 </style>
 
