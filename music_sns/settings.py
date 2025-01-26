@@ -166,7 +166,7 @@ SPOTIFY_CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID', 'a685bbc2aaba44a48cfc003
 SPOTIFY_CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET', 'ef88fbeaec7f4ed19f53187dcd6ca3bc')
 SPOTIFY_REDIRECT_URI = os.environ.get(
     'SPOTIFY_REDIRECT_URI',
-    'http://127.0.0.1:8000/spotify/callback/' if DEBUG else 'https://harmony-app-sns.herokuapp.com/spotify/callback/'
+    'https://harmony-sns-a8158d6a0a2f.herokuapp.com/' if DEBUG else 'https://harmony-app-sns.herokuapp.com/spotify/callback/'
 )
 
 # ログ設定
