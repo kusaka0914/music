@@ -24,17 +24,18 @@ class UserRegisterForm(UserCreationForm):
     username = forms.CharField(
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'ユーザー名（半角英数字）',
+            'placeholder': 'ユーザー名',
             'autocomplete': 'username'
         })
     )
-    email = forms.EmailField(
-        widget=forms.EmailInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'メールアドレス',
-            'autocomplete': 'email'
-        })
-    )
+    # email = forms.EmailField(
+    #     required=False,
+    #     widget=forms.EmailInput(attrs={
+    #         'class': 'form-control',
+    #         'placeholder': 'メールアドレス（任意）',
+    #         'autocomplete': 'email'
+    #     })
+    # )
     password1 = forms.CharField(
         widget=forms.PasswordInput(attrs={
             'class': 'form-control',
@@ -52,15 +53,32 @@ class UserRegisterForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2']
+        fields = ['username',  'password1', 'password2']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # パスワードのヘルプテキストをカスタマイズ
-        self.fields['password1'].help_text = '8文字以上で、文字と数字を含める必要があります'
-        self.fields['password2'].help_text = '確認のため、同じパスワードを入力してください'
+        # パスワードのバリデーションを無効化
+        self.fields['password1'].validators = []
+        self.fields['password2'].validators = []
+        # ヘルプテキストを空に
+        self.fields['password1'].help_text = ''
+        self.fields['password2'].help_text = ''
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
+            field.required = True  # パスワードフィールドは必須のまま
+            
+    def clean_password1(self):
+        password1 = self.cleaned_data.get('password1')
+        if len(password1) < 4:  # 最小文字数のみチェック
+            raise forms.ValidationError('パスワードは4文字以上で入力してください。')
+        return password1
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get('password1')
+        password2 = self.cleaned_data.get('password2')
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError('パスワードが一致しません。')
+        return password2
 
 class UserUpdateForm(forms.ModelForm):
     email = forms.EmailField()

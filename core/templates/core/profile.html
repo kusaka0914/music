@@ -404,47 +404,38 @@
     </div>
 </div>
 
-<!-- フォロー中のユーザー一覧 -->
+<!-- フォロー一覧モーダル -->
 <div class="modal fade" id="followingModal" tabindex="-1" aria-labelledby="followingModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content dark-modal">
+        <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="followingModalLabel">フォロー中</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="search-container">
-                <i class="bi bi-search search-icon"></i>
-                <input type="text" class="search-input" placeholder="検索">
-            </div>
             <div class="modal-body">
-                <div class="user-list">
-                    {% for user_data in following_users %}
-                    <div class="recommended-user-container">
-                        <a href="{% url 'core:profile' user_data.user.username %}">
-                            <div class="recommended-user">
-                                <div class="user-info-recommended">
-                                    <img src="{{ user_data.user.profile.get_avatar_url }}" alt="{{ user_data.user.username }}">
-                                    <div class="user-flex">
-                                        <span class="user-name">{{ user_data.user.username }}</span>
-                                        {% if user_data.user.profile.nickname %}
-                                            <span class="user-nickname">{{ user_data.user.profile.nickname }}</span>
-                                        {% endif %}
-                                        <span class="compatibility">音楽の相性: {{ user_data.compatibility_score|default:"0" }}%</span>
-                                    </div>
-                                </div>
+                <div class="search-box">
+                    <i class="bi bi-search"></i>
+                    <input type="text" placeholder="ユーザーを検索" class="search-input">
+                </div>
+                <div class="following-list user-list">
+                    {% for user in following_users %}
+                    <div class="user-item">
+                        <div class="modal-user-info">
+                            <img src="{{ user.user.profile.get_avatar_url }}" alt="{{ user.user.username }}" class="user-avatar">
+                            <div class="user-details">
+                                <a href="{% url 'core:profile' user.user.username %}" class="username">{{ user.user.username }}</a>
                             </div>
-                        </a>
-                        {% if user.is_authenticated and user != user_data.user %}
-                            <button class="follow-button following"
-                                    data-username="{{ user_data.user.username }}">
-                                フォロー中
-                            </button>
+                        </div>
+                        {% if user.user != request.user %}
+                        <button class="follow-button {% if user.user in request.user.profile.following.all %}following{% endif %}" data-username="{{ user.user.username }}">
+                            {% if user.user in request.user.profile.following.all %}フォロー中{% else %}フォローする{% endif %}
+                        </button>
                         {% endif %}
                     </div>
                     {% empty %}
-                        <div class="no-users">
-                            <p>フォローしているユーザーはいません</p>
-                        </div>
+                    <div class="no-users">
+                        <p>フォローしているユーザーはいません</p>
+                    </div>
                     {% endfor %}
                 </div>
             </div>
@@ -452,51 +443,38 @@
     </div>
 </div>
 
-<!-- フォロワー一覧 -->
+<!-- フォロワー一覧モーダル -->
 <div class="modal fade" id="followersModal" tabindex="-1" aria-labelledby="followersModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content dark-modal">
+        <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="followersModalLabel">フォロワー</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="search-container">
-                <i class="bi bi-search search-icon"></i>
-                <input type="text" class="search-input" placeholder="検索">
-            </div>
             <div class="modal-body">
-                <div class="user-list">
-                    {% for user_data in follower_users %}
-                    <div class="recommended-user-container">
-                        <a href="{% url 'core:profile' user_data.user.username %}">
-                            <div class="recommended-user">
-                                <div class="user-info-recommended">
-                                    <img src="{{ user_data.user.profile.get_avatar_url }}" alt="{{ user_data.user.username }}">
-                                    <div class="user-flex">
-                                        <span class="user-name">{{ user_data.user.username }}</span>
-                                        {% if user_data.user.profile.nickname %}
-                                            <span class="user-nickname">{{ user_data.user.profile.nickname }}</span>
-                                        {% endif %}
-                                        <span class="compatibility">音楽の相性: {{ user_data.compatibility_score|default:"0" }}%</span>
-                                    </div>
-                                </div>
+                <div class="search-box">
+                    <i class="bi bi-search"></i>
+                    <input type="text" placeholder="ユーザーを検索" class="search-input">
+                </div>
+                <div class="followers-list user-list">
+                    {% for user in follower_users %}
+                    <div class="user-item">
+                        <div class="modal-user-info">
+                            <img src="{{ user.user.profile.get_avatar_url }}" alt="{{ user.user.username }}" class="user-avatar">
+                            <div class="user-details">
+                                <a href="{% url 'core:profile' user.user.username %}" class="username">{{ user.user.username }}</a>
                             </div>
-                        </a>
-                        {% if user.is_authenticated and user != user_data.user %}
-                        <button class="follow-button {% if user_data.user.profile in user.profile.following.all %}following{% endif %}"
-                                data-username="{{ user_data.user.username }}">
-                            {% if user_data.user.profile in user.profile.following.all %}
-                                フォロー中
-                            {% else %}
-                                フォロー
-                            {% endif %}
+                        </div>
+                        {% if user.user != request.user %}
+                        <button class="follow-button {% if user.user in request.user.profile.following.all %}following{% endif %}" data-username="{{ user.user.username }}">
+                            {% if user.user in request.user.profile.following.all %}フォロー中{% else %}フォローする{% endif %}
                         </button>
                         {% endif %}
                     </div>
                     {% empty %}
-                        <div class="no-users">
-                            <p>フォロワーはいません</p>
-                        </div>
+                    <div class="no-users">
+                        <p>フォロワーはいません</p>
+                    </div>
                     {% endfor %}
                 </div>
             </div>
@@ -896,7 +874,20 @@
     background: rgba(0, 0, 0, 0.3);
     border-radius: 12px;
     overflow: hidden;
+    padding: 16px;
     border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.message-button {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    background-color: var(--spotify-green);
+    transition: all 0.3s ease;
+    color: #fff;
+    margin-left: 8px;
 }
 
 .spotify-player {
@@ -1005,6 +996,7 @@
 .comment-username {
     font-weight: bold;
     margin-right: 10px;
+    color: white;
 }
 
 .comment-text {
@@ -1429,6 +1421,7 @@
 
 .spotify-connection {
     margin-top: 1rem;
+    margin-bottom: 1rem;
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -1437,10 +1430,11 @@
 .spotify-connect-button {
     background: #1DB954;
     color: white;
-    padding: 0.8rem 1.5rem;
+    padding: 8px 16px;
     border-radius: 500px;
     text-decoration: none;
-    display: flex;
+    font-size: 14px;
+    max-width: 200px;
     align-items: center;
     gap: 0.5rem;
     font-weight: 600;
@@ -1745,6 +1739,176 @@
         font-size: 14px;
     }
 }
+
+/* モーダルのスタイル */
+.modal-content {
+    background: var(--spotify-dark-gray);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: var(--spotify-white);
+}
+
+.modal-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 16px 24px;
+}
+
+.modal-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.search-box {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.search-box i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--spotify-gray);
+}
+
+.search-input {
+    width: 100%;
+    padding: 8px 12px 8px 36px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 8px;
+    color: var(--spotify-white);
+}
+
+.search-input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.user-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.user-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.user-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+
+.modal-user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: flex-start;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.username {
+    font-weight: 600;
+    color: var(--spotify-white);
+    text-decoration: none;
+}
+
+.compatibility-score {
+    font-size: 0.8rem;
+    color: var(--spotify-green);
+}
+
+.follow-button {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: transparent;
+    border: 1px solid var(--spotify-green);
+    color: var(--spotify-green);
+}
+
+.follow-button:hover {
+    background: var(--spotify-green);
+    color: var(--spotify-white);
+}
+
+.follow-button.following {
+    background: var(--spotify-green);
+    color: var(--spotify-white);
+}
+
+.no-users {
+    text-align: center;
+    padding: 24px;
+    color: var(--spotify-gray);
+}
+
+@media (max-width: 576px) {
+    .modal-dialog {
+        margin: 0;
+        max-width: 100%;
+        height: 100%;
+    }
+
+    .modal-content {
+        border-radius: 0;
+        height: 100%;
+    }
+
+    .modal-body {
+        padding: 16px;
+    }
+
+    .search-input {
+        font-size: 14px;
+    }
+
+    .username {
+        font-size: 14px;
+    }
+
+    .compatibility-score {
+        font-size: 12px;
+    }
+
+    .follow-button {
+        font-size: 12px;
+        padding: 4px 12px;
+    }
+}
 </style>
 
 <script>
@@ -1815,27 +1979,29 @@ function showComments(postId, button) {
 
 // DOMContentLoadedイベントでフォローボタンにイベントリスナーを追加
 document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('[data-username]').forEach(button => {
+    document.querySelectorAll('.follow-button').forEach(button => {
         button.addEventListener('click', function() {
-            toggleFollow(this.dataset.username, this);
+            const username = this.dataset.username;
+            const isFollowing = this.classList.contains('following');
+            
+            toggleFollow(username, this);
         });
     });
-});
 
-document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.querySelector('.search-input');
-    const userItems = document.querySelectorAll('.user-item');
-
-    searchInput.addEventListener('input', function(e) {
-        const searchTerm = e.target.value.toLowerCase();
-        
-        userItems.forEach(item => {
-            const username = item.querySelector('.username').textContent.toLowerCase();
-            if (username.includes(searchTerm)) {
-                item.style.display = 'flex';
-            } else {
-                item.style.display = 'none';
-            }
+    // 検索機能の実装
+    document.querySelectorAll('.search-input').forEach(input => {
+        input.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const userList = this.closest('.modal-body').querySelector('.user-list');
+            
+            userList.querySelectorAll('.user-item').forEach(item => {
+                const username = item.querySelector('.username').textContent.toLowerCase();
+                if (username.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
         });
     });
 });

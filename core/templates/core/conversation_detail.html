@@ -38,9 +38,9 @@
         <div class="messages-header">
             <a href="{% url 'core:profile' other_user.username %}">
             <div class="chat-user-info">
-                {% if other_user.profile.avatar %}
+                    {% if other_user.profile.avatar %}
                     <img src="{{ other_user.profile.avatar.url }}" alt="{{ other_user.username }}" class="chat-avatar">
-                {% else %}
+                    {% else %}
                     <img src="{% static 'images/default-avatar.svg' %}" alt="{{ other_user.username }}" class="chat-avatar">
                 {% endif %}
                 <span class="username">{{ other_user.username }}</span>
@@ -51,7 +51,7 @@
             {% for message in messages %}
                 <div class="message {% if message.sender == user %}sent{% else %}received{% endif %}">
                         {% if message.content and message.attachments.all|length == 0 %}
-                            <div class="message-content">
+                        <div class="message-content">
                                 <p>{{ message.content }}</p>
                             </div>
                         {% endif %}
@@ -67,14 +67,14 @@
                                 <div class="pdf-preview">
                                     <i class="bi bi-file-pdf"></i>
                                     <a href="{{ attachment.file.url }}" target="_blank" class="pdf-link">{{ attachment.file.name }}</a>
-                                </div>
-                            {% endif %}
+                        </div>
+                    {% endif %}
                         {% endfor %}
                 </div>
             {% endfor %}
         </div>
-        <form id="message-form" class="message-form">
-            {% csrf_token %}
+            <form id="message-form" class="message-form">
+                {% csrf_token %}
             <div id="attachment-preview" class="attachment-preview"></div>
             <div class="message-input-container">
                 <input type="text" id="message-input" placeholder="メッセージを入力...">
@@ -82,11 +82,11 @@
                     <i class="bi bi-paperclip"></i>
                     <input type="file" id="file-input" multiple accept="image/*,video/*,.pdf" style="display: none;">
                 </label>
-                <button type="submit" class="send-button">
-                    <i class="bi bi-send"></i>
-                </button>
-            </div>
-        </form>
+                        <button type="submit" class="send-button">
+                            <i class="bi bi-send"></i>
+                        </button>
+                </div>
+            </form>
     </div>
 </div>
 
@@ -109,6 +109,7 @@
     height: 32px;
     border-radius: 50%;
     object-fit: cover;
+    margin-right: 8px;
 }
 
 .messages-content {
@@ -574,55 +575,50 @@
 .image-modal {
     display: none;
     position: fixed;
+    z-index: 1000;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.9);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
+    overflow: auto;
 }
 
 .modal-content {
+    margin: auto;
+    display: block;
     max-width: 90%;
     max-height: 90vh;
-    object-fit: contain;
-    border-radius: 8px;
+    margin-top: 2%;
 }
 
 .close-modal {
     position: absolute;
-    top: 20px;
     right: 20px;
+    top: 20px;
     color: #fff;
     font-size: 30px;
+    font-weight: bold;
     cursor: pointer;
     background: none;
     border: none;
-    padding: 10px;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(0, 0, 0, 0.5);
-    transition: background-color 0.2s;
+    padding: 0;
+    z-index: 1001;
 }
 
 .close-modal:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    color: #ccc;
 }
 
-/* 画像にホバー時のカーソル変更 */
 .message-attachment.image {
+    max-width: 300px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: opacity 0.2s;
+    transition: transform 0.2s;
 }
 
 .message-attachment.image:hover {
-    opacity: 0.9;
+    transform: scale(1.02);
 }
 
 @media (max-width: 576px) {
@@ -656,7 +652,7 @@ document.addEventListener('DOMContentLoaded', function() {
     messagesList.addEventListener('click', function(e) {
         if (e.target.classList.contains('message-attachment') && 
             e.target.classList.contains('image')) {
-            imageModal.style.display = 'flex';
+            imageModal.style.display = 'block';
             modalImage.src = e.target.src;
         }
     });
@@ -675,7 +671,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ESCキーでモーダルを閉じる
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && imageModal.style.display === 'flex') {
+        if (e.key === 'Escape' && imageModal.style.display === 'block') {
             imageModal.style.display = 'none';
         }
     });
@@ -824,19 +820,19 @@ document.addEventListener('DOMContentLoaded', function() {
         messagesList.scrollTop = messagesList.scrollHeight;
     }
 
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
             }
         }
-        return cookieValue;
+    }
+    return cookieValue;
     }
 });
 </script>

@@ -495,8 +495,7 @@ def profile(request, username):
                 playlist.cover_image = first_track.music.album_art
             else:
                 playlist.cover_image = None
-
-        playlist.track_count = playlist.playlistmusic_set.count()
+            playlist.track_count = playlist.playlistmusic_set.count()
         
         # 音楽の相性スコアを計算（既存のユーザーの場合）
         compatibility_data = None

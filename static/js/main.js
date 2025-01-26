@@ -67,13 +67,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     const userItem = document.createElement('div');
                     userItem.className = 'user-item';
                     userItem.innerHTML = `
-                        <div class="user-info">
+                    <a href="/profile/${user.username}/" class="username">
+                        <div class="modal-user-info">
                             <img src="${user.avatar || '/static/images/default-avatar.svg'}" alt="${user.username}" class="user-avatar">
                             <div class="user-details">
-                                <a href="/profile/${user.username}/" class="username">${user.username}</a>
+                                ${user.username}
                                 <span class="user-meta">${user.name || ''}</span>
                             </div>
                         </div>
+                    </a>
                     `;
                     userList.appendChild(userItem);
                 });

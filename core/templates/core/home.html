@@ -126,7 +126,7 @@
 
         <!-- 右サイドバー -->
         <div class="sidebar-right">
-            <div class="trending-section">
+            <div class="trending-section sidebar-section">
                 <h3>トレンド投稿</h3>
                 <div class="trending-posts">
                 {% if trending_posts %}
@@ -137,16 +137,7 @@
                                 <div class="trending-info">
                                     <h4>{{ post.user.username }}</h4>
                                     <p class="trending-description">{{ post.description }}</p>
-                                    <div class="trending-stats">
-                                        <span><i class="bi bi-heart-fill"></i> {{ post.likes.count }}</span>
-                                        <span><i class="bi bi-chat-fill"></i> {{ post.comments.count }}</span>
-                            </div>
                                 </div>
-                                {% if post.image %}
-                                    <div class="trending-image">
-                                        <img src="{{ post.image }}" alt="{{ post.user.username }}">
-                                    </div>
-                                {% endif %}
                             </a>
                         </div>
                     {% endfor %}
@@ -347,21 +338,21 @@
     </div>
 </div>
 
-<!-- いいねしたユーザーモーダル -->
+<!-- いいね一覧モーダル -->
 <div class="modal fade" id="likesModal" tabindex="-1" aria-labelledby="likesModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content dark-modal">
+        <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="likesModalLabel">いいねしたユーザー</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="search-container">
-                <i class="bi bi-search search-icon"></i>
-                <input type="text" class="search-input" placeholder="検索">
-            </div>
             <div class="modal-body">
-                <div class="user-list likes-list">
-                    <!-- いいねしたユーザーのリストがここに動的に挿入されます -->
+                <!-- <div class="search-box">
+                    <i class="bi bi-search"></i>
+                    <input type="text" placeholder="ユーザーを検索" class="search-input">
+                </div> -->
+                <div class="likes-list">
+                    <!-- いいねしたユーザーのリストがここに動的に追加されます -->
                 </div>
             </div>
         </div>
@@ -879,6 +870,14 @@
     gap: 0.8rem;
     position: relative;
     justify-content: space-between;
+}
+
+.modal-user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    position: relative;
+    justify-content: flex-start;
 }
 
 .user-info-recommended {
@@ -1658,35 +1657,35 @@
 /* モバイル用タブ */
 .mobile-tabs {
     display: none;
-    backdrop-filter: blur(10px);
-    border-radius: 12px;
-    padding: 0.5rem;
-    margin-bottom: 1.5rem;
-    gap: 0.5rem;
+    gap: 8px;
+    margin-bottom: 16px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px;
+    border-radius: 8px;
 }
 
 .tab-button {
     flex: 1;
+    padding: 8px;
     background: transparent;
     border: none;
     color: #b3b3b3;
-    padding: 0.8rem;
-    border-radius: 8px;
     cursor: pointer;
-    transition: all 0.3s;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
+    justify-content: center;
+    gap: 6px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.tab-button.active {
+    background: var(--spotify-green);
+    color: white;
 }
 
 .tab-button i {
     font-size: 1.2rem;
-}
-
-.tab-button.active {
-    background: rgba(29, 185, 84, 0.2);
-    color: #1DB954;
 }
 
 .tab-content {
@@ -1694,7 +1693,7 @@
 }
 
 .tab-content.active {
-    display: block;
+    display: block !important;
 }
 
 /* レスポンシブ対応 */
@@ -1722,10 +1721,6 @@
         margin: 0;
         padding: 1rem;
         border-radius: 12px;
-    }
-
-    .tab-content.active {
-        display: block;
     }
 
     .content-header {
@@ -1915,44 +1910,193 @@
     }
 
 }
+
+/* モーダルのスタイル */
+.modal-content {
+    background: var(--spotify-dark-gray);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: var(--spotify-white);
+}
+
+.modal-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 16px 24px;
+}
+
+.modal-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.search-box {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.search-box i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--spotify-gray);
+}
+
+.search-input {
+    width: 100%;
+    padding: 8px 12px 8px 36px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 8px;
+    color: var(--spotify-white);
+}
+
+.search-input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.likes-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.user-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.user-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.username {
+    font-weight: 600;
+    width: 100%;
+    color: var(--spotify-white);
+}
+
+.compatibility-score {
+    font-size: 0.8rem;
+    color: var(--spotify-green);
+}
+
+.follow-button {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: transparent;
+    border: 1px solid var(--spotify-green);
+    color: var(--spotify-green);
+}
+
+.follow-button:hover {
+    background: var(--spotify-green);
+    color: var(--spotify-white);
+}
+
+.follow-button.following {
+    background: var(--spotify-green);
+    color: var(--spotify-white);
+}
+
+@media (max-width: 576px) {
+    .modal-dialog {
+        margin: 0;
+        max-width: 100%;
+        height: 100%;
+    }
+
+    .modal-content {
+        border-radius: 0;
+        height: 100%;
+    }
+
+    .modal-body {
+        padding: 16px;
+    }
+
+    .search-input {
+        font-size: 14px;
+    }
+
+    .username {
+        font-size: 14px;
+    }
+
+    .compatibility-score {
+        font-size: 12px;
+    }
+
+    .follow-button {
+        font-size: 12px;
+        padding: 4px 12px;
+    }
+}
 </style>
 
 <script>
-// いいねボタンの処理
-const setupLikeButtons = () => {
-    document.querySelectorAll('.like-button').forEach(button => {
+document.addEventListener('DOMContentLoaded', function() {
+    // モバイルタブの切り替え
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
         button.addEventListener('click', function() {
-            const postId = this.dataset.postId;
-            fetch(`/post/${postId}/like/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    const likeCount = this.querySelector('.like-count');
-                    likeCount.textContent = data.like_count;
-                    if (data.liked) {
-                        this.classList.add('liked');
-                        this.querySelector('i').classList.add('bi-heart-fill');
-                        this.querySelector('i').classList.remove('bi-heart');
-                    } else {
-                        this.classList.remove('liked');
-                        this.querySelector('i').classList.remove('bi-heart-fill');
-                        this.querySelector('i').classList.add('bi-heart');
-                    }
+            // アクティブなタブボタンを更新
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+
+            // タブコンテンツの表示を切り替え
+            const tabName = this.dataset.tab;
+            tabContents.forEach(content => {
+                if (content.dataset.content === tabName) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
                 }
             });
         });
     });
-};
 
-document.addEventListener('DOMContentLoaded', function() {
+    // 既存のフィルター機能のコード
     const filterButtons = document.querySelectorAll('.filter-button');
     const sortSelect = document.getElementById('postSort');
     const postsContainer = document.querySelector('.posts-container');
+
     let currentFilter = 'all';
 
     // フィルターボタンのクリックイベント
@@ -1966,28 +2110,28 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ソート選択の変更イベント
-    sortSelect.addEventListener('change', function() {
-        fetchPosts();
-    });
+    if (sortSelect) {
+        sortSelect.addEventListener('change', function() {
+            fetchPosts();
+        });
+    }
 
     // 投稿を取得する関数
     function fetchPosts() {
-        const sort = sortSelect.value;
+        const sort = sortSelect ? sortSelect.value : 'newest';
         const loadingHtml = '<div class="loading"><i class="bi bi-arrow-repeat spinning"></i></div>';
         postsContainer.innerHTML = loadingHtml;
+
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (!csrfToken) return;
 
         fetch(`/filter_posts/?filter=${currentFilter}&sort=${sort}`, {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                'X-CSRFToken': csrfToken.value
             }
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
                 postsContainer.innerHTML = data.html;
@@ -2002,361 +2146,93 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // いいねボタンの処理
+    const setupLikeButtons = () => {
+        const likeButtons = document.querySelectorAll('.like-button');
+        if (!likeButtons) return;
+
+        likeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const postId = this.dataset.postId;
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+                if (!csrfToken) return;
+
+                fetch(`/post/${postId}/like/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken.value
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const likeCount = this.querySelector('.like-count');
+                        if (likeCount) {
+                            likeCount.textContent = data.like_count;
+                        }
+                        if (data.liked) {
+                            this.classList.add('liked');
+                            const icon = this.querySelector('i');
+                            if (icon) {
+                                icon.classList.add('bi-heart-fill');
+                                icon.classList.remove('bi-heart');
+                            }
+                        } else {
+                            this.classList.remove('liked');
+                            const icon = this.querySelector('i');
+                            if (icon) {
+                                icon.classList.remove('bi-heart-fill');
+                                icon.classList.add('bi-heart');
+                            }
+                        }
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+    };
+
     // 初期化時にいいねボタンのイベントリスナーを設定
     setupLikeButtons();
 });
-</script>
 
-<script>
+// フォローユーザー関数
 function followUser(username, button) {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+    if (!csrfToken || !button) return;  // 必要な要素が存在しない場合は処理を中止
+
     fetch(`/follow/${username}/`, {
         method: 'POST',
         headers: {
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            'X-CSRFToken': csrfToken.value,
         },
     })
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            // ボタンのテキストとスタイルを更新
             button.textContent = data.is_following ? 'フォロー中' : 'フォローする';
             button.classList.toggle('following', data.is_following);
         }
     })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+    .catch(error => console.error('Error:', error));
 }
-</script>
 
-<script>
+// コメント関連の処理
 document.addEventListener('DOMContentLoaded', function() {
-    // コメントの表示/非表示を切り替える関数
     window.toggleComments = function(postId) {
         const commentsSection = document.getElementById(`comments-${postId}`);
         const button = document.querySelector(`[data-post-id="${postId}"].comment-button`);
+        
+        if (!commentsSection || !button) return;  // 必要な要素が存在しない場合は処理を中止
+
         const isHidden = commentsSection.style.display === 'none';
-        
         commentsSection.style.display = isHidden ? 'block' : 'none';
-        button.querySelector('.comment-text').textContent = isHidden ? 'コメントを非表示' : 'コメントを表示';
+        
+        const commentText = button.querySelector('.comment-text');
+        if (commentText) {
+            commentText.textContent = isHidden ? 'コメントを非表示' : 'コメントを表示';
+        }
     };
-
-    // コメントを送信する関数
-    // window.submitComment = function(event, postId) {
-    //     event.preventDefault();
-    //     const form = event.target;
-    //     const input = form.querySelector('input[name="comment"]');
-    //     const content = input.value.trim();
-        
-    //     if (!content) return;
-
-    //     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        
-    //     fetch(`/post/${postId}/comment/`, {
-    //         method: 'POST',
-    //         headers: {
-    //             'X-CSRFToken': csrfToken,
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify({ content: content })
-    //     })
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         if (data.status === 'success') {
-    //             // コメントリストを更新
-    //             const commentsList = document.querySelector(`#comments-${postId} .comments-list`);
-    //             const newComment = document.createElement('div');
-    //             newComment.className = 'comment';
-    //             newComment.innerHTML = `
-    //                 <div class="comment-user">
-    //                     <img src="${data.comment.avatar_url || '/static/images/default-avatar.svg'}" alt="${data.comment.username}">
-    //                     <div class="comment-content">
-    //                         <div class="comment-header">
-    //                             <span class="comment-username">${data.comment.username}</span>
-    //                         </div>
-    //                         <p class="comment-text">${data.comment.content}</p>
-    //                     </div>
-    //                 </div>
-    //             `;
-    //             commentsList.appendChild(newComment);
-                
-    //             // コメント数を更新
-    //             const commentCount = document.querySelector(`[data-post-id="${postId}"].comment-button .comment-count`);
-    //             const currentCount = parseInt(commentCount.textContent);
-    //             commentCount.textContent = currentCount + 1;
-                
-    //             // 入力フィールドをクリア
-    //             input.value = '';
-                
-    //             // コメントセクションを表示
-    //             const commentsSection = document.getElementById(`comments-${postId}`);
-    //             commentsSection.style.display = 'block';
-    //         } else {
-    //             alert('コメントの投稿に失敗しました。');
-    //         }
-    //     })
-    //     .catch(error => {
-    //         console.error('Error:', error);
-    //         alert('エラーが発生しました。');
-    //     });
-    // };
-
-    // コメントフォームのEnterキー処理
-    document.querySelectorAll('.comment-form input[name="comment"]').forEach(input => {
-        input.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                const form = this.closest('form');
-                const postId = form.dataset.postId;
-                submitComment(new Event('submit'), postId);
-            }
-        });
-    });
-});
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const addStoryButton = document.getElementById('addStoryButton');
-    if (addStoryButton) {
-        addStoryButton.addEventListener('click', function() {
-            fetch('{% url "core:create_story_modal" %}')
-                .then(response => response.text())
-                .then(html => {
-                    document.body.insertAdjacentHTML('beforeend', html);
-                    const modal = document.querySelector('.modal');
-                    if (modal) {
-                        modal.style.display = 'block';
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-        });
-    }
-});
-</script>
-
-<script>
-function showComments(postId, button) {
-    const commentsSection = button.closest('.post-card').querySelector('.comments-section');
-    const buttonText = button.querySelector('span');
-    const isHidden = commentsSection.style.display === 'none';
-    
-    commentsSection.style.display = isHidden ? 'block' : 'none';
-    buttonText.textContent = `${button.querySelector('span').textContent.split(' ')[0]} ${isHidden ? 'コメントを非表示' : 'コメントを表示'}`;
-}
-</script>
-
-<script>
-function showLikesModal(postId) {
-    // いいねしたユーザーのデータを取得
-    fetch(`/api/posts/${postId}/likes/`)
-        .then(response => response.json())
-        .then(data => {
-            const userList = document.querySelector('.likes-list');
-            userList.innerHTML = '';
-
-            if (data.users.length === 0) {
-                userList.innerHTML = `
-                    <div class="no-users">
-                        <p>まだいいねしたユーザーはいません</p>
-                    </div>
-                `;
-                return;
-            }
-
-            data.users.forEach(user => {
-                const userItem = document.createElement('div');
-                userItem.className = 'user-item';
-                userItem.innerHTML = `
-                    <div class="user-info">
-                        <img src="${user.avatar || '/static/images/default-avatar.svg'}" alt="${user.username}" class="user-avatar">
-                        <div class="user-details">
-                            <a href="/profile/${user.username}/" class="username">${user.username}</a>
-                            <span class="user-meta">${user.name || ''}</span>
-                        </div>
-                    </div>
-                    ${user.is_following ? `
-                        <button class="follow-button following" onclick="toggleFollow('${user.username}', this)">
-                            フォロー中
-                        </button>
-                    ` : `
-                        <button class="follow-button" onclick="toggleFollow('${user.username}', this)">
-                            フォローする
-                        </button>
-                    `}
-                `;
-                userList.appendChild(userItem);
-            });
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-
-    // モーダルを表示
-    const modal = new bootstrap.Modal(document.getElementById('likesModal'));
-    modal.show();
-}
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const searchForm = document.getElementById('searchForm');
-    const searchInput = document.getElementById('searchInput');
-    const postsContainer = document.querySelector('.posts-container');
-    let searchTimeout;
-
-    searchInput.addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            const query = this.value.trim();
-            const sortValue = document.getElementById('postSort').value;
-            
-            // URLSearchParamsを使用してクエリパラメータを構築
-            const urlParams = new URLSearchParams();
-            if (query) urlParams.set('q', query);
-            if (sortValue) urlParams.set('sort', sortValue);
-            
-            // 検索リクエストを送信
-            fetch(`/?${urlParams.toString()}`, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => response.text())
-            .then(html => {
-                postsContainer.innerHTML = html;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }, 300); // 300ミリ秒のデバウンス
-    });
-
-    searchForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-    });
-});
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // タブ切り替え機能
-    const tabButtons = document.querySelectorAll('.tab-button');
-    const tabContents = document.querySelectorAll('.tab-content');
-
-    tabButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            // アクティブなタブボタンを更新
-            tabButtons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-
-            // タブコンテンツを切り替え
-            const tabName = button.dataset.tab;
-            tabContents.forEach(content => {
-                if (content.dataset.content === tabName) {
-                    content.classList.add('active');
-                } else {
-                    content.classList.remove('active');
-                }
-            });
-        });
-    });
-});
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // 削除ボタンのイベントリスナーを設定
-    function setupDeleteButtons() {
-        document.querySelectorAll('.delete-post').forEach(button => {
-            button.addEventListener('click', function() {
-                const postId = this.dataset.postId;
-                if (confirm('この投稿を削除してもよろしいですか？')) {
-                    deletePost(postId);
-                }
-            });
-        });
-    }
-
-    // 投稿を削除する関数
-    function deletePost(postId) {
-        fetch(`/post/${postId}/delete/`, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                // 投稿要素を削除
-                const postElement = document.querySelector(`.post-card[data-post-id="${postId}"]`);
-                if (postElement) {
-                    postElement.remove();
-                }
-            } else {
-                alert('投稿の削除に失敗しました。');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('投稿の削除中にエラーが発生しました。');
-        });
-    }
-
-    // 初期表示時に削除ボタンのイベントリスナーを設定
-    setupDeleteButtons();
-
-    // フィルタリング後にも削除ボタンのイベントリスナーを設定
-    const filterButtons = document.querySelectorAll('.filter-button');
-    const sortSelect = document.getElementById('postSort');
-    const postsContainer = document.querySelector('.posts-container');
-    let currentFilter = 'all';
-
-    filterButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            currentFilter = this.dataset.filter;
-            fetchPosts();
-        });
-    });
-
-    sortSelect.addEventListener('change', function() {
-        fetchPosts();
-    });
-
-    function fetchPosts() {
-        const sort = sortSelect.value;
-        const loadingHtml = '<div class="loading"><i class="bi bi-arrow-repeat spinning"></i></div>';
-        postsContainer.innerHTML = loadingHtml;
-
-        fetch(`/filter_posts/?filter=${currentFilter}&sort=${sort}`, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                postsContainer.innerHTML = data.html;
-                // フィルタリング後にいいねボタンと削除ボタンのイベントリスナーを再設定
-                setupLikeButtons();
-                setupDeleteButtons();
-            } else {
-                throw new Error(data.message || '投稿の読み込みに失敗しました。');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            postsContainer.innerHTML = `<div class="error">${error.message || '投稿の読み込みに失敗しました。'}</div>`;
-        });
-    }
-
-    // 初期表示時にフィルタリングを実行
-    fetchPosts();
 });
 </script>
 
