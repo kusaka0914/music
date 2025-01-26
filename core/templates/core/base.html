@@ -24,11 +24,11 @@
             <nav class="main-nav">
                 <a href="{% url 'core:home' %}" class="nav-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
                     <i class="bi bi-house"></i>
-                    <span>ホーム</span>
+                    <span class="for-pc">ホーム</span>
                 </a>
                 <a href="{% url 'core:search' %}" class="nav-item {% if request.resolver_match.url_name == 'search' %}active{% endif %}">
                     <i class="bi bi-search"></i>
-                    <span>検索</span>
+                    <span class="for-pc">検索</span>
                 </a>
                 <!-- <a href="{% url 'core:music_compatibility' %}" class="nav-item {% if request.resolver_match.url_name == 'music_compatibility' %}active{% endif %}">
                     <i class="bi bi-music-note"></i>
@@ -36,12 +36,12 @@
                 </a> -->
                 <a href="{% url 'core:messages' %}" class="nav-item {% if request.resolver_match.url_name == 'messages' %}active{% endif %}">
                     <i class="bi bi-chat"></i>
-                    <span>メッセージ</span>
+                    <span class="for-pc">メッセージ</span>
                     <span class="message-badge" style="display: none;">0</span>
                 </a>
                 <a href="{% url 'core:notifications' %}" class="nav-item {% if request.resolver_match.url_name == 'notifications' %}active{% endif %}">
                     <i class="bi bi-bell"></i>
-                    <span>通知</span>
+                    <span class="for-pc">通知</span>
                     <span class="notification-badge" style="display: none;">0</span>
                 </a>
             </nav>
@@ -364,7 +364,7 @@
     }
 
     @media (max-width: 768px) {
-        .nav-item span {
+        .for-pc {
             display: none;
         }
 
@@ -372,12 +372,40 @@
             display: none;
         }
 
-        .header-container {
-            padding: 0 0.5rem;
-        }
-
         .logo span {
             display: none;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .header-container {
+            margin:0;
+            gap: 12px;
+            padding: 0 4px;
+        }
+
+        .create-button {
+            padding: 4px 8px;
+        }
+
+        .main-nav{
+            gap: 4px;
+        }
+
+        .spotify-header {
+            padding: 0;
+        }
+
+        .nav-item {
+            padding: 8px 12px;
+        }
+
+        .nav-link {
+            padding: 0;
+        }
+
+        .header-right {
+            gap: 4px;
         }
     }
     </style>

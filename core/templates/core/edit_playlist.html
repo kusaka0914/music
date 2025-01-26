@@ -277,6 +277,11 @@ document.addEventListener('DOMContentLoaded', function() {
     color: var(--spotify-green);
     font-size: 2rem;
     margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+label{
+    font-weight: bold;
 }
 
 .spotify-subtitle {
@@ -542,6 +547,45 @@ input:checked + .toggle-slider:before {
 
 .spotify-connect-link:hover {
     background-color: var(--spotify-green-hover);
+}
+
+@media (max-width: 576px) {
+    .spotify-title {
+        font-size: 20px;
+    }
+
+    .playlist-header {
+        margin-bottom: 16px;
+        padding-bottom: 0;
+    }
+
+    .toggle-text{
+        font-size: 12px;
+    }
+
+    .form-actions{
+        font-size: 14px;
+    }
+
+    .spotify-button{
+        flex: 1;
+    }
+
+    p{
+        font-size: 14px;
+    }
+
+    label{
+        font-size: 16px; 
+    }
+
+    input {
+        font-size: 14px;
+    }
+
+    .spotify-input {
+        font-size: 14px;
+    }
 }
 </style>
 {% endblock %} 
