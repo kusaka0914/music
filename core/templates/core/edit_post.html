@@ -160,14 +160,14 @@
 }
 
 .target-type-options {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 3fr));
+    display: flex;
     gap: 1rem;
     margin-top: 1rem;
 }
 
 .target-type-option {
     cursor: pointer;
+    flex: 1;
 }
 
 .target-type-option input[type="radio"] {
@@ -253,13 +253,14 @@
 }
 
 .post-type-options {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    display: flex;
     gap: 1rem;
+    width: 100%;
 }
 
 .post-type-option {
     cursor: pointer;
+    flex: 1;
 }
 
 .post-type-option input[type="radio"] {
@@ -272,6 +273,7 @@
     border-radius: 12px;
     text-align: center;
     transition: all 0.3s ease;
+    height: 100%;
 }
 
 .post-type-content i {
@@ -355,7 +357,10 @@ textarea:focus {
 }
 
 .cancel-button {
-    width: 180px;
+    width: 180px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 8px 16px;
     background: transparent;
     border: 1px solid rgba(255, 255, 255, 0.5);
@@ -372,10 +377,107 @@ textarea:focus {
     transform: scale(1.02);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 576px) {
     .post-form-container {
-        margin: 1rem;
-        padding: 1.5rem;
+        margin: 0;
+        padding: 16px;
+    }
+
+    .form-section {
+        padding: 0;
+    }
+
+    .scene-options {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .target-type-section {
+        padding: 0;
+    }
+
+    .post-type-description {
+        font-size: 10px;
+        text-align: center;
+    }
+
+    .post-type-content span {
+        font-size: 12px;
+    }
+
+    .post-type-content {
+        padding: 10px;
+        height: 100%;
+    }
+
+    textarea {
+        font-size: 14px;
+    }
+
+    .form-section {
+        margin-bottom: 24px;
+    }
+
+    .character-count {
+        font-size: 12px;
+    }
+
+    .post-type-section h3 {
+        font-size: 16px;
+    }
+
+    .search-box input {
+        font-size: 14px;
+    }
+
+    .target-type-description {
+        font-size: 10px;
+        text-align: center;
+    }
+
+    .target-type-flex {
+        flex-direction: column;
+    }
+
+    .target-type-content span {
+        font-size: 12px; 
+    }
+
+    .target-type-content {
+        padding: 8px;
+    }
+
+    .target-type-content i {
+        margin-bottom: 0;
+    }
+
+    .target-type-section h3{
+        font-size: 16px;
+    }
+
+    .subtitle {
+        font-size: 14px;
+        margin-bottom: 0
+    }
+
+    .form-header {
+        margin-bottom:32px;
+    }
+
+    .form-header h2 {
+        font-size: 20px;
+    }
+
+    main{
+        margin-top: 80px;
+        padding-top: 0;
+    }
+
+    .submit-button {
+        font-size: 14px;
+    }
+
+    .cancel-button {
+        font-size: 14px;
     }
 }
 </style>
