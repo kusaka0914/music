@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-1rivkxrr&)rbe+)c+k+5m%stpt9a)52@23cc3720ldxucpw9hm')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['harmony-sns-a8158d6a0a2f.herokuapp.com', 'localhost', '127.0.0.1', '0.0.0.0']
 
@@ -166,7 +166,7 @@ SPOTIFY_CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID', 'a685bbc2aaba44a48cfc003
 SPOTIFY_CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET', 'ef88fbeaec7f4ed19f53187dcd6ca3bc')
 SPOTIFY_REDIRECT_URI = os.environ.get(
     'SPOTIFY_REDIRECT_URI',
-    'http://127.0.0.1:8000/spotify/callback/' if DEBUG else 'https://harmony-app-sns.herokuapp.com/spotify/callback/'
+    'http://127.0.0.1:8000/spotify/callback/' if DEBUG else 'https://harmony-sns-a8158d6a0a2f.herokuapp.com/spotify/callback/'
 )
 
 # ログ設定
