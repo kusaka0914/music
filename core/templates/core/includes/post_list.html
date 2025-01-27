@@ -1,5 +1,174 @@
 {% load static %}
 
+<style>
+    .post-card {
+        background: var(--spotify-dark-gray);
+        border-radius: 8px;
+        padding: 8px;
+        margin-bottom: 16px;
+    }
+    
+    .post-content {
+        margin-top: 12px;
+    }
+    
+    .post-header {
+        margin-bottom: 12px;
+    }
+    
+    .user-info {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .user-link {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: inherit;
+    }
+    
+    .user-link:hover {
+        opacity: 0.8;
+    }
+    
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 12px;
+    }
+    
+    .user-details {
+        display: flex;
+    }
+    
+    .username {
+        font-weight: 600;
+        color: var(--spotify-white);
+        margin-bottom: 2px;
+    }
+    
+    .post-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .post-type {
+        color: var(--spotify-green);
+        background: rgba(29, 185, 84, 0.1);
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+    
+    .post-time {
+        color: var(--spotify-gray);
+        font-size: 0.9rem;
+    }
+    
+    .post-description {
+        margin: 12px 0;
+        color: var(--spotify-white);
+        line-height: 1.5;
+    }
+    
+    .post-actions {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-top: 12px;
+    }
+    
+    .action-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .comment-user {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .load-more-comments {
+        background: transparent;
+        border: none;
+        color: #1DB954;
+        padding: 8px 16px;
+        width: 100%;
+        cursor: pointer;
+        transition: color 0.2s;
+        margin: 10px 0;
+    }
+    
+    .load-more-comments:hover {
+        color: #1ed760;
+        text-decoration: underline;
+    }
+    
+    .post-actions-dropdown {
+        position: relative;
+        margin-left: 8px;
+    }
+    
+    .post-actions-btn {
+        background: none;
+        border: none;
+        color: var(--spotify-gray);
+        padding: 4px 8px;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+    
+    .post-actions-btn:hover {
+        color: var(--spotify-white);
+    }
+    
+    .post-actions-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: var(--spotify-dark-gray);
+        border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        display: none;
+        z-index: 1000;
+        min-width: 120px;
+    }
+    
+    .post-actions-dropdown:hover .post-actions-menu {
+        display: block;
+    }
+    
+    .post-action-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        color: var(--spotify-white);
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        border: none;
+        background: none;
+        width: 100%;
+        text-align: left;
+    }
+    
+    .post-action-item:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .post-action-item i {
+        font-size: 1rem;
+    }
+    </style>
 {% for post in posts %}
     {% if post.user and post.user.username %}
         <div class="post-card" data-post-id="{{ post.id }}">
@@ -135,176 +304,6 @@
         <p>投稿がありません</p>
     </div>
 {% endfor %}
-
-<style>
-.post-card {
-    background: var(--spotify-dark-gray);
-    border-radius: 8px;
-    padding: 8px;
-    margin-bottom: 16px;
-}
-
-.post-content {
-    margin-top: 12px;
-}
-
-.post-header {
-    margin-bottom: 12px;
-}
-
-.user-info {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.user-link {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: inherit;
-}
-
-.user-link:hover {
-    opacity: 0.8;
-}
-
-.user-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 12px;
-}
-
-.user-details {
-    display: flex;
-}
-
-.username {
-    font-weight: 600;
-    color: var(--spotify-white);
-    margin-bottom: 2px;
-}
-
-.post-meta {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.post-type {
-    color: var(--spotify-green);
-    background: rgba(29, 185, 84, 0.1);
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    white-space: nowrap;
-}
-
-.post-time {
-    color: var(--spotify-gray);
-    font-size: 0.9rem;
-}
-
-.post-description {
-    margin: 12px 0;
-    color: var(--spotify-white);
-    line-height: 1.5;
-}
-
-.post-actions {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-top: 12px;
-}
-
-.action-group {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.comment-user {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.load-more-comments {
-    background: transparent;
-    border: none;
-    color: #1DB954;
-    padding: 8px 16px;
-    width: 100%;
-    cursor: pointer;
-    transition: color 0.2s;
-    margin: 10px 0;
-}
-
-.load-more-comments:hover {
-    color: #1ed760;
-    text-decoration: underline;
-}
-
-.post-actions-dropdown {
-    position: relative;
-    margin-left: 8px;
-}
-
-.post-actions-btn {
-    background: none;
-    border: none;
-    color: var(--spotify-gray);
-    padding: 4px 8px;
-    cursor: pointer;
-    transition: color 0.2s;
-}
-
-.post-actions-btn:hover {
-    color: var(--spotify-white);
-}
-
-.post-actions-menu {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background: var(--spotify-dark-gray);
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    display: none;
-    z-index: 1000;
-    min-width: 120px;
-}
-
-.post-actions-dropdown:hover .post-actions-menu {
-    display: block;
-}
-
-.post-action-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    color: var(--spotify-white);
-    text-decoration: none;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    border: none;
-    background: none;
-    width: 100%;
-    text-align: left;
-}
-
-.post-action-item:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.post-action-item i {
-    font-size: 1rem;
-}
-</style>
 
 <script>
 function submitComment(event, postId) {

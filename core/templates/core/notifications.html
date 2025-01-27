@@ -3,6 +3,218 @@
 
 {% block content %}
 {% csrf_token %}
+<style>
+    .main-container {
+        margin: 0 64px;
+    }
+    
+    .notifications-container {
+        margin: 64px auto 0;
+        padding: 20px;
+        min-height: calc(100vh - 64px);
+    }
+    
+    .notifications-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        color: #fff;
+    }
+    
+    .notifications-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .notification-item-container {
+        display: flex;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        text-decoration: none;
+        color: #fff;
+        transition: all 0.2s;
+        justify-content: space-between;
+        align-items: center;
+    }   
+    
+    .notification-item {
+        display: flex;
+        align-items: flex-start;
+        width: 100%;
+        padding: 16px;
+        text-decoration: none;
+        color: #fff;
+        transition: all 0.2s;
+        width: 8ERROR 2025-01-23 03:11:28,540 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+        ERROR 2025-01-23 03:11:28,540 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'0%;
+    }
+    
+    .notification-item-container:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+    }
+    
+    .notification-item.unread {
+        background: rgba(13, 110, 253, 0.1);
+        border-color: rgba(13, 110, 253, 0.3);
+        width: 100%;
+    }
+    
+    .notification-avatar {
+        margin-right: 16px;
+    }
+    
+    .notification-avatar img {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .notification-content {
+        flex: 1;
+    }
+    
+    .notification-type {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 8px;
+        color: #1DB954;
+        font-size: 0.875rem;
+    }
+    
+    .notification-type i {
+        font-size: 1rem;
+    }
+    
+    .notification-type span {
+        font-weight: 500;
+    }
+    
+    .notification-text {
+        margin-bottom: 4px;
+        line-height: 1.4;
+        color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .notification-text strong {
+        color: #fff;
+        font-weight: 600;
+    }
+    
+    .notification-comment {
+        display: block;
+        margin-top: 8px;
+        color: rgba(255, 255, 255, 0.7);
+        font-style: italic;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 8px 12px;
+        border-radius: 8px;
+    }
+    
+    .notification-time {
+        font-size: 0.875rem;
+        color: rgba(255, 255, 255, 0.5);
+    }
+    
+    .follow-button {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        margin-right: 16px;
+        transition: all 0.3s ease;
+        background: transparent;
+        border: 1px solid #1DB954;
+        color: #1DB954;
+    }
+    
+    .follow-button:hover {
+        background: #1ed760;
+        transform: scale(1.02);
+        color: #fff;
+    }
+    
+    .follow-button.following {
+        background: var(--spotify-green);
+        color: #fff;
+    }
+    
+    .follow-button.following:hover {
+        transform: scale(1.02);
+    }
+    
+    .no-notifications {
+        text-align: center;
+        padding: 40px;
+        color: rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        margin-top: 20px;
+    }
+    
+    .no-notifications i {
+        font-size: 3rem;
+        margin-bottom: 16px;
+        color: rgba(255, 255, 255, 0.3);
+    }
+    
+    .no-notifications p {
+        font-size: 1.1rem;
+        margin: 0;
+    }
+    
+    @media (max-width: 576px) {
+        .main-container {
+            margin: 0 16px;
+        }
+    
+        .notifications-container {
+            padding: 0;
+        }
+    
+        .notification-text {
+            font-size: 12px;
+        }
+    
+        .notification-time {
+            font-size: 10px;
+        }
+    
+        .notification-type span {
+            font-size: 10px;
+        }
+    
+        .notifications-title {
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+    
+        .follow-button {
+            font-size: 10px;
+            min-width: 95px;
+        }
+    
+        .notification-avatar img {
+            width: 32px;
+            height: 32px;
+        }
+    
+        .notification-avatar {
+            margin-right: 8px;
+        }
+    
+        .notification-item {
+            padding: 12px;
+        }
+    }
+    </style>
 <div class="main-container">
     <div class="notifications-container">
         <h2 class="notifications-title">通知</h2>
@@ -71,219 +283,6 @@
         {% endif %}
     </div>
 </div>
-
-<style>
-.main-container {
-    margin: 0 64px;
-}
-
-.notifications-container {
-    margin: 64px auto 0;
-    padding: 20px;
-    min-height: calc(100vh - 64px);
-}
-
-.notifications-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    color: #fff;
-}
-
-.notifications-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.notification-item-container {
-    display: flex;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    text-decoration: none;
-    color: #fff;
-    transition: all 0.2s;
-    justify-content: space-between;
-    align-items: center;
-}   
-
-.notification-item {
-    display: flex;
-    align-items: flex-start;
-    width: 100%;
-    padding: 16px;
-    text-decoration: none;
-    color: #fff;
-    transition: all 0.2s;
-    width: 8ERROR 2025-01-23 03:11:28,540 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
-    ERROR 2025-01-23 03:11:28,540 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'0%;
-}
-
-.notification-item-container:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
-}
-
-.notification-item.unread {
-    background: rgba(13, 110, 253, 0.1);
-    border-color: rgba(13, 110, 253, 0.3);
-    width: 100%;
-}
-
-.notification-avatar {
-    margin-right: 16px;
-}
-
-.notification-avatar img {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid rgba(255, 255, 255, 0.1);
-}
-
-.notification-content {
-    flex: 1;
-}
-
-.notification-type {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 8px;
-    color: #1DB954;
-    font-size: 0.875rem;
-}
-
-.notification-type i {
-    font-size: 1rem;
-}
-
-.notification-type span {
-    font-weight: 500;
-}
-
-.notification-text {
-    margin-bottom: 4px;
-    line-height: 1.4;
-    color: rgba(255, 255, 255, 0.9);
-}
-
-.notification-text strong {
-    color: #fff;
-    font-weight: 600;
-}
-
-.notification-comment {
-    display: block;
-    margin-top: 8px;
-    color: rgba(255, 255, 255, 0.7);
-    font-style: italic;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 8px 12px;
-    border-radius: 8px;
-}
-
-.notification-time {
-    font-size: 0.875rem;
-    color: rgba(255, 255, 255, 0.5);
-}
-
-.follow-button {
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    margin-right: 16px;
-    transition: all 0.3s ease;
-    background: transparent;
-    border: 1px solid #1DB954;
-    color: #1DB954;
-}
-
-.follow-button:hover {
-    background: #1ed760;
-    transform: scale(1.02);
-    color: #fff;
-}
-
-.follow-button.following {
-    background: var(--spotify-green);
-    color: #fff;
-}
-
-.follow-button.following:hover {
-    transform: scale(1.02);
-}
-
-.no-notifications {
-    text-align: center;
-    padding: 40px;
-    color: rgba(255, 255, 255, 0.5);
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    margin-top: 20px;
-}
-
-.no-notifications i {
-    font-size: 3rem;
-    margin-bottom: 16px;
-    color: rgba(255, 255, 255, 0.3);
-}
-
-.no-notifications p {
-    font-size: 1.1rem;
-    margin: 0;
-}
-
-@media (max-width: 576px) {
-    .main-container {
-        margin: 0 16px;
-    }
-
-    .notifications-container {
-        padding: 0;
-    }
-
-    .notification-text {
-        font-size: 12px;
-    }
-
-    .notification-time {
-        font-size: 10px;
-    }
-
-    .notification-type span {
-        font-size: 10px;
-    }
-
-    .notifications-title {
-        font-size: 16px;
-        margin-bottom: 16px;
-    }
-
-    .follow-button {
-        font-size: 10px;
-        min-width: 95px;
-    }
-
-    .notification-avatar img {
-        width: 32px;
-        height: 32px;
-    }
-
-    .notification-avatar {
-        margin-right: 8px;
-    }
-
-    .notification-item {
-        padding: 12px;
-    }
-}
-</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

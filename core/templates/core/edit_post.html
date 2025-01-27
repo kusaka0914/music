@@ -2,6 +2,365 @@
 {% load static %}
 
 {% block content %}
+<style>
+    .post-form-container {
+        max-width: 800px;
+        margin: 3rem auto;
+        padding: 2.5rem;
+        border-radius: 24px;
+        color: #fff;
+    }
+    
+    .form-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+    
+    .form-header h2 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(45deg, #1DB954, #1ed760);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .subtitle {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1.1rem;
+    }
+    
+    .form-section {
+        margin-bottom: 2.5rem;
+        border-radius: 16px;
+        transition: all 0.3s ease;
+    }
+    
+    .target-type-options{
+        margin-bottom: 2rem;
+    }
+    
+    .target-type-options {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    
+    .target-type-option {
+        cursor: pointer;
+        flex: 1;
+    }
+    
+    .target-type-option input[type="radio"] {
+        display: none;
+    }
+    
+    .target-type-content {
+        padding: 1.5rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+    
+    .target-type-option input[type="radio"]:checked + .target-type-content {
+        background: rgba(29, 185, 84, 0.3);
+        transform: translateY(-2px);
+    }
+    
+    .target-type-content i {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: #1DB954;
+    }
+    
+    .target-type-content span {
+        display: block;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+    
+    .target-type-flex {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .target-type-description {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin: 0;
+    }
+    
+    
+    .form-section h3 {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+        color: var(--spotify-white);
+    }
+    
+    .selected-item {
+        background: rgba(30, 30, 30, 0.95);
+        border-radius: 12px;
+        padding: 1rem;
+    }
+    
+    .selected-content {
+        display: flex;
+        align-items: center;
+    }
+    
+    .selected-content img {
+        width: 60px;
+        height: 60px;
+        border-radius: 8px;
+        object-fit: cover;
+        margin-right: 1rem;
+    }
+    
+    .selected-info {
+        flex-grow: 1;
+    }
+    
+    .selected-info h4 {
+        margin: 0;
+        font-size: 1.1rem;
+        color: #fff;
+    }
+    
+    .selected-info p {
+        margin: 0.2rem 0 0;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .post-type-options {
+        display: flex;
+        gap: 1rem;
+        width: 100%;
+    }
+    
+    .post-type-option {
+        cursor: pointer;
+        flex: 1;
+    }
+    
+    .post-type-option input[type="radio"] {
+        display: none;
+    }
+    
+    .post-type-content {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 1.5rem;
+        border-radius: 12px;
+        text-align: center;
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+    
+    .post-type-content i {
+        font-size: 2rem;
+        color: var(--spotify-green);
+        margin-bottom: 0.5rem;
+    }
+    
+    .post-type-content span {
+        display: block;
+        font-size: 1.1rem;
+        color: var(--spotify-white);
+        margin-bottom: 0.5rem;
+    }
+    
+    .post-type-description {
+        font-size: 0.9rem;
+        color: var(--spotify-gray);
+        margin: 0;
+    }
+    
+    .post-type-option input[type="radio"]:checked + .post-type-content {
+        background: rgba(29, 185, 84, 0.1);
+        border: 2px solid var(--spotify-green);
+    }
+    
+    .textarea-container {
+        position: relative;
+    }
+    
+    textarea {
+        width: 100%;
+        min-height: 120px;
+        padding: 1.2rem;
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid transparent;
+        border-radius: 12px;
+        color: #fff;
+        font-size: 1.1rem;
+        resize: vertical;
+        transition: all 0.3s ease;
+    }
+    
+    textarea:focus {
+        border-color: #1DB954;
+        background: rgba(255, 255, 255, 0.15);
+        outline: none;
+    }
+    
+    .character-count {
+        position: absolute;
+        bottom: 1rem;
+        right: 1rem;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.9rem;
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+    
+    .submit-button {
+        width: 180px;
+        padding: 8px 16px;
+        background: linear-gradient(45deg, #1DB954, #1ed760);
+        border: none;
+        border-radius: 500px;
+        color: #fff;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        height: 50px;
+    }
+    
+    .submit-button:hover {
+        transform: scale(1.02);
+    }
+    
+    .cancel-button {
+        width: 180px; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 16px;
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 500px;
+        color: #fff;
+        font-size: 1.1rem;
+        text-decoration: none;
+        text-align: center;
+        transition: all 0.3s ease;
+        height: 50px;
+    }
+    
+    .cancel-button:hover {
+        transform: scale(1.02);
+    }
+    
+    @media (max-width: 576px) {
+        .post-form-container {
+            margin: 0;
+            padding: 16px;
+        }
+    
+        .form-section {
+            padding: 0;
+        }
+    
+        .scene-options {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        }
+    
+        .target-type-section {
+            padding: 0;
+        }
+    
+        .post-type-description {
+            font-size: 10px;
+            text-align: center;
+        }
+    
+        .post-type-content span {
+            font-size: 12px;
+        }
+    
+        .post-type-content {
+            padding: 10px;
+            height: 100%;
+        }
+    
+        textarea {
+            font-size: 14px;
+        }
+    
+        .form-section {
+            margin-bottom: 24px;
+        }
+    
+        .character-count {
+            font-size: 12px;
+        }
+    
+        .post-type-section h3 {
+            font-size: 16px;
+        }
+    
+        .search-box input {
+            font-size: 14px;
+        }
+    
+        .target-type-description {
+            font-size: 10px;
+            text-align: center;
+        }
+    
+        .target-type-flex {
+            flex-direction: column;
+        }
+    
+        .target-type-content span {
+            font-size: 12px; 
+        }
+    
+        .target-type-content {
+            padding: 8px;
+        }
+    
+        .target-type-content i {
+            margin-bottom: 0;
+        }
+    
+        .target-type-section h3{
+            font-size: 16px;
+        }
+    
+        .subtitle {
+            font-size: 14px;
+            margin-bottom: 0
+        }
+    
+        .form-header {
+            margin-bottom:32px;
+        }
+    
+        .form-header h2 {
+            font-size: 20px;
+        }
+    
+        main{
+            margin-top: 80px;
+            padding-top: 0;
+        }
+    
+        .submit-button {
+            font-size: 14px;
+        }
+    
+        .cancel-button {
+            font-size: 14px;
+        }
+    }
+    </style>
 <div class="post-form-container">
     <div class="form-header">
         <h2>投稿を編集</h2>
@@ -121,366 +480,6 @@
         </div>
     </form>
 </div>
-
-<style>
-.post-form-container {
-    max-width: 800px;
-    margin: 3rem auto;
-    padding: 2.5rem;
-    border-radius: 24px;
-    color: #fff;
-}
-
-.form-header {
-    text-align: center;
-    margin-bottom: 3rem;
-}
-
-.form-header h2 {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-    background: linear-gradient(45deg, #1DB954, #1ed760);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.subtitle {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 1.1rem;
-}
-
-.form-section {
-    margin-bottom: 2.5rem;
-    border-radius: 16px;
-    transition: all 0.3s ease;
-}
-
-.target-type-options{
-    margin-bottom: 2rem;
-}
-
-.target-type-options {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
-.target-type-option {
-    cursor: pointer;
-    flex: 1;
-}
-
-.target-type-option input[type="radio"] {
-    display: none;
-}
-
-.target-type-content {
-    padding: 1.5rem;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    transition: all 0.3s ease;
-}
-
-.target-type-option input[type="radio"]:checked + .target-type-content {
-    background: rgba(29, 185, 84, 0.3);
-    transform: translateY(-2px);
-}
-
-.target-type-content i {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-    color: #1DB954;
-}
-
-.target-type-content span {
-    display: block;
-    font-size: 1.1rem;
-    font-weight: 600;
-}
-
-.target-type-flex {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.target-type-description {
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.7);
-    margin: 0;
-}
-
-
-.form-section h3 {
-    font-size: 1.3rem;
-    margin-bottom: 1rem;
-    color: var(--spotify-white);
-}
-
-.selected-item {
-    background: rgba(30, 30, 30, 0.95);
-    border-radius: 12px;
-    padding: 1rem;
-}
-
-.selected-content {
-    display: flex;
-    align-items: center;
-}
-
-.selected-content img {
-    width: 60px;
-    height: 60px;
-    border-radius: 8px;
-    object-fit: cover;
-    margin-right: 1rem;
-}
-
-.selected-info {
-    flex-grow: 1;
-}
-
-.selected-info h4 {
-    margin: 0;
-    font-size: 1.1rem;
-    color: #fff;
-}
-
-.selected-info p {
-    margin: 0.2rem 0 0;
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.7);
-}
-
-.post-type-options {
-    display: flex;
-    gap: 1rem;
-    width: 100%;
-}
-
-.post-type-option {
-    cursor: pointer;
-    flex: 1;
-}
-
-.post-type-option input[type="radio"] {
-    display: none;
-}
-
-.post-type-content {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 1.5rem;
-    border-radius: 12px;
-    text-align: center;
-    transition: all 0.3s ease;
-    height: 100%;
-}
-
-.post-type-content i {
-    font-size: 2rem;
-    color: var(--spotify-green);
-    margin-bottom: 0.5rem;
-}
-
-.post-type-content span {
-    display: block;
-    font-size: 1.1rem;
-    color: var(--spotify-white);
-    margin-bottom: 0.5rem;
-}
-
-.post-type-description {
-    font-size: 0.9rem;
-    color: var(--spotify-gray);
-    margin: 0;
-}
-
-.post-type-option input[type="radio"]:checked + .post-type-content {
-    background: rgba(29, 185, 84, 0.1);
-    border: 2px solid var(--spotify-green);
-}
-
-.textarea-container {
-    position: relative;
-}
-
-textarea {
-    width: 100%;
-    min-height: 120px;
-    padding: 1.2rem;
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid transparent;
-    border-radius: 12px;
-    color: #fff;
-    font-size: 1.1rem;
-    resize: vertical;
-    transition: all 0.3s ease;
-}
-
-textarea:focus {
-    border-color: #1DB954;
-    background: rgba(255, 255, 255, 0.15);
-    outline: none;
-}
-
-.character-count {
-    position: absolute;
-    bottom: 1rem;
-    right: 1rem;
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 0.9rem;
-}
-
-.form-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    margin-top: 2rem;
-}
-
-.submit-button {
-    width: 180px;
-    padding: 8px 16px;
-    background: linear-gradient(45deg, #1DB954, #1ed760);
-    border: none;
-    border-radius: 500px;
-    color: #fff;
-    font-size: 1.1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    height: 50px;
-}
-
-.submit-button:hover {
-    transform: scale(1.02);
-}
-
-.cancel-button {
-    width: 180px; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px 16px;
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 500px;
-    color: #fff;
-    font-size: 1.1rem;
-    text-decoration: none;
-    text-align: center;
-    transition: all 0.3s ease;
-    height: 50px;
-}
-
-.cancel-button:hover {
-    transform: scale(1.02);
-}
-
-@media (max-width: 576px) {
-    .post-form-container {
-        margin: 0;
-        padding: 16px;
-    }
-
-    .form-section {
-        padding: 0;
-    }
-
-    .scene-options {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    }
-
-    .target-type-section {
-        padding: 0;
-    }
-
-    .post-type-description {
-        font-size: 10px;
-        text-align: center;
-    }
-
-    .post-type-content span {
-        font-size: 12px;
-    }
-
-    .post-type-content {
-        padding: 10px;
-        height: 100%;
-    }
-
-    textarea {
-        font-size: 14px;
-    }
-
-    .form-section {
-        margin-bottom: 24px;
-    }
-
-    .character-count {
-        font-size: 12px;
-    }
-
-    .post-type-section h3 {
-        font-size: 16px;
-    }
-
-    .search-box input {
-        font-size: 14px;
-    }
-
-    .target-type-description {
-        font-size: 10px;
-        text-align: center;
-    }
-
-    .target-type-flex {
-        flex-direction: column;
-    }
-
-    .target-type-content span {
-        font-size: 12px; 
-    }
-
-    .target-type-content {
-        padding: 8px;
-    }
-
-    .target-type-content i {
-        margin-bottom: 0;
-    }
-
-    .target-type-section h3{
-        font-size: 16px;
-    }
-
-    .subtitle {
-        font-size: 14px;
-        margin-bottom: 0
-    }
-
-    .form-header {
-        margin-bottom:32px;
-    }
-
-    .form-header h2 {
-        font-size: 20px;
-    }
-
-    main{
-        margin-top: 80px;
-        padding-top: 0;
-    }
-
-    .submit-button {
-        font-size: 14px;
-    }
-
-    .cancel-button {
-        font-size: 14px;
-    }
-}
-</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

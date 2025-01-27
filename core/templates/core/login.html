@@ -2,6 +2,155 @@
 {% load static %}
 
 {% block content %}
+<style>
+    .spotify-container {
+        background: var(--spotify-black);
+        min-height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        color: #fff;
+    }
+    
+    .auth-container {
+        width: 100%;
+        max-width: 450px;
+        margin: 0 auto;
+    }
+    
+    .auth-box {
+        background: var(--spotify-dark-gray);
+        padding: 2.5rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 60px rgba(0, 0, 0, 0.5);
+    }
+    
+    .auth-box h1 {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    
+    .auth-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .form-group label {
+        color: #b3b3b3;
+        font-size: 0.9rem;
+    }
+    
+    .form-group input {
+        background: #282828;
+        border: none;
+        padding: 0.8rem 1rem;
+        border-radius: 4px;
+        color: #fff;
+        font-size: 1rem;
+        transition: background-color 0.3s;
+    }
+    
+    .form-group input::placeholder {
+        color: #9e9e9e;
+    }
+    
+    .form-group input:focus {
+        background: #383838;
+        outline: none;
+        color: #fff;
+    }
+    
+    .form-group input:-webkit-autofill,
+    .form-group input:-webkit-autofill:hover,
+    .form-group input:-webkit-autofill:focus {
+        -webkit-text-fill-color: #fff;
+        -webkit-box-shadow: 0 0 0px 1000px #282828 inset;
+        transition: background-color 5000s ease-in-out 0s;
+    }
+    
+    .error-message {
+        color: #ff5555;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+    }
+    
+    .auth-button {
+        background: #1db954;
+        color: #fff;
+        border: none;
+        padding: 1rem;
+        border-radius: 500px;
+        font-weight: bold;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-top: 1rem;
+    }
+    
+    .auth-button:hover {
+        background: #1ed760;
+        transform: scale(1.02);
+    }
+    
+    .auth-links {
+        margin-top: 2rem;
+        text-align: center;
+        color: #b3b3b3;
+    }
+    
+    .auth-links a {
+        color: #1db954;
+        text-decoration: none;
+        margin-left: 0.5rem;
+        transition: color 0.3s;
+    }
+    
+    .auth-links a:hover {
+        color: #1ed760;
+    }
+    
+    @media (max-width: 576px) {
+        .spotify-container {
+            padding: 1rem;
+        }
+    
+        .auth-box h1 {
+            font-size: 16px;
+        }
+    
+        .form-group label {
+            font-size: 14px;
+        }
+    
+        .auth-box {
+            padding: 16px;
+        }
+    
+        .form-group input {
+            font-size: 14px;
+        }
+    
+        .auth-button {
+            font-size: 14px;
+            margin-top: 0px;
+            padding: 8px 12px;
+        }
+    
+        p {
+            font-size: 12px;
+        }
+    }
+    </style>
 <div class="spotify-container">
     <div class="auth-container">
         <div class="auth-box">
@@ -33,153 +182,4 @@
     </div>
 </div>
 
-<style>
-.spotify-container {
-    background: var(--spotify-black);
-    min-height: 90vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    color: #fff;
-}
-
-.auth-container {
-    width: 100%;
-    max-width: 450px;
-    margin: 0 auto;
-}
-
-.auth-box {
-    background: var(--spotify-dark-gray);
-    padding: 2.5rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 60px rgba(0, 0, 0, 0.5);
-}
-
-.auth-box h1 {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 2rem;
-    text-align: center;
-}
-
-.auth-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.form-group label {
-    color: #b3b3b3;
-    font-size: 0.9rem;
-}
-
-.form-group input {
-    background: #282828;
-    border: none;
-    padding: 0.8rem 1rem;
-    border-radius: 4px;
-    color: #fff;
-    font-size: 1rem;
-    transition: background-color 0.3s;
-}
-
-.form-group input::placeholder {
-    color: #9e9e9e;
-}
-
-.form-group input:focus {
-    background: #383838;
-    outline: none;
-    color: #fff;
-}
-
-.form-group input:-webkit-autofill,
-.form-group input:-webkit-autofill:hover,
-.form-group input:-webkit-autofill:focus {
-    -webkit-text-fill-color: #fff;
-    -webkit-box-shadow: 0 0 0px 1000px #282828 inset;
-    transition: background-color 5000s ease-in-out 0s;
-}
-
-.error-message {
-    color: #ff5555;
-    font-size: 0.9rem;
-    margin-top: 0.5rem;
-}
-
-.auth-button {
-    background: #1db954;
-    color: #fff;
-    border: none;
-    padding: 1rem;
-    border-radius: 500px;
-    font-weight: bold;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s;
-    margin-top: 1rem;
-}
-
-.auth-button:hover {
-    background: #1ed760;
-    transform: scale(1.02);
-}
-
-.auth-links {
-    margin-top: 2rem;
-    text-align: center;
-    color: #b3b3b3;
-}
-
-.auth-links a {
-    color: #1db954;
-    text-decoration: none;
-    margin-left: 0.5rem;
-    transition: color 0.3s;
-}
-
-.auth-links a:hover {
-    color: #1ed760;
-}
-
-@media (max-width: 576px) {
-    .spotify-container {
-        padding: 1rem;
-    }
-
-    .auth-box h1 {
-        font-size: 16px;
-    }
-
-    .form-group label {
-        font-size: 14px;
-    }
-
-    .auth-box {
-        padding: 16px;
-    }
-
-    .form-group input {
-        font-size: 14px;
-    }
-
-    .auth-button {
-        font-size: 14px;
-        margin-top: 0px;
-        padding: 8px 12px;
-    }
-
-    p {
-        font-size: 12px;
-    }
-}
-</style>
 {% endblock %} 

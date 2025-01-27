@@ -2,54 +2,6 @@
 {% load static %}
 
 {% block content %}
-<div class="messages-container">
-    <div class="messages-sidebar">
-        <div class="messages-header">
-            <h2>メッセージ</h2>
-        </div>
-        <div class="conversations-list">
-            {% for data in conversations_data %}
-                <a href="{% url 'core:conversation_detail' data.conversation.id %}" 
-                   class="conversation-item {% if data.unread_count > 0 %}unread{% endif %}">
-                    <div class="conversation-avatar">
-                        {% if data.other_user.profile.avatar %}
-                            <img src="{{ data.other_user.profile.avatar.url }}" alt="{{ data.other_user.username }}">
-                        {% else %}
-                            <img src="{% static 'images/default-avatar.svg' %}" alt="{{ data.other_user.username }}">
-                        {% endif %}
-                    </div>
-                    <div class="conversation-content">
-                        <div class="conversation-header">
-                            <span class="username">{{ data.other_user.username }}</span>
-                        </div>
-                        <div class="last-message">
-                            {% if data.last_message %}
-                                {{ data.last_message.content|truncatechars:50 }}
-                            {% else %}
-                                会話を始めましょう
-                            {% endif %}
-                        </div>
-                    </div>
-                    {% if data.unread_count > 0 %}
-                        <span class="unread-badge">{{ data.unread_count }}</span>
-                    {% endif %}
-                </a>
-            {% empty %}
-                <div class="no-conversations">
-                    <i class="bi bi-chat"></i>
-                    <p>メッセージはありません</p>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
-    <div class="messages-content">
-        <div class="select-conversation">
-            <i class="bi bi-chat-dots"></i>
-            <p>会話を選択してください</p>
-        </div>
-    </div>
-</div>
-
 <style>
     body {
         overflow: hidden;
@@ -212,4 +164,52 @@
 }
 
 </style>
+<div class="messages-container">
+    <div class="messages-sidebar">
+        <div class="messages-header">
+            <h2>メッセージ</h2>
+        </div>
+        <div class="conversations-list">
+            {% for data in conversations_data %}
+                <a href="{% url 'core:conversation_detail' data.conversation.id %}" 
+                   class="conversation-item {% if data.unread_count > 0 %}unread{% endif %}">
+                    <div class="conversation-avatar">
+                        {% if data.other_user.profile.avatar %}
+                            <img src="{{ data.other_user.profile.avatar.url }}" alt="{{ data.other_user.username }}">
+                        {% else %}
+                            <img src="{% static 'images/default-avatar.svg' %}" alt="{{ data.other_user.username }}">
+                        {% endif %}
+                    </div>
+                    <div class="conversation-content">
+                        <div class="conversation-header">
+                            <span class="username">{{ data.other_user.username }}</span>
+                        </div>
+                        <div class="last-message">
+                            {% if data.last_message %}
+                                {{ data.last_message.content|truncatechars:50 }}
+                            {% else %}
+                                会話を始めましょう
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if data.unread_count > 0 %}
+                        <span class="unread-badge">{{ data.unread_count }}</span>
+                    {% endif %}
+                </a>
+            {% empty %}
+                <div class="no-conversations">
+                    <i class="bi bi-chat"></i>
+                    <p>メッセージはありません</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="messages-content">
+        <div class="select-conversation">
+            <i class="bi bi-chat-dots"></i>
+            <p>会話を選択してください</p>
+        </div>
+    </div>
+</div>
+
 {% endblock %} 

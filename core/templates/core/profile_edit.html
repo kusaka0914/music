@@ -2,6 +2,230 @@
 {% load static %}
 
 {% block content %}
+<style>
+    .edit-profile-container {
+        min-height: 100vh;
+        padding: 2rem;
+        color: #fff;
+    }
+    
+    .edit-profile-content {
+        max-width: 600px;
+        margin: 0 auto;
+        border-radius: 10px;
+        padding: 2rem;
+    }
+    
+    .edit-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .edit-header h1 {
+        font-size: 2rem;
+        color: var(--spotify-green);
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    
+    .subtitle {
+        color: #b3b3b3;
+        font-size: 1rem;
+    }
+    
+    .avatar-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+    
+    .current-avatar {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 60px rgba(0, 0, 0, 0.5);
+    }
+    
+    .current-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .avatar-upload {
+        position: relative;
+    }
+    
+    .upload-button {
+        background: #1db954;
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border-radius: 500px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+    
+    .upload-button:hover {
+        background: #1ed760;
+        transform: scale(1.02);
+    }
+    
+    input[type="file"] {
+        display: none;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #fff;
+        font-weight: 500;
+    }
+    
+    .form-group input[type="text"],
+    .form-group input[type="url"],
+    .form-group textarea {
+        width: 100%;
+        padding: 0.8rem;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid transparent;
+        border-radius: 4px;
+        color: #fff;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .form-group input[type="text"]:focus,
+    .form-group input[type="url"]:focus,
+    .form-group textarea:focus {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: #1db954;
+        outline: none;
+    }
+    
+    .form-group input[type="text"]::placeholder,
+    .form-group input[type="url"]::placeholder,
+    .form-group textarea::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
+    
+    /* フォーム内の入力テキストの色を白に */
+    .form-group input[type="text"],
+    .form-group input[type="url"],
+    .form-group textarea {
+        color: #fff !important;
+    }
+    
+    .form-group textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+    
+    .character-count {
+        text-align: right;
+        color: #b3b3b3;
+        font-size: 0.8rem;
+        margin-top: 0.25rem;
+    }
+    
+    .error-message {
+        color: #ff5555;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+    
+    .save-button {
+        background: #1db954;
+        color: white;
+        border: none;
+        padding: 0.8rem 2rem;
+        border-radius: 500px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+    }
+    
+    .save-button:hover {
+        background: #1ed760;
+        transform: scale(1.02);
+    }
+    
+    .cancel-button {
+        background: transparent;
+        color: #fff;
+        border: 1px solid #fff;
+        padding: 0.8rem 2rem;
+        border-radius: 500px;
+        text-decoration: none;
+        font-weight: 600;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    
+    .cancel-button:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+    
+    @media (max-width: 768px) {
+        .edit-profile-container {
+            padding: 0;
+        }
+    
+        .edit-profile-content {
+            padding: 16px;
+        }
+    
+        .save-button,
+        .cancel-button {
+            width: 100%;
+            justify-content: center;
+        }
+    
+        .edit-header{
+            margin-top: 16px;
+        }
+    
+        .edit-header h1 {
+            font-size: 20px;
+        }
+    
+        .current-avatar {
+            width: 100px;
+            height: 100px;
+        }
+    
+        .form-group input[type="text"], .form-group input[type="url"], .form-group textarea {
+            font-size: 14px;
+        }
+    
+        .character-count {
+            font-size: 12px;
+        }
+    
+        .form-actions{
+            font-size: 14px;
+        }
+    }
+    </style>
 <div class="edit-profile-container">
     <div class="edit-profile-content">
         <div class="edit-header">
@@ -91,231 +315,6 @@
         </form>
     </div>
 </div>
-
-<style>
-.edit-profile-container {
-    min-height: 100vh;
-    padding: 2rem;
-    color: #fff;
-}
-
-.edit-profile-content {
-    max-width: 600px;
-    margin: 0 auto;
-    border-radius: 10px;
-    padding: 2rem;
-}
-
-.edit-header {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-.edit-header h1 {
-    font-size: 2rem;
-    color: var(--spotify-green);
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-}
-
-.subtitle {
-    color: #b3b3b3;
-    font-size: 1rem;
-}
-
-.avatar-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 2rem;
-}
-
-.current-avatar {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin-bottom: 24px;
-    box-shadow: 0 4px 60px rgba(0, 0, 0, 0.5);
-}
-
-.current-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.avatar-upload {
-    position: relative;
-}
-
-.upload-button {
-    background: #1db954;
-    color: white;
-    padding: 0.8rem 1.5rem;
-    border-radius: 500px;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-}
-
-.upload-button:hover {
-    background: #1ed760;
-    transform: scale(1.02);
-}
-
-input[type="file"] {
-    display: none;
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: #fff;
-    font-weight: 500;
-}
-
-.form-group input[type="text"],
-.form-group input[type="url"],
-.form-group textarea {
-    width: 100%;
-    padding: 0.8rem;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid transparent;
-    border-radius: 4px;
-    color: #fff;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-}
-
-.form-group input[type="text"]:focus,
-.form-group input[type="url"]:focus,
-.form-group textarea:focus {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: #1db954;
-    outline: none;
-}
-
-.form-group input[type="text"]::placeholder,
-.form-group input[type="url"]::placeholder,
-.form-group textarea::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-}
-
-/* フォーム内の入力テキストの色を白に */
-.form-group input[type="text"],
-.form-group input[type="url"],
-.form-group textarea {
-    color: #fff !important;
-}
-
-.form-group textarea {
-    min-height: 100px;
-    resize: vertical;
-}
-
-.character-count {
-    text-align: right;
-    color: #b3b3b3;
-    font-size: 0.8rem;
-    margin-top: 0.25rem;
-}
-
-.error-message {
-    color: #ff5555;
-    font-size: 0.9rem;
-    margin-top: 0.5rem;
-}
-
-.form-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
-}
-
-.save-button {
-    background: #1db954;
-    color: white;
-    border: none;
-    padding: 0.8rem 2rem;
-    border-radius: 500px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.3s ease;
-}
-
-.save-button:hover {
-    background: #1ed760;
-    transform: scale(1.02);
-}
-
-.cancel-button {
-    background: transparent;
-    color: #fff;
-    border: 1px solid #fff;
-    padding: 0.8rem 2rem;
-    border-radius: 500px;
-    text-decoration: none;
-    font-weight: 600;
-    text-align: center;
-    transition: all 0.3s ease;
-}
-
-.cancel-button:hover {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-@media (max-width: 768px) {
-    .edit-profile-container {
-        padding: 0;
-    }
-
-    .edit-profile-content {
-        padding: 16px;
-    }
-
-    .save-button,
-    .cancel-button {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .edit-header{
-        margin-top: 16px;
-    }
-
-    .edit-header h1 {
-        font-size: 20px;
-    }
-
-    .current-avatar {
-        width: 100px;
-        height: 100px;
-    }
-
-    .form-group input[type="text"], .form-group input[type="url"], .form-group textarea {
-        font-size: 14px;
-    }
-
-    .character-count {
-        font-size: 12px;
-    }
-
-    .form-actions{
-        font-size: 14px;
-    }
-}
-</style>
 
 <script>
 // アバタープレビュー
