@@ -4,7 +4,6 @@
     .post-card {
         background: var(--spotify-dark-gray);
         border-radius: 8px;
-        padding: 8px;
         margin-bottom: 16px;
     }
     
@@ -106,6 +105,10 @@
         transition: color 0.2s;
         margin: 10px 0;
     }
+
+    .for-sp {
+        display: none;
+    }
     
     .load-more-comments:hover {
         color: #1ed760;
@@ -168,6 +171,17 @@
     .post-action-item i {
         font-size: 1rem;
     }
+
+    @media (max-width: 576px) {
+        .for-pc {
+            display: none;
+        }
+
+        .for-sp {
+            display: block;
+            margin-top: 16px;
+        }
+    }
     </style>
 {% for post in posts %}
     {% if post.user and post.user.username %}
@@ -217,8 +231,10 @@
                         </a>
                         <div class="user-details">
                             <div class="post-meta">
-                                <span class="post-type">{{ post.get_post_type_display }}</span>
-                                <span class="post-time">{{ post.created_at|timesince }}前</span>
+                                <div class="post-time-container for-pc">
+                                    <span class="post-type">{{ post.get_post_type_display }}</span>
+                                    <span class="post-time">{{ post.created_at|timesince }}前</span>
+                                </div>
                                 {% if post.user == user %}
                                 <div class="post-actions-dropdown">
                                     <button class="post-actions-btn">
@@ -238,6 +254,10 @@
                                 {% endif %}
                             </div>
                         </div>
+                    </div>
+                    <div class="post-time-container for-sp">
+                        <span class="post-type">{{ post.get_post_type_display }}</span>
+                        <span class="post-time">{{ post.created_at|timesince }}前</span>
                     </div>
                 </div>
                 {% if post.description %}

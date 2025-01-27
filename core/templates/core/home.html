@@ -196,7 +196,6 @@
     .post-time {
         color: rgba(255, 255, 255, 0.6);
         font-size: 0.9rem;
-        font-style: italic;
     }
     
     .post-title {
@@ -1363,7 +1362,7 @@
         .recommended-playlists.tab-content {
             display: none;
             margin: 0;
-            padding: 1rem;
+            padding: 0;
             border-radius: 12px;
         }
     
@@ -1404,7 +1403,7 @@
     
     @media (max-width: 576px) {
         .spotify-player {
-            padding: 8px;
+            padding: 16px;
         }
     
         .post-description {
@@ -1441,7 +1440,7 @@
     
         .post-content {
             margin: 0;
-            padding: 8px;
+            padding: 16px;
         }
     
         .sort-select {
@@ -1487,7 +1486,7 @@
     
         .sort-select {
             width: 100%;
-            font-size: 10px;
+            font-size: 12px;
         }
     
         .post-type {
@@ -1778,11 +1777,15 @@
                                         <span><i class="bi bi-chat-fill"></i> {{ post.comments.count }}</span>
                                     </div>
                                 </div>
-                                {% if post.image %}
-                                    <div class="trending-image">
-                                        <img src="{{ post.image }}" alt="{{ post.user.username }}">
-                                    </div>
-                                {% endif %}
+                                <div class="trending-image">
+                                    {% if post.target_type == 'track' %}
+                                        <img src="{{ post.image }}" alt="Track artwork">
+                                    {% elif post.target_type == 'artist' %}
+                                        <img src="{{ post.image }}" alt="Artist image">
+                                    {% elif post.target_type == 'album' %}
+                                        <img src="{{ post.image }}" alt="Album artwork">
+                                    {% endif %}
+                                </div>
                             </a>
                         </div>
                     {% endfor %}
@@ -1845,6 +1848,19 @@
                                 <div class="trending-info">
                                     <h4>{{ post.user.username }}</h4>
                                     <p class="trending-description">{{ post.description }}</p>
+                                    <div class="trending-stats">
+                                        <span><i class="bi bi-heart-fill"></i> {{ post.likes.count }}</span>
+                                        <span><i class="bi bi-chat-fill"></i> {{ post.comments.count }}</span>
+                                    </div>
+                                </div>
+                                <div class="trending-image">
+                                    {% if post.target_type == 'track' %}
+                                        <img src="{{ post.image }}" alt="Track artwork">
+                                    {% elif post.target_type == 'artist' %}
+                                        <img src="{{ post.image }}" alt="Artist image">
+                                    {% elif post.target_type == 'album' %}
+                                        <img src="{{ post.image }}" alt="Album artwork">
+                                    {% endif %}
                                 </div>
                             </a>
                         </div>
