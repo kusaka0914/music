@@ -7320,3 +7320,21 @@ INFO 2025-01-28 00:12:41,396 views 7 281473557000608 アーティスト取得: F
 INFO 2025-01-28 00:12:41,396 views 7 281473557000608 アーティスト取得: RADWIMPS
 INFO 2025-01-28 00:12:41,396 views 7 281473557000608 アーティスト取得: YOASOBI
 INFO 2025-01-28 00:12:41,397 views 7 281473557000608 人気アーティスト取得完了: 10件
+ERROR 2025-01-28 01:25:43,251 views 96 281473364062624 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-28 01:26:06,509 views 106 281472992866720 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-28 01:26:26,683 views 110 281473229844896 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-28 01:26:27,347 views 110 281473229844896 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-28 01:26:37,360 views 114 281473452143008 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+ERROR 2025-01-28 01:26:46,004 views 120 281473124987296 音楽の相性スコア計算エラー: 'dict' object has no attribute 'favorite_artists'
+INFO 2025-01-28 01:38:54,526 views 128 281473533931936 人気アーティストの取得を開始
+INFO 2025-01-28 01:38:54,783 views 128 281473533931936 アーティスト取得: Mrs. GREEN APPLE
+INFO 2025-01-28 01:38:54,784 views 128 281473533931936 アーティスト取得: back number
+INFO 2025-01-28 01:38:54,784 views 128 281473533931936 アーティスト取得: Vaundy
+INFO 2025-01-28 01:38:54,784 views 128 281473533931936 アーティスト取得: Kenshi Yonezu
+INFO 2025-01-28 01:38:54,785 views 128 281473533931936 アーティスト取得: OFFICIAL HIGE DANDISM
+INFO 2025-01-28 01:38:54,785 views 128 281473533931936 アーティスト取得: ヨルシカ
+INFO 2025-01-28 01:38:54,785 views 128 281473533931936 アーティスト取得: Aimyon
+INFO 2025-01-28 01:38:54,785 views 128 281473533931936 アーティスト取得: Fujii Kaze
+INFO 2025-01-28 01:38:54,786 views 128 281473533931936 アーティスト取得: RADWIMPS
+INFO 2025-01-28 01:38:54,786 views 128 281473533931936 アーティスト取得: YOASOBI
+INFO 2025-01-28 01:38:54,787 views 128 281473533931936 人気アーティスト取得完了: 10件

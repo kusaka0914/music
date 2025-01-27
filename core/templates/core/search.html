@@ -223,7 +223,7 @@
     }
     
     .user-nickname {
-        color: #9ca3af;
+    color: #9ca3af !important;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -810,11 +810,11 @@
         margin-top: 0.2rem;
     }
 
-    .for-pc {
+    .for-pc-meta {
         display: none !important;
     }
 
-    .for-sp{
+    .for-sp-meta{
         display: block !important;
         margin-top: 16px;
     }
@@ -1018,7 +1018,138 @@
             max-width: 100%;
         }
     }
-    </style>
+
+    /* モーダルのスタイル */
+    .modal-content {
+        background: var(--spotify-dark-gray);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        color: var(--spotify-white);
+    }
+
+    .modal-header {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 16px 24px;
+    }
+
+    .modal-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+    .btn-close {
+        filter: invert(1) grayscale(100%) brightness(200%);
+    }
+
+    .modal-body {
+        padding: 24px;
+    }
+
+    .likes-list {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .user-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px;
+        border-radius: 8px;
+        transition: background-color 0.2s;
+    }
+
+    .user-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .modal-user-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .user-details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .username {
+        font-weight: 600;
+        color: var(--spotify-white);
+        text-decoration: none;
+    }
+
+    .user-nickname {
+        font-size: 0.9rem;
+        color: var(--spotify-gray);
+    }
+
+    .follow-button {
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: transparent;
+        border: 1px solid var(--spotify-green);
+        color: var(--spotify-green);
+    }
+
+    .follow-button:hover {
+        background: var(--spotify-green);
+        color: var(--spotify-white);
+    }
+
+    .follow-button.following {
+        background: var(--spotify-green);
+        color: var(--spotify-white);
+    }
+
+    .no-users {
+        text-align: center;
+        padding: 24px;
+        color: var(--spotify-gray);
+    }
+
+    @media (max-width: 576px) {
+        .modal-dialog {
+            margin: 0;
+            max-width: 100%;
+            height: 100%;
+        }
+
+        .modal-content {
+            border-radius: 0;
+            height: 100%;
+        }
+
+        .modal-body {
+            padding: 16px;
+        }
+
+        .username {
+            font-size: 14px;
+        }
+
+        .user-nickname {
+            font-size: 12px;
+        }
+
+        .follow-button {
+            font-size: 12px;
+            padding: 4px 12px;
+        }
+    }
+</style>
 <div class="search-container">
     <div class="result-container">
     <!-- 検索フォーム -->
@@ -1264,7 +1395,23 @@
     </div>
 </div>
 
-{% block extra_js %}
+<!-- いいね一覧モーダル -->
+<div class="modal fade" id="likesModal" tabindex="-1" aria-labelledby="likesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="likesModalLabel">いいねしたユーザー</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="likes-list">
+                    <!-- いいねしたユーザーのリストがここに動的に追加されます -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // フォローボタンのクリックイベントを設定
@@ -1315,7 +1462,53 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         return cookieValue;
     }
+
+    // いいねモーダルの処理を追加
+    window.showLikesModal = async function(postId) {
+        try {
+            const response = await fetch(`/api/posts/${postId}/likes/`);
+            const data = await response.json();
+            
+            const modal = new bootstrap.Modal(document.getElementById('likesModal'));
+            const userList = document.querySelector('.likes-list');
+            userList.innerHTML = '';
+
+            if (data.users.length === 0) {
+                userList.innerHTML = `
+                    <div class="no-users">
+                        <p>まだいいねしたユーザーはいません</p>
+                    </div>
+                `;
+            } else {
+                data.users.forEach(user => {
+                    const userItem = document.createElement('div');
+                    userItem.className = 'user-item';
+                    userItem.innerHTML = `
+                        <div class="modal-user-info">
+                            <img src="${user.avatar || '/static/images/default-avatar.svg'}" alt="${user.username}" class="user-avatar">
+                            <div class="user-details">
+                                <a href="/profile/${user.username}/" class="username">${user.username}</a>
+                                ${user.name ? `<span class="user-nickname">${user.name}</span>` : ''}
+                            </div>
+                        </div>
+                        ${user.username !== document.querySelector('[name=username]')?.value ? `
+                            <button 
+                                onclick="followUser('${user.username}', this)" 
+                                class="follow-button ${user.is_following ? 'following' : ''}"
+                                data-username="${user.username}">
+                                ${user.is_following ? 'フォロー中' : 'フォローする'}
+                            </button>
+                        ` : ''}
+                    `;
+                    userList.appendChild(userItem);
+                });
+            }
+            
+            modal.show();
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
 });
 </script>
-{% endblock %}
 {% endblock %} 

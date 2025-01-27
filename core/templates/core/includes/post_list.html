@@ -106,7 +106,7 @@
         margin: 10px 0;
     }
 
-    .for-sp {
+    .for-sp-meta {
         display: none;
     }
     
@@ -173,11 +173,11 @@
     }
 
     @media (max-width: 576px) {
-        .for-pc {
+        .for-pc-meta {
             display: none;
         }
 
-        .for-sp {
+        .for-sp-meta {
             display: block;
             margin-top: 16px;
         }
@@ -231,7 +231,7 @@
                         </a>
                         <div class="user-details">
                             <div class="post-meta">
-                                <div class="post-time-container for-pc">
+                                <div class="post-time-container for-pc-meta">
                                     <span class="post-type">{{ post.get_post_type_display }}</span>
                                     <span class="post-time">{{ post.created_at|timesince }}前</span>
                                 </div>
@@ -255,7 +255,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="post-time-container for-sp">
+                    <div class="post-time-container for-sp-meta">
                         <span class="post-type">{{ post.get_post_type_display }}</span>
                         <span class="post-time">{{ post.created_at|timesince }}前</span>
                     </div>

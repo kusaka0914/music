@@ -653,10 +653,6 @@
         gap: 1.5rem;
     }
     
-    .compatibility-score {
-        text-align: center;
-    }
-    
     .progress-container {
         background: rgba(255, 255, 255, 0.1);
         border-radius: 500px;
@@ -1842,10 +1838,6 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- <div class="search-box">
-                    <i class="bi bi-search"></i>
-                    <input type="text" placeholder="ユーザーを検索" class="search-input">
-                </div> -->
                 <div class="following-list user-list">
                     {% for user in following_users %}
                     <div class="user-item">
@@ -1855,10 +1847,14 @@
                                 <a href="{% url 'core:profile' user.user.username %}" class="username">{{ user.user.username }}</a>
                             </div>
                         </div>
-                        {% if user.user != request.user %}
-                        <button class="follow-button {% if user.user in request.user.profile.following.all %}following{% endif %}" data-username="{{ user.user.username }}">
-                            {% if user.user in request.user.profile.following.all %}フォロー中{% else %}フォローする{% endif %}
-                        </button>
+                        {% if request.user.is_authenticated and request.user != user.user %}
+                            <button 
+                                onclick="followUser('{{ user.user.username }}', this)" 
+                                class="follow-button {% if user.user.profile in request.user.profile.following.all %}following{% endif %}"
+                                data-username="{{ user.user.username }}"
+                                data-following="{% if user.user.profile in request.user.profile.following.all %}true{% else %}false{% endif %}">
+                                {% if user.user.profile in request.user.profile.following.all %}フォロー中{% else %}フォローする{% endif %}
+                            </button>
                         {% endif %}
                     </div>
                     {% empty %}
@@ -1881,10 +1877,6 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- <div class="search-box">
-                    <i class="bi bi-search"></i>
-                    <input type="text" placeholder="ユーザーを検索" class="search-input">
-                </div> -->
                 <div class="followers-list user-list">
                     {% for user in follower_users %}
                     <div class="user-item">
@@ -1894,10 +1886,14 @@
                                 <a href="{% url 'core:profile' user.user.username %}" class="username">{{ user.user.username }}</a>
                             </div>
                         </div>
-                        {% if user.user != request.user %}
-                        <button class="follow-button {% if user.user in request.user.profile.following.all %}following{% endif %}" data-username="{{ user.user.username }}">
-                            {% if user.user in request.user.profile.following.all %}フォロー中{% else %}フォローする{% endif %}
-                        </button>
+                        {% if request.user.is_authenticated and request.user != user.user %}
+                            <button 
+                                onclick="followUser('{{ user.user.username }}', this)" 
+                                class="follow-button {% if user.user.profile in request.user.profile.following.all %}following{% endif %}"
+                                data-username="{{ user.user.username }}"
+                                data-following="{% if user.user.profile in request.user.profile.following.all %}true{% else %}false{% endif %}">
+                                {% if user.user.profile in request.user.profile.following.all %}フォロー中{% else %}フォローする{% endif %}
+                            </button>
                         {% endif %}
                     </div>
                     {% empty %}
@@ -1905,6 +1901,23 @@
                         <p>フォロワーはいません</p>
                     </div>
                     {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- いいね一覧モーダル -->
+<div class="modal fade" id="likesModal" tabindex="-1" aria-labelledby="likesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="likesModalLabel">いいねしたユーザー</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="likes-list">
+                    <!-- いいねしたユーザーのリストがここに動的に追加されます -->
                 </div>
             </div>
         </div>
@@ -2005,5 +2018,46 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// いいねモーダルの処理を追加
+window.showLikesModal = async function(postId) {
+    try {
+        const response = await fetch(`/api/posts/${postId}/likes/`);
+        const data = await response.json();
+        
+        const modal = new bootstrap.Modal(document.getElementById('likesModal'));
+        const userList = document.querySelector('.likes-list');
+        userList.innerHTML = '';
+
+        if (data.users.length === 0) {
+            userList.innerHTML = `
+                <div class="no-users">
+                    <p>まだいいねしたユーザーはいません</p>
+                </div>
+            `;
+        } else {
+            data.users.forEach(user => {
+                const userItem = document.createElement('div');
+                userItem.className = 'user-item';
+                userItem.innerHTML = `
+                <a href="/profile/${user.username}/" class="username">
+                    <div class="modal-user-info">
+                        <img src="${user.avatar || '/static/images/default-avatar.svg'}" alt="${user.username}" class="user-avatar">
+                        <div class="user-details">
+                            ${user.username}
+                            <span class="user-meta">${user.name || ''}</span>
+                        </div>
+                    </div>
+                </a>
+                `;
+                userList.appendChild(userItem);
+            });
+        }
+        
+        modal.show();
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
 </script>
 {% endblock %} 
