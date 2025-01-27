@@ -1586,7 +1586,6 @@
             {% endif %}
         </div> -->
 
-        {% if profile_user.profile.favorite_artists %}
         <div class="favorite-artists-section">
             <div class="section-header">
                 <h2>好きなアーティスト</h2>
@@ -1596,6 +1595,7 @@
                     </a>
                 {% endif %}
             </div>
+            {% if profile_user.profile.favorite_artists %}
             <div class="artists-grid">
                 {% for artist in profile_user.profile.favorite_artists %}
                     <div class="artist-card">
@@ -1614,8 +1614,10 @@
                     </div>
                 {% endfor %}
             </div>
+            {% else %}
+                <p class="no-artists">まだ好きなアーティストがありません</p>
+            {% endif %}
         </div>
-        {% endif %}
 
         <div class="spotify-section">
             {% if profile_user.profile.spotify_connected %}
