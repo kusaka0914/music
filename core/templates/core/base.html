@@ -116,14 +116,14 @@
         background: #282828;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         border-radius: 8px;
-    }
+        }
 
     .spotify-header {
         background: rgba(0, 0, 0, 0.8);
         backdrop-filter: blur(10px);
-        position: fixed;
-        top: 0;
-        left: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
         right: 0;
         z-index: 1000;
         padding: 0.5rem 0;
@@ -277,8 +277,8 @@
     }
 
     .profile-button img {
-        width: 100%;
-        height: 100%;
+            width: 100%;
+            height: 100%;
         object-fit: cover;
     }
 
@@ -300,8 +300,8 @@
     }
 
     .menu-item {
-        display: flex;
-        align-items: center;
+            display: flex;
+            align-items: center;
         gap: 0.5rem;
         color: #b3b3b3;
         text-decoration: none;
@@ -424,7 +424,7 @@
         .auth-buttons {
             gap: 8px;
         }
-    }
+        }
     </style>
 
     <script>
@@ -455,7 +455,7 @@
         if (userMenu && !profileButton && userMenu.classList.contains('show')) {
             userMenu.classList.remove('show');
         }
-    });
+        });
 
     function updateNotificationCount() {
         fetch('{% url "core:get_unread_notification_count" %}')
@@ -502,8 +502,8 @@
         if (messageBadge) {
             updateMessageCount();
             setInterval(updateMessageCount, 30000);
-        }
-    });
+            }
+        });
     </script>
 
     <main>
